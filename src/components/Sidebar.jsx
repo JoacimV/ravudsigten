@@ -43,7 +43,7 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
             return <div className="card">
                 <div className="card-content">
                     <div className="content">
-                        <p>Ingen lavvands alarmer</p>
+                        <p>Ingen prognoser, kig tilbage senere</p>
                     </div>
                 </div>
             </div>
