@@ -21,37 +21,37 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v7
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v7
         with:
-          node-version: 18
+          node-version: 24
       - name: Install dependencies
         run: npm install
       - name: Build project
         run: npm run build
       - name: upload artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
           # Uploads the ./build directory as an artifact
           name: build
-          path: "./build"
+          path: "./dist"
   deploy:
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: download artifact from build job
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v7
         with:
           name: build
-          path: "./build"
+          path: "./dist"
       - name: Setup Pages
-        uses: actions/configure-pages@v3
+        uses: actions/configure-pages@v6
       - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+        uses: actions/upload-pages-artifact@v5
         with:
-          # Uploads the ./build directory as an artifact
-          path: "build"
+          # Uploads the ./dist directory as an artifact
+          path: "dist"
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v5

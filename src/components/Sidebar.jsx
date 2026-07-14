@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 
-/* eslint-disable react/prop-types */
 export default function Sidebar({ loading, tiderWaterStationName, currentWind, lowSpots, sidebarOpen, setSidebarOpen }) {
     const [matches, setMatches] = useState(
         window.matchMedia("(min-width: 768px)").matches
@@ -44,7 +43,7 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
             return <div className="card">
                 <div className="card-content">
                     <div className="content">
-                        <p>Ingen lavvands alarmer</p>
+                        <p>Ingen prognoser, kig tilbage senere</p>
                     </div>
                 </div>
             </div>

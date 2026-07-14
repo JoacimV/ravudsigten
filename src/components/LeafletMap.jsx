@@ -7,7 +7,6 @@ import municipalities from "../resources/geojson/municipalities.json"
 import logo from "../resources/images/marker-original.png"
 
 
-/* eslint-disable react/prop-types */
 function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, setNearestNextPoint, setSplitLine, setSplitLine2 }) {
     let clickTimeout = null;  // Declare a variable to hold the timeout
 
