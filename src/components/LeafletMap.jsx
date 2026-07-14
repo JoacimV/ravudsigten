@@ -4,8 +4,7 @@ import React, { useState } from "react";
 import { Icon } from 'leaflet'
 import dk from "../resources/geojson/denmark-coastal-line.json"
 import municipalities from "../resources/geojson/municipalities.json"
-import logo from "../resources/images/marker-original.png"
-
+import logo from "../resources/images/marker.svg"
 
 function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, setNearestNextPoint, setSplitLine, setSplitLine2 }) {
     let clickTimeout = null;  // Declare a variable to hold the timeout
@@ -37,7 +36,7 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
     return (
         <Marker position={clickedPosition} icon={new Icon({
             iconUrl: logo,
-            iconSize: [64, 64], // size of the icon
+            iconSize: [64 * 1.5, 64 * 1.5], // size of the icon
             iconAnchor: [32, 64], // point of the icon which will correspond to marker's location
             popupAnchor: [0, -64] // point from which the popup should open relative to the iconAnchor
         })} />
