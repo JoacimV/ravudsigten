@@ -119,14 +119,14 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
                             <div className="is-flex is-align-items-center mb-1">
                                 <span className="has-text-info mr-2">🌊</span>
                                 <span className="is-size-7 has-text-grey-lighter">
-                                    Vandstand: <strong>{Math.round(lowSpot.height)} cm</strong>
+                                    Vandstand: <strong style={{ color: 'currentColor' }}>{Math.round(lowSpot.height)} cm</strong>
                                 </span>
                             </div>
 
                             <div className="is-flex is-align-items-center">
                                 <span className="has-text-warning mr-2">💨</span>
                                 <span className="is-size-7 has-text-grey-lighter">
-                                    Pålandsvind: <strong>{lowSpot.hours} timer</strong>
+                                    Pålandsvind: <strong style={{ color: 'currentColor' }}>{lowSpot.hours} timer</strong>
                                 </span>
                             </div>
                         </div>
