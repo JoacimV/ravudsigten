@@ -161,7 +161,6 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
                 left: 15,
                 bottom: 15,
                 width: matches ? '360px' : 'calc(100vw - 30px)',
-                maxHeight: matches ? '70vh' : '45vh',
                 display: 'flex',
                 flexDirection: 'column'
             }}
