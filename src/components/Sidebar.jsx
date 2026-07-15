@@ -43,9 +43,7 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
     };
 
     const renderLowSpots = () => {
-        // Filter out lowSpots with low chance (less than 3 hours)
-        const filteredLowSpots = lowSpots.filter(lowSpot => calculateChance(lowSpot.hours).colorClass !== 'is-danger');
-        if (!lowSpots || lowSpots.length === 0 || filteredLowSpots.length === 0) {
+        if (!lowSpots || lowSpots.length === 0) {
             return (
                 <div className="notification is-dark has-text-centered py-4">
                     <p className="has-text-grey-light">Ingen prognoser, kig tilbage senere</p>
@@ -53,9 +51,18 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
             );
         }
 
-        return lowSpots.map((lowSpot, index) => {
+        // Filter out lowSpots with low chance (less than 3 hours)
+        const filteredLowSpots = lowSpots.filter(lowSpot => calculateChance(lowSpot.hours).colorClass !== 'is-danger');
+        if (filteredLowSpots.length === 0) {
+            return (
+                <div className="notification is-dark has-text-centered py-4">
+                    <p className="has-text-grey-light">Ingen prognoser, kig tilbage senere</p>
+                </div>
+            );
+        }
+
+        return filteredLowSpots.map((lowSpot, index) => {
             const gauge = calculateChance(lowSpot.hours);
-            if(gauge.colorClass === 'is-danger') return null; // Skip rendering if the chance is low
             const strokeDashArray = "126";
 
             return (
