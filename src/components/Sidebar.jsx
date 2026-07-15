@@ -16,24 +16,24 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
     const calculateChance = (hours) => {
         switch (true) {
             case hours < 3:
-                return { 
-                    text: 'LAV CHANCE', 
+                return {
+                    text: 'LAV CHANCE',
                     color: '#f43f5e', // Rød
                     emoji: '🌧️',
                     dashOffset: 75,
                     colorClass: 'is-danger'
                 };
             case hours <= 7:
-                return { 
-                    text: 'MIDDEL CHANCE', 
+                return {
+                    text: 'MIDDEL CHANCE',
                     color: '#f59e0b', // Gul/Orange
                     emoji: '⛅',
                     dashOffset: 45,
                     colorClass: 'is-warning'
                 };
             default:
-                return { 
-                    text: 'HØJ CHANCE', 
+                return {
+                    text: 'HØJ CHANCE',
                     color: '#10b981', // Grøn
                     emoji: '☀️',
                     dashOffset: 0,
@@ -42,30 +42,20 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
         }
     };
 
-    const renderLowSpots = () => {
-        // Filter out lowSpots with low chance (less than 3 hours)
-        const filteredLowSpots = lowSpots.filter(lowSpot => calculateChance(lowSpot.hours).colorClass !== 'is-danger');
-        if (!lowSpots || lowSpots.length === 0 || filteredLowSpots.length === 0) {
-            return (
-                <div className="notification is-dark has-text-centered py-4">
-                    <p className="has-text-grey-light">Ingen prognoser, kig tilbage senere</p>
-                </div>
-            );
-        }
-
-        return lowSpots.map((lowSpot, index) => {
+    const renderSpots = () => {
+        const spots = lowSpots.map((lowSpot, index) => {
             const gauge = calculateChance(lowSpot.hours);
-            if(gauge.colorClass === 'is-danger') return null; // Skip rendering if the chance is low
+            if (gauge.colorClass === 'is-danger') return null; // Skip rendering if the chance is low
             const strokeDashArray = "126";
 
             return (
-                <div 
-                    className="box has-background-black-ter mb-4" 
+                <div
+                    className="box has-background-black-ter mb-4"
                     key={lowSpot.time || index}
                     style={{ border: '1px solid #2b313a', borderRadius: '12px' }}
                 >
                     <div className="columns is-mobile is-vcentered">
-                        
+
                         {/* Venstre side: Den skudsikre SVG-gauge */}
                         <div className="column is-5 is-flex is-justify-content-center">
                             <svg width="110" height="75" viewBox="0 0 100 65" style={{ overflow: 'visible' }}>
@@ -88,25 +78,25 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
                                     strokeDashoffset={gauge.dashOffset}
                                     style={{ transition: 'stroke-dashoffset 0.8s ease-in-out' }}
                                 />
-                                
+
                                 {/* EMOJI (Placeret præcis i SVG-koordinatsystemet) */}
-                                <text 
-                                    x="50" 
-                                    y="42" 
-                                    textAnchor="middle" 
+                                <text
+                                    x="50"
+                                    y="42"
+                                    textAnchor="middle"
                                     style={{ fontSize: '18px', fill: '#fff' }}
                                 >
                                     {gauge.emoji}
                                 </text>
 
                                 {/* TEKST (Placeret præcis under emojien) */}
-                                <text 
-                                    x="50" 
-                                    y="58" 
-                                    textAnchor="middle" 
-                                    style={{ 
-                                        fontSize: '7.5px', 
-                                        fontWeight: 'bold', 
+                                <text
+                                    x="50"
+                                    y="58"
+                                    textAnchor="middle"
+                                    style={{
+                                        fontSize: '7.5px',
+                                        fontWeight: 'bold',
                                         fill: gauge.color,
                                         letterSpacing: '0.3px',
                                         fontFamily: 'sans-serif'
@@ -125,7 +115,7 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
                             <p className="is-size-7 has-text-grey-light mb-2">
                                 {DateTime.fromISO(lowSpot.time).toLocaleString(DateTime.DATE_MED)}
                             </p>
-                            
+
                             <div className="is-flex is-align-items-center mb-1">
                                 <span className="has-text-info mr-2">🌊</span>
                                 <span className="is-size-7 has-text-grey-lighter">
@@ -145,6 +135,18 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
                 </div>
             );
         });
+        // If no spots are rendered (all were low chance), show a message
+        if (spots.filter(spot => spot !== null).length === 0) {
+            return (
+                <div className="box has-background-black-ter" style={{ border: '1px solid #2b313a', borderRadius: '12px' }}>
+                    <p className="has-text-grey-light is-size-7 has-text-centered">
+                        Ingen lavvands-prognoser i dette område.
+                    </p>
+                </div>
+            );
+        }
+
+        return spots;
     };
 
     if (!sidebarOpen) {
@@ -152,11 +154,11 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
     }
 
     return (
-        <div 
-            style={{ 
-                position: 'absolute', 
-                zIndex: 401, 
-                left: 15, 
+        <div
+            style={{
+                position: 'absolute',
+                zIndex: 401,
+                left: 15,
                 bottom: 15,
                 width: matches ? '360px' : 'calc(100vw - 30px)',
                 maxHeight: matches ? '70vh' : '45vh',
@@ -174,10 +176,10 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
                     <p className="has-text-centered has-text-grey is-size-7">Forbinder til vejr udbyder...</p>
                 </div>
             ) : (
-                <div 
-                    className="box has-background-dark has-text-light p-5" 
-                    style={{ 
-                        border: '1px solid #30363d', 
+                <div
+                    className="box has-background-dark has-text-light p-5"
+                    style={{
+                        border: '1px solid #30363d',
                         borderRadius: '16px',
                         display: 'flex',
                         flexDirection: 'column',
@@ -194,19 +196,19 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
                     </div>
 
                     {/* Nuværende vindforhold */}
-                    <div 
-                        className="mb-4 p-3 is-flex is-align-items-center" 
-                        style={{ 
-                            backgroundColor: 'rgba(255,255,255,0.03)', 
-                            borderRadius: '10px', 
-                            border: '1px solid #363636' 
+                    <div
+                        className="mb-4 p-3 is-flex is-align-items-center"
+                        style={{
+                            backgroundColor: 'rgba(255,255,255,0.03)',
+                            borderRadius: '10px',
+                            border: '1px solid #363636'
                         }}
                     >
-                        <span 
-                            className="icon is-medium has-text-info mr-3" 
-                            style={{ 
-                                display: 'inline-block', 
-                                transform: `rotate(${currentWind?.direction}deg)`, 
+                        <span
+                            className="icon is-medium has-text-info mr-3"
+                            style={{
+                                display: 'inline-block',
+                                transform: `rotate(${currentWind?.direction}deg)`,
                                 transformOrigin: 'center center',
                                 transition: 'transform 0.5s ease'
                             }}
@@ -228,10 +230,10 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
                     </div>
 
                     <p className="heading has-text-grey-light mb-3">Kommende lavvands-prognoser:</p>
-                    
+
                     {/* Scrollbar-område */}
                     <div style={{ overflowY: 'auto', flex: 1, paddingRight: '4px' }}>
-                        {renderLowSpots()}
+                        {renderSpots()}
                     </div>
                 </div>
             )}
