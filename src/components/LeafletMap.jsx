@@ -1,4 +1,4 @@
-import { MapContainer, TileLayer, useMapEvent, useMap, Marker, Rectangle, GeoJSON } from "react-leaflet";
+import { MapContainer, TileLayer, useMapEvent, useMap, Marker, Rectangle, GeoJSON, Popup } from "react-leaflet";
 import { findNearestCoastline, pointsAlongGeoJson } from "../functions";
 import React, { useEffect, useState } from "react";
 import { Icon } from 'leaflet'
@@ -10,6 +10,65 @@ import points from "../one-off/coast-points-enriched-quarter.json"
 import logo from "../resources/images/marker.svg"
 
 const minZoom = 7, maxZoom = 14;
+
+
+const tidewaterStationIcon = L.divIcon({
+    className: 'station-marker-icon station-marker-icon--tidewater',
+    html: `
+        <div style="
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(14,165,233,0.98), rgba(3,105,161,0.98));
+            border: 2px solid rgba(255,255,255,0.96);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            line-height: 1;
+        ">T</div>
+    `,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -14],
+});
+
+const metStationIcon = L.divIcon({
+    className: 'station-marker-icon station-marker-icon--met',
+    html: `
+        <div style="
+            width: 28px;
+            height: 28px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(244,114,182,0.98), rgba(190,24,93,0.98));
+            border: 2px solid rgba(255,255,255,0.96);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.35);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            line-height: 1;
+        ">M</div>
+    `,
+    iconSize: [28, 28],
+    iconAnchor: [14, 14],
+    popupAnchor: [0, -14],
+});
+
+const getStationIcon = (source) => {
+    if (source === 'tidewater') {
+        return tidewaterStationIcon;
+    }
+
+    if (source === 'met') {
+        return metStationIcon;
+    }
+
+    return null;
+};
 
 function HeatLayer() {
     const map = useMap();
@@ -111,7 +170,7 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
 }
 
 
-export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestPoint, setNearestNextPoint, bbox, debug }) {
+export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestPoint, setNearestNextPoint, bbox, debug, stations = [] }) {
     const [clickedPosition, setClickedPosition] = useState(undefined)
     const [splitLine, setSplitLine] = useState(undefined)
     const [splitLine2, setSplitLine2] = useState(undefined)
@@ -298,8 +357,26 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                         />
 
                         <Rectangle bounds={[[bbox[1], bbox[0]], [bbox[3], bbox[2]]]} pathOptions={{ color: 'white' }} />
+                        {stations
+                            .filter((station) => Number.isFinite(Number(station?.latitude)) && Number.isFinite(Number(station?.longitude)))
+                            .map((station) => (
+                                <Marker
+                                    key={station.pk}
+                                    position={[Number(station.latitude), Number(station.longitude)]}
+                                    icon={getStationIcon(station.source)}
+                                >
+                                    <Popup>
+                                        <div style={{ minWidth: 160 }}>
+                                            <div style={{ fontWeight: 700, marginBottom: 4 }}>{station.stationName}</div>
+                                            <div style={{ fontSize: 12, opacity: 0.8 }}>{station.source} station</div>
+                                            <div style={{ fontSize: 12, marginTop: 4 }}>ID: {station.stationId}</div>
+                                        </div>
+                                    </Popup>
+                                </Marker>
+                            ))}
                     </>
                     : null}
+
             </MapContainer>
         </div>
     )

@@ -13,9 +13,29 @@ function App() {
   const [nearestNextPoint, setNearestNextPoint] = useState(undefined)
   const [currentWind, setCurrentWind] = useState(undefined)
   const [loading, setLoading] = useState(false)
+  const [stations, setStations] = useState([])
+  const [stationsLoading, setStationsLoading] = useState(false)
 
   const [debug, setDebug] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+
+  useEffect(() => {
+    const fetchStations = async () => {
+      setStationsLoading(true)
+      try {
+        const res = await fetch('https://hayxmiy9qg.execute-api.eu-north-1.amazonaws.com/forecast-data')
+        const json = await res.json()
+        setStations(Array.isArray(json.stations) ? json.stations : [])
+      } catch (error) {
+        console.log('Failed to fetch stations', error)
+        setStations([])
+      } finally {
+        setStationsLoading(false)
+      }
+    }
+
+    fetchStations()
+  }, [])
 
   useEffect(() => {
     if (!nearestPoint) {
@@ -32,6 +52,7 @@ function App() {
       const azimuth = bearingToAzimuth(bearing(point([nearestPoint.lng, nearestPoint.lat]), point([nearestNextPoint.lng, nearestNextPoint.lat])));
       const res = await fetch(`https://hayxmiy9qg.execute-api.eu-north-1.amazonaws.com/forecast?&position=${JSON.stringify({ longitude: nearestPoint.lng, latitude: nearestPoint.lat })}&municipalityId=${municipality.MunicipalityID}&azimuth=${azimuth}`);
       const json = await res.json();
+      console.log(json);
       if (json.message) { // Something bad happened
         console.log(json.message);
         setLoading(false);
@@ -70,6 +91,8 @@ function App() {
         setNearestNextPoint={setNearestNextPoint}
         setBbox={setBbox}
         bbox={bbox}
+        stations={stations}
+        stationsLoading={stationsLoading}
       />
     </React.Fragment>
   );
