@@ -127,3 +127,75 @@ export const pointsAlongGeoJson = (geoJson, distanceKm = 1) => {
 
     return featureCollection(points);
 };
+
+const toRadians = (degrees) => (degrees * Math.PI) / 180;
+
+const haversineDistanceKm = (from, to) => {
+    const earthRadiusKm = 6371;
+    const dLat = toRadians(to.lat - from.lat);
+    const dLng = toRadians(to.lng - from.lng);
+
+    const lat1 = toRadians(from.lat);
+    const lat2 = toRadians(to.lat);
+
+    const a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1) * Math.cos(lat2) * Math.sin(dLng / 2) * Math.sin(dLng / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return earthRadiusKm * c;
+};
+
+export const findNearestStation = (position, stations = [], source) => {
+    if (!position || !Number.isFinite(position.lat) || !Number.isFinite(position.lng)) {
+        return undefined;
+    }
+
+    const candidates = stations.filter((station) => {
+        if (!Number.isFinite(Number(station?.latitude)) || !Number.isFinite(Number(station?.longitude))) {
+            return false;
+        }
+
+        if (!source) {
+            return true;
+        }
+
+        return station.source === source;
+    });
+
+    if (candidates.length === 0) {
+        return undefined;
+    }
+
+    let nearest = undefined;
+    let nearestDistanceKm = Number.POSITIVE_INFINITY;
+
+    for (const station of candidates) {
+        const distanceKm = haversineDistanceKm(
+            { lat: position.lat, lng: position.lng },
+            { lat: Number(station.latitude), lng: Number(station.longitude) }
+        );
+
+        if (distanceKm < nearestDistanceKm) {
+            nearest = station;
+            nearestDistanceKm = distanceKm;
+        }
+    }
+
+    if (!nearest) {
+        return undefined;
+    }
+
+    return {
+        ...nearest,
+        distanceKm: nearestDistanceKm,
+    };
+};
+
+export const findNearestMetStation = (position, stations = []) => {
+    const nearest = findNearestStation(position, stations, "met");
+    return nearest;
+}
+
+export const findNearestTideStation = (position, stations = []) =>
+    findNearestStation(position, stations, "tidewater");

@@ -1,9 +1,10 @@
-import { MapContainer, TileLayer, useMapEvent, useMap, Marker, Rectangle, GeoJSON, Popup } from "react-leaflet";
-import { findNearestCoastline, pointsAlongGeoJson } from "../functions";
-import React, { useEffect, useState } from "react";
+import { MapContainer, TileLayer, useMapEvent, Marker, Rectangle, GeoJSON, Popup } from "react-leaflet";
+import { findNearestCoastline, findNearestMetStation, findNearestTideStation } from "../functions";
+import React, { useState } from "react";
 import { Icon } from 'leaflet'
 import L from "leaflet";
 import "leaflet.heat";
+import HeatLayer from "./HeatLayer";
 import dk from "../resources/geojson/denmark-coastal-line.json"
 import municipalities from "../resources/geojson/municipalities.json"
 import points from "../one-off/coast-points-enriched-quarter.json"
@@ -70,67 +71,7 @@ const getStationIcon = (source) => {
     return null;
 };
 
-function HeatLayer() {
-    const map = useMap();
-    const [zoom, setZoom] = useState(map.getZoom());
-    const [points, setPoints] = useState([]);
-    useMapEvent('zoomend', () => setZoom(map.getZoom()));
 
-    useEffect(() => {
-        const cpoints = pointsAlongGeoJson(dk, 1);
-        if (!cpoints || cpoints.features.length === 0) {
-            return;
-        }
-        const points = cpoints.features.map(point => {
-            // Generate random number between 0-1, skewed towards lower values
-            const randomOffset = Math.pow(Math.random(), 128);
-            return {
-                lat: point.geometry.coordinates[1],
-                lng: point.geometry.coordinates[0],
-                intensity: randomOffset,
-            };
-        });
-        setPoints(points);
-    }, []);
-
-
-    useEffect(() => {
-        const midPoints = points
-            .filter(point => point.intensity >= 0.33 && point.intensity < 0.66)
-            .map(point => [point.lat, point.lng, 0.75]);
-        const highPoints = points
-            .filter(point => point.intensity >= 0.66)
-            .map(point => [point.lat, point.lng, 1.0]);
-
-        // Set the radius based on the zoom level, with a minimum of 25 and a maximum of 50
-        const minRadius = 40, maxRadius = 70;
-        const radius = Math.round(minRadius + ((zoom - minZoom) / (maxZoom - minZoom)) * (maxRadius - minRadius));
-        const minOpacity = 0.3;
-        const layer = L.layerGroup([
-            L.heatLayer(midPoints, {
-                radius,
-                blur: 28,
-                // maxZoom: 12,
-                gradient: { 0.4: 'rgba(250, 204, 21, 0.25)', 1.0: 'rgba(234, 179, 8, 1)' },
-                minOpacity,
-            }),
-            L.heatLayer(highPoints, {
-                radius,
-                blur: 28,
-                // maxZoom: 12,
-                gradient: { 0.4: 'rgba(248, 113, 113, 0.35)', 1.0: 'rgba(220, 38, 38, 1)' },
-                minOpacity,
-            }),
-        ]);
-        layer.addTo(map);
-
-        return () => {
-            map.removeLayer(layer);
-        };
-    }, [map, zoom, points]);
-
-    return null;
-}
 
 function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, setNearestNextPoint, setSplitLine, setSplitLine2 }) {
     let clickTimeout = null;  // Declare a variable to hold the timeout
@@ -169,11 +110,37 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
     )
 }
 
+const selectedStationIcon = L.divIcon({
+    className: 'station-marker-icon station-marker-icon--selected',
+    html: `
+        <div style="
+            width: 36px;
+            height: 36px;
+            border-radius: 999px;
+            background: linear-gradient(180deg, rgba(250,204,21,0.98), rgba(217,119,6,0.98));
+            border: 2px solid rgba(255,255,255,0.98);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            line-height: 1;
+            font-weight: 700;
+        ">★</div>
+    `,
+    iconSize: [36, 36],
+    iconAnchor: [18, 18],
+    popupAnchor: [0, -18],
+});
+
 
 export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestPoint, setNearestNextPoint, bbox, debug, stations = [] }) {
     const [clickedPosition, setClickedPosition] = useState(undefined)
     const [splitLine, setSplitLine] = useState(undefined)
     const [splitLine2, setSplitLine2] = useState(undefined)
+    const [nearestMetStation, setNearestMetStation] = useState(undefined)
+    const [nearestTideStation, setNearestTideStation] = useState(undefined)
     const [debugWindDirection, setDebugWindDirection] = useState("270")
     const [isSatellite, setIsSatellite] = useState(true)
 
@@ -291,10 +258,24 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
 
             <MapContainer style={{ height: "100vh", width: "100%" }} center={[56.0, 11.0]} zoom={8}>
                 <TileLayer url={mapLayerUrl} attributionControl={false} maxZoom={maxZoom} minZoom={minZoom} />
-                <MovingMarker clickedPosition={clickedPosition} setClickedPosition={setClickedPosition} nearestPoint={nearestPoint} setNearestPoint={setNearestPoint} setNearestNextPoint={setNearestNextPoint} setSplitLine={setSplitLine} setSplitLine2={setSplitLine2} />
+                <MovingMarker
+                    clickedPosition={clickedPosition}
+                    setClickedPosition={(latlng) => {
+                        setClickedPosition(latlng)
+                        const closestMetStation = findNearestMetStation(latlng, stations)
+                        const closestTideStation = findNearestTideStation(latlng, stations)         
+                        setNearestMetStation(closestMetStation)
+                        setNearestTideStation(closestTideStation)
+                    }}
+                    nearestPoint={nearestPoint}
+                    setNearestPoint={setNearestPoint}
+                    setNearestNextPoint={setNearestNextPoint}
+                    setSplitLine={setSplitLine}
+                    setSplitLine2={setSplitLine2}
+                />
                 {debug ?
                     <>
-                        <HeatLayer />
+                        <HeatLayer minZoom={minZoom} maxZoom={maxZoom} />
                         <Marker opacity={.5} position={nearestPoint} />
                         <Marker opacity={1} position={nearestNextPoint} />
                         <GeoJSON data={dk} style={{ color: 'black' }} />
@@ -359,21 +340,36 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                         <Rectangle bounds={[[bbox[1], bbox[0]], [bbox[3], bbox[2]]]} pathOptions={{ color: 'white' }} />
                         {stations
                             .filter((station) => Number.isFinite(Number(station?.latitude)) && Number.isFinite(Number(station?.longitude)))
-                            .map((station) => (
-                                <Marker
-                                    key={station.pk}
-                                    position={[Number(station.latitude), Number(station.longitude)]}
-                                    icon={getStationIcon(station.source)}
-                                >
-                                    <Popup>
-                                        <div style={{ minWidth: 160 }}>
-                                            <div style={{ fontWeight: 700, marginBottom: 4 }}>{station.stationName}</div>
-                                            <div style={{ fontSize: 12, opacity: 0.8 }}>{station.source} station</div>
-                                            <div style={{ fontSize: 12, marginTop: 4 }}>ID: {station.stationId}</div>
-                                        </div>
-                                    </Popup>
-                                </Marker>
-                            ))}
+                            .map((station) => {
+                                const isNearestMet = nearestMetStation?.stationName === station.stationName
+                                const isNearestTide = nearestTideStation?.stationName === station.stationName
+
+                                return (
+                                    <Marker
+                                        key={station.pk}
+                                        position={[Number(station.latitude), Number(station.longitude)]}
+                                        icon={isNearestMet || isNearestTide ? selectedStationIcon : getStationIcon(station.source)}
+                                    >
+                                        <Popup>
+                                            <div style={{ minWidth: 160 }}>
+                                                <div style={{ fontWeight: 700, marginBottom: 4 }}>{station.stationName}</div>
+                                                <div style={{ fontSize: 12, opacity: 0.8 }}>{station.source} station</div>
+                                                <div style={{ fontSize: 12, marginTop: 4 }}>ID: {station.stationId}</div>
+                                                {isNearestMet ? (
+                                                    <div style={{ fontSize: 12, marginTop: 4 }}>
+                                                        Nearest met: {nearestMetStation.distanceKm.toFixed(2)} km
+                                                    </div>
+                                                ) : null}
+                                                {isNearestTide ? (
+                                                    <div style={{ fontSize: 12, marginTop: 4 }}>
+                                                        Nearest tidewater: {nearestTideStation.distanceKm.toFixed(2)} km
+                                                    </div>
+                                                ) : null}
+                                            </div>
+                                        </Popup>
+                                    </Marker>
+                                )
+                            })}
                     </>
                     : null}
 

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useState, useEffect } from 'react';
 import { DateTime } from 'luxon';
 
-export default function Sidebar({ loading, tiderWaterStationName, currentWind, lowSpots, sidebarOpen, setSidebarOpen }) {
+export default function Sidebar({ loading, tiderWaterStationName, currentWind, lowSpots, sidebarOpen, setSidebarOpen, nearestStationObservations }) {
     const [matches, setMatches] = useState(
         window.matchMedia("(min-width: 768px)").matches
     );
@@ -149,6 +149,95 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
         return spots;
     };
 
+    const getTimestamp = (observation) => {
+        if (!observation || typeof observation !== 'object') {
+            return undefined;
+        }
+
+        if (typeof observation.timestamp === 'string') {
+            return observation.timestamp;
+        }
+
+        if (typeof observation.observed === 'string') {
+            return observation.observed;
+        }
+
+        if (typeof observation.time === 'string') {
+            return observation.time;
+        }
+
+        if (typeof observation.sk === 'string' && observation.sk.startsWith('OBS#')) {
+            return observation.sk.replace('OBS#', '');
+        }
+
+        return undefined;
+    };
+
+    const getLatestObservation = (observationState) => {
+        const observations = observationState?.observations;
+        if (!Array.isArray(observations) || observations.length === 0) {
+            return undefined;
+        }
+
+        return observations
+            .map((observation) => ({
+                observation,
+                timestamp: getTimestamp(observation),
+            }))
+            .filter(({ timestamp }) => typeof timestamp === 'string')
+            .sort((a, b) => a.timestamp.localeCompare(b.timestamp))
+            .at(-1)?.observation;
+    };
+
+    const latestMetObservation = useMemo(
+        () => getLatestObservation(nearestStationObservations?.met),
+        [nearestStationObservations?.met]
+    );
+
+    const latestTideObservation = useMemo(
+        () => getLatestObservation(nearestStationObservations?.tidewater),
+        [nearestStationObservations?.tidewater]
+    );
+
+    const formatObservationTime = (observation) => {
+        const timestamp = getTimestamp(observation);
+        if (!timestamp) {
+            return 'N/A';
+        }
+
+        const dateTime = DateTime.fromISO(timestamp);
+        return dateTime.isValid ? dateTime.toLocaleString(DateTime.DATETIME_SHORT) : timestamp;
+    };
+
+    const renderStationObservationCard = ({ title, station, state, latestObservation, valueText }) => {
+        if (!station && !state) {
+            return null;
+        }
+
+        return (
+            <div
+                className="mb-3 p-3"
+                style={{
+                    backgroundColor: 'rgba(255,255,255,0.03)',
+                    borderRadius: '10px',
+                    border: '1px solid #363636'
+                }}
+            >
+                <p className="is-size-7 has-text-grey-light mb-1">{title}</p>
+                <p className="has-text-weight-semibold is-size-6 mb-1">{station?.stationName ?? 'Vælges ved kortklik'}</p>
+                {state?.loading ? <p className="is-size-7 has-text-grey-light">Henter observationer...</p> : null}
+                {state?.error ? <p className="is-size-7" style={{ color: '#f87171' }}>{state.error}</p> : null}
+                {!state?.loading && !state?.error ? (
+                    <>
+                        <p className="is-size-7 has-text-grey-light mb-1">{valueText}</p>
+                        <p className="is-size-7 has-text-grey-light">Seneste: {formatObservationTime(latestObservation)}</p>
+                        <p className="is-size-7 has-text-grey-light">Antal: {state?.observations?.length ?? 0}</p>
+                    </>
+                ) : null}
+            </div>
+        );
+    };
+
     if (!sidebarOpen) {
         return null;
     }
@@ -228,6 +317,26 @@ export default function Sidebar({ loading, tiderWaterStationName, currentWind, l
                             </span>
                         </div>
                     </div>
+
+                    <p className="heading has-text-grey-light mb-2">Nærmeste stationer</p>
+                    {renderStationObservationCard({
+                        title: 'Met station',
+                        station: nearestStationObservations?.metStation,
+                        state: nearestStationObservations?.met,
+                        latestObservation: latestMetObservation,
+                        valueText: latestMetObservation
+                            ? `Vind: ${latestMetObservation.windSpeed ?? 'N/A'} m/s - ${latestMetObservation.windDirection ?? 'N/A'}°`
+                            : 'Ingen observationer endnu',
+                    })}
+                    {renderStationObservationCard({
+                        title: 'Tidewater station',
+                        station: nearestStationObservations?.tidewaterStation,
+                        state: nearestStationObservations?.tidewater,
+                        latestObservation: latestTideObservation,
+                        valueText: latestTideObservation
+                            ? `Vandstand: ${latestTideObservation.tideHeight ?? 'N/A'} cm`
+                            : 'Ingen observationer endnu',
+                    })}
 
                     <p className="heading has-text-grey-light mb-3">Kommende lavvands-prognoser:</p>
 

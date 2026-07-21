@@ -15,6 +15,12 @@ function App() {
   const [loading, setLoading] = useState(false)
   const [stations, setStations] = useState([])
   const [stationsLoading, setStationsLoading] = useState(false)
+  const [nearestStationObservations, setNearestStationObservations] = useState({
+    met: undefined,
+    tidewater: undefined,
+    metStation: undefined,
+    tidewaterStation: undefined,
+  })
 
   const [debug, setDebug] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -23,9 +29,9 @@ function App() {
     const fetchStations = async () => {
       setStationsLoading(true)
       try {
-        const res = await fetch('https://hayxmiy9qg.execute-api.eu-north-1.amazonaws.com/forecast-data')
+        const res = await fetch('https://dswx6vubccbkr.cloudfront.net/raw/stations.json')
         const json = await res.json()
-        setStations(Array.isArray(json.stations) ? json.stations : [])
+        setStations(json.met.concat(json.tidewater))
       } catch (error) {
         console.log('Failed to fetch stations', error)
         setStations([])
@@ -52,7 +58,6 @@ function App() {
       const azimuth = bearingToAzimuth(bearing(point([nearestPoint.lng, nearestPoint.lat]), point([nearestNextPoint.lng, nearestNextPoint.lat])));
       const res = await fetch(`https://hayxmiy9qg.execute-api.eu-north-1.amazonaws.com/forecast?&position=${JSON.stringify({ longitude: nearestPoint.lng, latitude: nearestPoint.lat })}&municipalityId=${municipality.MunicipalityID}&azimuth=${azimuth}`);
       const json = await res.json();
-      console.log(json);
       if (json.message) { // Something bad happened
         console.log(json.message);
         setLoading(false);
@@ -82,7 +87,15 @@ function App() {
 
   return (
     <React.Fragment>
-      <Sidebar currentWind={currentWind} loading={loading} lowSpots={lowSpots} tiderWaterStationName={tiderWaterStationName} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
+      <Sidebar
+        currentWind={currentWind}
+        loading={loading}
+        lowSpots={lowSpots}
+        tiderWaterStationName={tiderWaterStationName}
+        sidebarOpen={sidebarOpen}
+        setSidebarOpen={setSidebarOpen}
+        nearestStationObservations={nearestStationObservations}
+      />
       <LeafletMap
         debug={debug}
         nearestPoint={nearestPoint}
@@ -93,6 +106,7 @@ function App() {
         bbox={bbox}
         stations={stations}
         stationsLoading={stationsLoading}
+        onNearestStationObservationsChange={setNearestStationObservations}
       />
     </React.Fragment>
   );

@@ -1,10 +1,9 @@
 import fs from "node:fs/promises";
 // import municipalities from "../resources/geojson/municipalities.json" with { type: "json" };
 
-import { point, featureCollection } from "@turf/helpers";
+import { point } from "@turf/helpers";
 import { bearing } from "@turf/bearing";
 import { bearingToAzimuth } from "@turf/helpers";
-import booleanPointInPolygon from "@turf/boolean-point-in-polygon";
 import { bboxPolygon } from "@turf/bbox-polygon";
 import { multiPolygon } from "@turf/helpers";
 import booleanOverlap from "@turf/boolean-overlap";
