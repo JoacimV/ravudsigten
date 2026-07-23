@@ -1,0 +1,1225 @@
+{
+    "updatedAt": "2026-07-20T19:20:41.638Z",
+    "tidewater": [
+        {
+            "source": "tidewater",
+            "stationId": "26239",
+            "stationName": "Aabenraa",
+            "latitude": 55.0448,
+            "longitude": 9.427
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20303",
+            "stationName": "Aalborg Øst",
+            "latitude": 57.0525,
+            "longitude": 9.9576
+        },
+        {
+            "source": "tidewater",
+            "stationId": "22331",
+            "stationName": "Århus",
+            "latitude": 56.1466,
+            "longitude": 10.2226
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20676",
+            "stationName": "Als Odde",
+            "latitude": 56.7052,
+            "longitude": 10.3292
+        },
+        {
+            "source": "tidewater",
+            "stationId": "28366",
+            "stationName": "Assens Havn",
+            "latitude": 55.2706,
+            "longitude": 9.8897
+        },
+        {
+            "source": "tidewater",
+            "stationId": "28548",
+            "stationName": "Bagenkop",
+            "latitude": 54.7517,
+            "longitude": 10.6724
+        },
+        {
+            "source": "tidewater",
+            "stationId": "27084",
+            "stationName": "Ballen",
+            "latitude": 55.8155,
+            "longitude": 10.6399
+        },
+        {
+            "source": "tidewater",
+            "stationId": "26346",
+            "stationName": "Ballum sluse",
+            "latitude": 55.1308,
+            "longitude": 8.6858
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31343",
+            "stationName": "Bandholm Havn",
+            "latitude": 54.8368,
+            "longitude": 11.4879
+        },
+        {
+            "source": "tidewater",
+            "stationId": "28003",
+            "stationName": "Bogense",
+            "latitude": 55.5663,
+            "longitude": 10.08
+        },
+        {
+            "source": "tidewater",
+            "stationId": "26143",
+            "stationName": "Brøns sluse",
+            "latitude": 55.1863,
+            "longitude": 8.6875
+        },
+        {
+            "source": "tidewater",
+            "stationId": "32002",
+            "stationName": "Christians Ø",
+            "latitude": 55.3207,
+            "longitude": 15.1861
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30361",
+            "stationName": "Dragør",
+            "latitude": 55.5935,
+            "longitude": 12.6785
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30357",
+            "stationName": "Drogden Fyr",
+            "latitude": 55.5364,
+            "longitude": 12.7113
+        },
+        {
+            "source": "tidewater",
+            "stationId": "25149",
+            "stationName": "Esbjerg Havn",
+            "latitude": 55.4602,
+            "longitude": 8.4397
+        },
+        {
+            "source": "tidewater",
+            "stationId": "28397",
+            "stationName": "Fåborg",
+            "latitude": 55.0934,
+            "longitude": 10.2412
+        },
+        {
+            "source": "tidewater",
+            "stationId": "24018",
+            "stationName": "Ferring",
+            "latitude": 56.5246,
+            "longitude": 8.1152
+        },
+        {
+            "source": "tidewater",
+            "stationId": "23293",
+            "stationName": "Fredericia",
+            "latitude": 55.5595,
+            "longitude": 9.753
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20101",
+            "stationName": "Frederikshavn",
+            "latitude": 57.4357,
+            "longitude": 10.5479
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30129",
+            "stationName": "Frederikssund Syd",
+            "latitude": 55.8278,
+            "longitude": 12.0626
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30106",
+            "stationName": "Frederiksværk",
+            "latitude": 55.9653,
+            "longitude": 12.0005
+        },
+        {
+            "source": "tidewater",
+            "stationId": "26457",
+            "stationName": "Fynshav",
+            "latitude": 54.9944,
+            "longitude": 9.9856
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31616",
+            "stationName": "Gedser",
+            "latitude": 54.5721,
+            "longitude": 11.9245
+        },
+        {
+            "source": "tidewater",
+            "stationId": "25137",
+            "stationName": "Grådyb Barre",
+            "latitude": 55.4401,
+            "longitude": 8.2602
+        },
+        {
+            "source": "tidewater",
+            "stationId": "27004",
+            "stationName": "Grasten, Thurø",
+            "latitude": 55.0316,
+            "longitude": 10.6681
+        },
+        {
+            "source": "tidewater",
+            "stationId": "22121",
+            "stationName": "Grenå",
+            "latitude": 56.4121,
+            "longitude": 10.922
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20299",
+            "stationName": "Grønlandshavnen, Aalborg",
+            "latitude": 57.0486,
+            "longitude": 10.052
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31473",
+            "stationName": "Guldborgsund Tunnel",
+            "latitude": 54.8352,
+            "longitude": 11.7944
+        },
+        {
+            "source": "tidewater",
+            "stationId": "26089",
+            "stationName": "Haderslev",
+            "latitude": 55.2519,
+            "longitude": 9.5092
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20577",
+            "stationName": "Hadsund Fiskerihavn",
+            "latitude": 56.7168,
+            "longitude": 10.1255
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20252",
+            "stationName": "Hals Barre",
+            "latitude": 56.9547,
+            "longitude": 10.4255
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20262",
+            "stationName": "Hals Havn",
+            "latitude": 56.9901,
+            "longitude": 10.3084
+        },
+        {
+            "source": "tidewater",
+            "stationId": "21009",
+            "stationName": "Hanstholm",
+            "latitude": 57.12,
+            "longitude": 8.5955
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20333",
+            "stationName": "Haverslev Havn",
+            "latitude": 57.0284,
+            "longitude": 9.4017
+        },
+        {
+            "source": "tidewater",
+            "stationId": "26136",
+            "stationName": "Havneby",
+            "latitude": 55.0871,
+            "longitude": 8.5654
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30328",
+            "stationName": "Hellerup Havn",
+            "latitude": 55.7316,
+            "longitude": 12.5823
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31493",
+            "stationName": "Hesnæs",
+            "latitude": 54.8231,
+            "longitude": 12.1373
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20047",
+            "stationName": "Hirtshals",
+            "latitude": 57.5951,
+            "longitude": 9.9625
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20567",
+            "stationName": "Hobro",
+            "latitude": 56.6378,
+            "longitude": 9.8094
+        },
+        {
+            "source": "tidewater",
+            "stationId": "29038",
+            "stationName": "Holbæk",
+            "latitude": 55.7214,
+            "longitude": 11.7089
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30017",
+            "stationName": "Hornbæk",
+            "latitude": 56.0934,
+            "longitude": 12.4571
+        },
+        {
+            "source": "tidewater",
+            "stationId": "23126",
+            "stationName": "Horsens Havn",
+            "latitude": 55.8549,
+            "longitude": 9.8576
+        },
+        {
+            "source": "tidewater",
+            "stationId": "22598",
+            "stationName": "Hov",
+            "latitude": 55.9121,
+            "longitude": 10.2589
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30112",
+            "stationName": "Hundested",
+            "latitude": 55.9655,
+            "longitude": 11.8448
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30396",
+            "stationName": "Hundige Havn",
+            "latitude": 55.5984,
+            "longitude": 12.3565
+        },
+        {
+            "source": "tidewater",
+            "stationId": "24342",
+            "stationName": "Hvide Sande kyst",
+            "latitude": 55.9967,
+            "longitude": 8.1098
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30119",
+            "stationName": "Jægerspris Havn",
+            "latitude": 55.8563,
+            "longitude": 12.0091
+        },
+        {
+            "source": "tidewater",
+            "stationId": "23132",
+            "stationName": "Juelsminde",
+            "latitude": 55.7156,
+            "longitude": 10.0163
+        },
+        {
+            "source": "tidewater",
+            "stationId": "29141",
+            "stationName": "Kalundborg",
+            "latitude": 55.6736,
+            "longitude": 11.0973
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31244",
+            "stationName": "Kalvehave",
+            "latitude": 54.995,
+            "longitude": 12.1666
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31171",
+            "stationName": "Karrebæksminde",
+            "latitude": 55.1766,
+            "longitude": 11.6471
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30333",
+            "stationName": "Kastrup Havn",
+            "latitude": 55.6426,
+            "longitude": 12.6514
+        },
+        {
+            "source": "tidewater",
+            "stationId": "28198",
+            "stationName": "Kerteminde",
+            "latitude": 55.4508,
+            "longitude": 10.6651
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31282",
+            "stationName": "Klintholm Havn",
+            "latitude": 54.953,
+            "longitude": 12.4651
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30336",
+            "stationName": "Københavns Havn",
+            "latitude": 55.7043,
+            "longitude": 12.5989
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30479",
+            "stationName": "Køge Havn",
+            "latitude": 55.4555,
+            "longitude": 12.1965
+        },
+        {
+            "source": "tidewater",
+            "stationId": "23322",
+            "stationName": "Kolding Havn",
+            "latitude": 55.4899,
+            "longitude": 9.4824
+        },
+        {
+            "source": "tidewater",
+            "stationId": "29393",
+            "stationName": "Korsør",
+            "latitude": 55.3306,
+            "longitude": 11.1422
+        },
+        {
+            "source": "tidewater",
+            "stationId": "29395",
+            "stationName": "Korsør Fiskerihavn",
+            "latitude": 55.3323,
+            "longitude": 11.1309
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30121",
+            "stationName": "Kyndbyværket Havn",
+            "latitude": 55.8117,
+            "longitude": 11.8773
+        },
+        {
+            "source": "tidewater",
+            "stationId": "24032",
+            "stationName": "Lemvig",
+            "latitude": 56.5507,
+            "longitude": 8.3068
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20423",
+            "stationName": "Løgstør",
+            "latitude": 56.9678,
+            "longitude": 9.2459
+        },
+        {
+            "source": "tidewater",
+            "stationId": "25346",
+            "stationName": "Mandø",
+            "latitude": 55.2764,
+            "longitude": 8.5739
+        },
+        {
+            "source": "tidewater",
+            "stationId": "28119",
+            "stationName": "Middelfart Havn",
+            "latitude": 55.5064,
+            "longitude": 9.7362
+        },
+        {
+            "source": "tidewater",
+            "stationId": "28121",
+            "stationName": "Middelfart Lystbådehavn",
+            "latitude": 55.4925,
+            "longitude": 9.7292
+        },
+        {
+            "source": "tidewater",
+            "stationId": "26458",
+            "stationName": "Mommark",
+            "latitude": 54.9322,
+            "longitude": 10.0445
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31417",
+            "stationName": "Nakskov",
+            "latitude": 54.8279,
+            "longitude": 11.1364
+        },
+        {
+            "source": "tidewater",
+            "stationId": "25139",
+            "stationName": "Nordby",
+            "latitude": 55.45,
+            "longitude": 8.4083
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30346",
+            "stationName": "Nordre Røse Fyr",
+            "latitude": 55.6361,
+            "longitude": 12.6865
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31513",
+            "stationName": "Nykøbing Falster Havn",
+            "latitude": 54.7701,
+            "longitude": 11.861
+        },
+        {
+            "source": "tidewater",
+            "stationId": "21138",
+            "stationName": "Nykøbing Mors",
+            "latitude": 56.7948,
+            "longitude": 8.8635
+        },
+        {
+            "source": "tidewater",
+            "stationId": "29014",
+            "stationName": "Nykøbing Sjælland Havn",
+            "latitude": 55.9134,
+            "longitude": 11.6752
+        },
+        {
+            "source": "tidewater",
+            "stationId": "28068",
+            "stationName": "Odense Fjord, Gabet",
+            "latitude": 55.516,
+            "longitude": 10.5701
+        },
+        {
+            "source": "tidewater",
+            "stationId": "28087",
+            "stationName": "Odense Fjord, Stige Ø",
+            "latitude": 55.4386,
+            "longitude": 10.4245
+        },
+        {
+            "source": "tidewater",
+            "stationId": "28086",
+            "stationName": "Odense Kanal, Stige Ø",
+            "latitude": 55.4376,
+            "longitude": 10.4226
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31212",
+            "stationName": "Præstø Havn",
+            "latitude": 55.1251,
+            "longitude": 12.0425
+        },
+        {
+            "source": "tidewater",
+            "stationId": "22058",
+            "stationName": "Randers",
+            "latitude": 56.4569,
+            "longitude": 10.0396
+        },
+        {
+            "source": "tidewater",
+            "stationId": "27003",
+            "stationName": "Rantzausminde Lystbådehavn",
+            "latitude": 55.0332,
+            "longitude": 10.5402
+        },
+        {
+            "source": "tidewater",
+            "stationId": "29336",
+            "stationName": "Reersø Havn",
+            "latitude": 55.5173,
+            "longitude": 11.1198
+        },
+        {
+            "source": "tidewater",
+            "stationId": "25343",
+            "stationName": "Ribe kammersluse",
+            "latitude": 55.34,
+            "longitude": 8.676
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31573",
+            "stationName": "Rødbyhavn",
+            "latitude": 54.6561,
+            "longitude": 11.3475
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31063",
+            "stationName": "Rødvig",
+            "latitude": 55.2543,
+            "longitude": 12.3744
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20412",
+            "stationName": "Rønbjerg Huse",
+            "latitude": 56.8924,
+            "longitude": 9.1668
+        },
+        {
+            "source": "tidewater",
+            "stationId": "32096",
+            "stationName": "Rønne Havn",
+            "latitude": 55.0932,
+            "longitude": 14.6896
+        },
+        {
+            "source": "tidewater",
+            "stationId": "29006",
+            "stationName": "Rørvig Havn",
+            "latitude": 55.9436,
+            "longitude": 11.7685
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30409",
+            "stationName": "Roskilde",
+            "latitude": 55.6509,
+            "longitude": 12.0771
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31463",
+            "stationName": "Sakskøbing Havn",
+            "latitude": 54.8023,
+            "longitude": 11.6353
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20575",
+            "stationName": "Saltfabrikken",
+            "latitude": 56.6829,
+            "longitude": 10.0384
+        },
+        {
+            "source": "tidewater",
+            "stationId": "29002",
+            "stationName": "Sjællands Odde",
+            "latitude": 55.9727,
+            "longitude": 11.3694
+        },
+        {
+            "source": "tidewater",
+            "stationId": "29422",
+            "stationName": "Skælskør Fjord",
+            "latitude": 55.2458,
+            "longitude": 11.2469
+        },
+        {
+            "source": "tidewater",
+            "stationId": "29421",
+            "stationName": "Skælskør Havn",
+            "latitude": 55.2518,
+            "longitude": 11.2879
+        },
+        {
+            "source": "tidewater",
+            "stationId": "20002",
+            "stationName": "Skagen Havn",
+            "latitude": 57.7165,
+            "longitude": 10.5951
+        },
+        {
+            "source": "tidewater",
+            "stationId": "21191",
+            "stationName": "Skive",
+            "latitude": 56.5701,
+            "longitude": 9.0519
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30042",
+            "stationName": "Sletten Havn, Humlebæk",
+            "latitude": 55.9534,
+            "longitude": 12.5353
+        },
+        {
+            "source": "tidewater",
+            "stationId": "28234",
+            "stationName": "Slipshavn",
+            "latitude": 55.2878,
+            "longitude": 10.8264
+        },
+        {
+            "source": "tidewater",
+            "stationId": "26473",
+            "stationName": "Sønderborg",
+            "latitude": 54.9107,
+            "longitude": 9.7853
+        },
+        {
+            "source": "tidewater",
+            "stationId": "25144",
+            "stationName": "Sønderho",
+            "latitude": 55.3478,
+            "longitude": 8.4749
+        },
+        {
+            "source": "tidewater",
+            "stationId": "28582",
+            "stationName": "Spodsbjerg",
+            "latitude": 54.9347,
+            "longitude": 10.8338
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31272",
+            "stationName": "Stege Havn",
+            "latitude": 54.9838,
+            "longitude": 12.2803
+        },
+        {
+            "source": "tidewater",
+            "stationId": "24053",
+            "stationName": "Struer",
+            "latitude": 56.4945,
+            "longitude": 8.5854
+        },
+        {
+            "source": "tidewater",
+            "stationId": "27000",
+            "stationName": "Svendborg Havn",
+            "latitude": 55.0604,
+            "longitude": 10.6214
+        },
+        {
+            "source": "tidewater",
+            "stationId": "32048",
+            "stationName": "Tejn",
+            "latitude": 55.249,
+            "longitude": 14.8368
+        },
+        {
+            "source": "tidewater",
+            "stationId": "21058",
+            "stationName": "Thisted",
+            "latitude": 56.9538,
+            "longitude": 8.6941
+        },
+        {
+            "source": "tidewater",
+            "stationId": "24122",
+            "stationName": "Thorsminde kyst",
+            "latitude": 56.3726,
+            "longitude": 8.1136
+        },
+        {
+            "source": "tidewater",
+            "stationId": "24006",
+            "stationName": "Thyborøn kyst",
+            "latitude": 56.7077,
+            "longitude": 8.2088
+        },
+        {
+            "source": "tidewater",
+            "stationId": "22009",
+            "stationName": "Udbyhøj",
+            "latitude": 56.607,
+            "longitude": 10.3016
+        },
+        {
+            "source": "tidewater",
+            "stationId": "30202",
+            "stationName": "Vedbæk",
+            "latitude": 55.8491,
+            "longitude": 12.5715
+        },
+        {
+            "source": "tidewater",
+            "stationId": "23259",
+            "stationName": "Vejle Havn",
+            "latitude": 55.7071,
+            "longitude": 9.5431
+        },
+        {
+            "source": "tidewater",
+            "stationId": "27014",
+            "stationName": "Vesterø Havn",
+            "latitude": 57.2961,
+            "longitude": 10.924
+        },
+        {
+            "source": "tidewater",
+            "stationId": "26361",
+            "stationName": "Højer/Vidåslusen",
+            "latitude": 54.9628,
+            "longitude": 8.6619
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31232",
+            "stationName": "Vordingborg Havn",
+            "latitude": 54.9967,
+            "longitude": 11.8868
+        },
+        {
+            "source": "tidewater",
+            "stationId": "31233",
+            "stationName": "Vordingborg Nordhavn",
+            "latitude": 55.004,
+            "longitude": 11.9167
+        }
+    ],
+    "met": [
+        {
+            "source": "met",
+            "stationId": "06019",
+            "stationName": "Silstrup",
+            "latitude": 56.93,
+            "longitude": 8.6412
+        },
+        {
+            "source": "met",
+            "stationId": "06030",
+            "stationName": "Flyvestation Ålborg",
+            "latitude": 57.0963,
+            "longitude": 9.8505
+        },
+        {
+            "source": "met",
+            "stationId": "06031",
+            "stationName": "Tylstrup",
+            "latitude": 57.1852,
+            "longitude": 9.9527
+        },
+        {
+            "source": "met",
+            "stationId": "06032",
+            "stationName": "Stenhøj",
+            "latitude": 57.3828,
+            "longitude": 10.3349
+        },
+        {
+            "source": "met",
+            "stationId": "06034",
+            "stationName": "Sindal Lufthavn",
+            "latitude": 57.5044,
+            "longitude": 10.2227
+        },
+        {
+            "source": "met",
+            "stationId": "06039",
+            "stationName": "Galten",
+            "latitude": 56.1618,
+            "longitude": 9.9033
+        },
+        {
+            "source": "met",
+            "stationId": "06041",
+            "stationName": "Skagen Fyr",
+            "latitude": 57.7364,
+            "longitude": 10.6316
+        },
+        {
+            "source": "met",
+            "stationId": "06049",
+            "stationName": "Hald Vest",
+            "latitude": 56.5604,
+            "longitude": 10.0929
+        },
+        {
+            "source": "met",
+            "stationId": "06051",
+            "stationName": "Vestervig",
+            "latitude": 56.7687,
+            "longitude": 8.3214
+        },
+        {
+            "source": "met",
+            "stationId": "06052",
+            "stationName": "Thyborøn",
+            "latitude": 56.7068,
+            "longitude": 8.215
+        },
+        {
+            "source": "met",
+            "stationId": "06073",
+            "stationName": "Sletterhage Fyr",
+            "latitude": 56.0955,
+            "longitude": 10.5135
+        },
+        {
+            "source": "met",
+            "stationId": "06056",
+            "stationName": "Mejrup",
+            "latitude": 56.383,
+            "longitude": 8.6705
+        },
+        {
+            "source": "met",
+            "stationId": "06058",
+            "stationName": "Hvide Sande",
+            "latitude": 56.0072,
+            "longitude": 8.1413
+        },
+        {
+            "source": "met",
+            "stationId": "06060",
+            "stationName": "Flyvestation Karup",
+            "latitude": 56.2934,
+            "longitude": 9.1139
+        },
+        {
+            "source": "met",
+            "stationId": "06065",
+            "stationName": "Års Syd",
+            "latitude": 56.7558,
+            "longitude": 9.5067
+        },
+        {
+            "source": "met",
+            "stationId": "06068",
+            "stationName": "Isenvad",
+            "latitude": 56.0939,
+            "longitude": 9.1811
+        },
+        {
+            "source": "met",
+            "stationId": "06069",
+            "stationName": "Foulum",
+            "latitude": 56.4931,
+            "longitude": 9.5709
+        },
+        {
+            "source": "met",
+            "stationId": "06070",
+            "stationName": "Århus Lufthavn",
+            "latitude": 56.3083,
+            "longitude": 10.6254
+        },
+        {
+            "source": "met",
+            "stationId": "06080",
+            "stationName": "Esbjerg Lufthavn",
+            "latitude": 55.5281,
+            "longitude": 8.5627
+        },
+        {
+            "source": "met",
+            "stationId": "06081",
+            "stationName": "Blåvandshuk Fyr",
+            "latitude": 55.5575,
+            "longitude": 8.0828
+        },
+        {
+            "source": "met",
+            "stationId": "06072",
+            "stationName": "Ødum",
+            "latitude": 56.3027,
+            "longitude": 10.1272
+        },
+        {
+            "source": "met",
+            "stationId": "06079",
+            "stationName": "Anholt Havn",
+            "latitude": 56.7169,
+            "longitude": 11.5098
+        },
+        {
+            "source": "met",
+            "stationId": "06082",
+            "stationName": "Borris",
+            "latitude": 55.9591,
+            "longitude": 8.6242
+        },
+        {
+            "source": "met",
+            "stationId": "06088",
+            "stationName": "Nordby",
+            "latitude": 55.4426,
+            "longitude": 8.3869
+        },
+        {
+            "source": "met",
+            "stationId": "06096",
+            "stationName": "Rømø/Juvre",
+            "latitude": 55.1904,
+            "longitude": 8.5599
+        },
+        {
+            "source": "met",
+            "stationId": "06102",
+            "stationName": "Bygholm Landbrugsskole",
+            "latitude": 55.8583,
+            "longitude": 9.7985
+        },
+        {
+            "source": "met",
+            "stationId": "06124",
+            "stationName": "Elvira Madigan Airport",
+            "latitude": 55.0144,
+            "longitude": 10.5693
+        },
+        {
+            "source": "met",
+            "stationId": "06104",
+            "stationName": "Billund Lufthavn",
+            "latitude": 55.7379,
+            "longitude": 9.1674
+        },
+        {
+            "source": "met",
+            "stationId": "06108",
+            "stationName": "Kolding Lufthavn",
+            "latitude": 55.4376,
+            "longitude": 9.3338
+        },
+        {
+            "source": "met",
+            "stationId": "06109",
+            "stationName": "Askov",
+            "latitude": 55.4715,
+            "longitude": 9.1124
+        },
+        {
+            "source": "met",
+            "stationId": "06110",
+            "stationName": "Flyvestation Skrydstrup",
+            "latitude": 55.2252,
+            "longitude": 9.2634
+        },
+        {
+            "source": "met",
+            "stationId": "06116",
+            "stationName": "Store Jyndevad",
+            "latitude": 54.8977,
+            "longitude": 9.1284
+        },
+        {
+            "source": "met",
+            "stationId": "06118",
+            "stationName": "Sønderborg Lufthavn",
+            "latitude": 54.9616,
+            "longitude": 9.793
+        },
+        {
+            "source": "met",
+            "stationId": "06119",
+            "stationName": "Kegnæs Fyr",
+            "latitude": 54.8527,
+            "longitude": 9.9881
+        },
+        {
+            "source": "met",
+            "stationId": "06120",
+            "stationName": "H. C. Andersen Airport",
+            "latitude": 55.4749,
+            "longitude": 10.3305
+        },
+        {
+            "source": "met",
+            "stationId": "06123",
+            "stationName": "Assens/Torø",
+            "latitude": 55.2444,
+            "longitude": 9.8882
+        },
+        {
+            "source": "met",
+            "stationId": "06126",
+            "stationName": "Årslev",
+            "latitude": 55.3088,
+            "longitude": 10.4398
+        },
+        {
+            "source": "met",
+            "stationId": "06132",
+            "stationName": "Tranebjerg Øst",
+            "latitude": 55.8315,
+            "longitude": 10.6217
+        },
+        {
+            "source": "met",
+            "stationId": "06134",
+            "stationName": "Tranebjerg Syd",
+            "latitude": 55.811,
+            "longitude": 10.5839
+        },
+        {
+            "source": "met",
+            "stationId": "06168",
+            "stationName": "Nakkehoved Fyr",
+            "latitude": 56.1193,
+            "longitude": 12.3424
+        },
+        {
+            "source": "met",
+            "stationId": "06135",
+            "stationName": "Flakkebjerg",
+            "latitude": 55.3224,
+            "longitude": 11.3879
+        },
+        {
+            "source": "met",
+            "stationId": "06136",
+            "stationName": "Tystofte",
+            "latitude": 55.2465,
+            "longitude": 11.3285
+        },
+        {
+            "source": "met",
+            "stationId": "06138",
+            "stationName": "Langø",
+            "latitude": 54.8205,
+            "longitude": 10.9939
+        },
+        {
+            "source": "met",
+            "stationId": "06141",
+            "stationName": "Abed",
+            "latitude": 54.8275,
+            "longitude": 11.3292
+        },
+        {
+            "source": "met",
+            "stationId": "06147",
+            "stationName": "Vindebæk Kyst",
+            "latitude": 54.879,
+            "longitude": 12.1841
+        },
+        {
+            "source": "met",
+            "stationId": "06149",
+            "stationName": "Gedser",
+            "latitude": 54.5687,
+            "longitude": 11.9435
+        },
+        {
+            "source": "met",
+            "stationId": "06151",
+            "stationName": "Omø Fyr",
+            "latitude": 55.1593,
+            "longitude": 11.1348
+        },
+        {
+            "source": "met",
+            "stationId": "06154",
+            "stationName": "Brandelev",
+            "latitude": 55.2075,
+            "longitude": 11.8605
+        },
+        {
+            "source": "met",
+            "stationId": "06156",
+            "stationName": "Holbæk Flyveplads",
+            "latitude": 55.7358,
+            "longitude": 11.6035
+        },
+        {
+            "source": "met",
+            "stationId": "06159",
+            "stationName": "Røsnæs Fyr",
+            "latitude": 55.7435,
+            "longitude": 10.8694
+        },
+        {
+            "source": "met",
+            "stationId": "06169",
+            "stationName": "Gniben",
+            "latitude": 56.0083,
+            "longitude": 11.2787
+        },
+        {
+            "source": "met",
+            "stationId": "06170",
+            "stationName": "Roskilde Lufthavn",
+            "latitude": 55.5868,
+            "longitude": 12.1363
+        },
+        {
+            "source": "met",
+            "stationId": "06174",
+            "stationName": "Tessebølle",
+            "latitude": 55.3955,
+            "longitude": 12.149
+        },
+        {
+            "source": "met",
+            "stationId": "06180",
+            "stationName": "Københavns Lufthavn",
+            "latitude": 55.614,
+            "longitude": 12.6454
+        },
+        {
+            "source": "met",
+            "stationId": "06181",
+            "stationName": "Jægersborg",
+            "latitude": 55.7664,
+            "longitude": 12.5263
+        },
+        {
+            "source": "met",
+            "stationId": "06183",
+            "stationName": "Drogden Fyr",
+            "latitude": 55.5364,
+            "longitude": 12.7114
+        },
+        {
+            "source": "met",
+            "stationId": "06186",
+            "stationName": "Landbohøjskolen",
+            "latitude": 55.6861,
+            "longitude": 12.5439
+        },
+        {
+            "source": "met",
+            "stationId": "06187",
+            "stationName": "Københavns Toldbod",
+            "latitude": 55.6886,
+            "longitude": 12.5985
+        },
+        {
+            "source": "met",
+            "stationId": "06188",
+            "stationName": "Sjælsmark",
+            "latitude": 55.8764,
+            "longitude": 12.4121
+        },
+        {
+            "source": "met",
+            "stationId": "06190",
+            "stationName": "Bornholms Lufthavn",
+            "latitude": 55.0677,
+            "longitude": 14.7494
+        },
+        {
+            "source": "met",
+            "stationId": "06193",
+            "stationName": "Hammer Odde Fyr",
+            "latitude": 55.2979,
+            "longitude": 14.7718
+        },
+        {
+            "source": "met",
+            "stationId": "06197",
+            "stationName": "Nexø Vest",
+            "latitude": 55.0557,
+            "longitude": 15.0953
+        }
+    ]
+}

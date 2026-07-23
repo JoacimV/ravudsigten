@@ -2,36 +2,10 @@ import { along } from "@turf/along";
 import { multiPolygon, point, lineString } from "@turf/helpers";
 import { featureCollection } from "@turf/helpers";
 import { lineSplit } from "@turf/line-split";
-import { bboxPolygon } from "@turf/bbox-polygon";
 import { booleanPointOnLine } from "@turf/boolean-point-on-line";
 import { nearestPointOnLine } from "@turf/nearest-point-on-line";
-import { booleanOverlap } from "@turf/boolean-overlap";
 import { length } from "@turf/length";
-import dk from "./resources/geojson/denmark-coastal-line.json";
-import municipalities from "./resources/geojson/municipalities.json";
-
-
-export const findNearestMunicipality = (position) => {
-    // Create a bounding box around the position
-    const dist = 0.02; // 2 km
-    const bbox = new bboxPolygon([
-        position.lng - dist,
-        position.lat - dist,
-        position.lng + dist,
-        position.lat + dist
-    ]);
-    const geojson = multiPolygon(municipalities)
-    let nearest;
-    // Find the nearest municipality to the position
-    for (const municipality of geojson.geometry.coordinates.features) {
-        // Check if the position is inside the municipality
-        const overlaps = booleanOverlap(municipality, bbox);
-        if (overlaps) {
-            nearest = municipality.properties
-        }
-    }
-    return nearest;
-}
+import dk from "./resources/geojson/denmark-coastal-line.json" with { type: "json" };
 
 export const findNearestCoastline = (position) => {
     const p = point([position.lng, position.lat]);
@@ -124,7 +98,6 @@ export const pointsAlongGeoJson = (geoJson, distanceKm = 1) => {
             }
         }
     }
-
     return featureCollection(points);
 };
 

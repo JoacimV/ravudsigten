@@ -1,16 +1,14 @@
-import { MapContainer, TileLayer, useMapEvent, Marker, Rectangle, GeoJSON, Popup } from "react-leaflet";
+import { MapContainer, TileLayer, useMapEvent, Marker, Popup, GeoJSON } from "react-leaflet";
 import { findNearestCoastline, findNearestMetStation, findNearestTideStation } from "../functions";
-import React, { useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Icon } from 'leaflet'
 import L from "leaflet";
 import "leaflet.heat";
 import HeatLayer from "./HeatLayer";
-import dk from "../resources/geojson/denmark-coastal-line.json"
-import municipalities from "../resources/geojson/municipalities.json"
-import points from "../one-off/coast-points-enriched-quarter.json"
+import dk from "../resources/geojson/test1.json"
 import logo from "../resources/images/marker.svg"
-
-const minZoom = 7, maxZoom = 14;
+const minZoom = 1, maxZoom = 14;
+const OBSERVATIONS_BASE_URL = "https://dswx6vubccbkr.cloudfront.net/raw";
 
 
 const tidewaterStationIcon = L.divIcon({
@@ -134,33 +132,136 @@ const selectedStationIcon = L.divIcon({
     popupAnchor: [0, -18],
 });
 
-
-export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestPoint, setNearestNextPoint, bbox, debug, stations = [] }) {
+export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestPoint, setNearestNextPoint, debug, stations = [], onNearestStationObservationsChange }) {
     const [clickedPosition, setClickedPosition] = useState(undefined)
     const [splitLine, setSplitLine] = useState(undefined)
     const [splitLine2, setSplitLine2] = useState(undefined)
     const [nearestMetStation, setNearestMetStation] = useState(undefined)
     const [nearestTideStation, setNearestTideStation] = useState(undefined)
-    const [debugWindDirection, setDebugWindDirection] = useState("270")
     const [isSatellite, setIsSatellite] = useState(true)
+    const observationRequestIdRef = useRef(0)
+    const [points, setPoints] = useState([]);
 
-    const parsedDebugWindDirection = Number(debugWindDirection)
-    const hasValidWindDirection = Number.isFinite(parsedDebugWindDirection)
-
-    const calculateIsOnshore = (coastlineAzimuth, windDirection) => {
-        const normalizeDegrees = (degrees) => {
-            const normalized = degrees % 360
-            return normalized < 0 ? normalized + 360 : normalized
+    useEffect(() => {
+        const fetchPoints = async () => {
+            const response = await fetch("https://dswx6vubccbkr.cloudfront.net/enriched/coast-points.json");
+            const data = await response.json();
+            const points = data.map(point => ({
+                lat: point.latitude,
+                lng: point.longitude,
+                intensity: point.score * 100,
+                stationId: point.metStation,
+                azimuth: point.azimuth,
+                id: point.id,
+            }));
+            setPoints(points);
         }
-
-        const angularDifference = (a, b) => {
-            const diff = Math.abs(normalizeDegrees(a) - normalizeDegrees(b))
-            return diff > 180 ? 360 - diff : diff
+        fetchPoints();
+    }, []);
+    const mapMetObservation = (feature) => {
+        const props = feature?.properties ?? {}
+        const value = Number(props.value)
+        return {
+            timestamp: props.observed,
+            observed: props.observed,
+            windSpeed: props.parameterId === 'wind_max' && Number.isFinite(value) ? value : undefined,
+            windDirection: props.parameterId === 'wind_dir' && Number.isFinite(value) ? value : undefined,
         }
-
-        const onshoreCenter = normalizeDegrees(coastlineAzimuth - 90)
-        return angularDifference(windDirection, onshoreCenter) <= 60
     }
+
+    const mapTideObservation = (feature) => {
+        const props = feature?.properties ?? {}
+        const value = Number(props.value)
+
+        return {
+            timestamp: props.predictionTime,
+            observed: props.created,
+            tideHeight: Number.isFinite(value) ? value : undefined,
+        }
+    }
+
+    const fetchNearestStationObservations = async (metStation, tidewaterStation) => {
+        const requestId = observationRequestIdRef.current + 1
+        observationRequestIdRef.current = requestId
+
+        onNearestStationObservationsChange?.({
+            metStation,
+            tidewaterStation,
+            met: {
+                loading: !!metStation,
+                error: undefined,
+                observations: [],
+            },
+            tidewater: {
+                loading: !!tidewaterStation,
+                error: undefined,
+                observations: [],
+            },
+        })
+
+        const fetchState = async (station, source, parameter) => {
+            if (!station?.stationId) {
+                return {
+                    loading: false,
+                    error: undefined,
+                    observations: [],
+                }
+            }
+
+            try {
+                const response = await fetch(`${OBSERVATIONS_BASE_URL}/${station.stationId}/${parameter ? `report_${parameter}` : 'report'}.json`)
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`)
+                }
+
+                const payload = await response.json()
+                const features = Array.isArray(payload?.features) ? payload.features : []
+                const observations = source === 'met'
+                    ? features.map(mapMetObservation)
+                    : features.map(mapTideObservation)
+                return {
+                    loading: false,
+                    error: undefined,
+                    observations,
+                }
+            } catch {
+                return {
+                    loading: false,
+                    error: `Kunne ikke hente observationer (${source})`,
+                    observations: [],
+                }
+            }
+        }
+
+        const [metWindSpeed, metWindDir, tidewaterState] = await Promise.all([
+            fetchState(metStation, 'met', 'wind_max'),
+            fetchState(metStation, 'met', 'wind_dir'),
+            fetchState(tidewaterStation, 'tidewater'),
+        ])
+        if (observationRequestIdRef.current !== requestId) {
+            return
+        }
+
+        const windSpeed = metWindSpeed.observations.filter(obs => {
+            const observedDate = new Date(obs.observed);
+            return observedDate.getMinutes() === 0;
+        })
+        const windDir = metWindDir.observations.filter(obs => {
+            const observedDate = new Date(obs.observed);
+            return observedDate.getMinutes() === 0;
+        })
+        onNearestStationObservationsChange?.({
+            metStation,
+            tidewaterStation,
+            met: {
+                windSpeed: windSpeed.map(obs => ({ observed: obs.observed, windSpeed: obs.windSpeed })),
+                windDir: windDir.map(obs => ({ observed: obs.observed, windDirection: obs.windDirection })),
+            },
+            tidewater: tidewaterState,
+        })
+    }
+
 
     const mapLayerUrl = isSatellite
         ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
@@ -189,73 +290,6 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
             >
                 {isSatellite ? "Standard 🗺️" : "Satellit 🛰️"}
             </button>
-
-            {debug ? (
-                <div
-                    style={{
-                        position: "absolute",
-                        top: 12,
-                        right: 12,
-                        zIndex: 1000,
-                        background: "rgba(0, 0, 0, 0.75)",
-                        color: "#fff",
-                        padding: "8px 10px",
-                        borderRadius: 8,
-                        border: "1px solid rgba(255,255,255,0.2)",
-                        minWidth: 180,
-                    }}
-                >
-                    <div style={{ fontSize: 12, marginBottom: 6 }}>Debug wind direction</div>
-                    <input
-                        type="number"
-                        min="0"
-                        max="360"
-                        value={debugWindDirection}
-                        onChange={(e) => setDebugWindDirection(e.target.value)}
-                        placeholder="0-360"
-                        style={{ width: "100%", padding: "4px 6px" }}
-                    />
-                    <div
-                        style={{
-                            marginTop: 8,
-                            display: "flex",
-                            alignItems: "center",
-                            gap: 10,
-                        }}
-                    >
-                        <div
-                            style={{
-                                width: 34,
-                                height: 34,
-                                borderRadius: "50%",
-                                border: "1px solid rgba(255,255,255,0.35)",
-                                display: "flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                            }}
-                        >
-                            <span
-                                style={{
-                                    display: "inline-flex",
-                                    transform: `rotate(${hasValidWindDirection ? parsedDebugWindDirection : 0}deg)`,
-                                    transformOrigin: "center center",
-                                    transition: "transform 0.15s linear",
-                                    lineHeight: 1,
-                                }}
-                                title="Wind direction arrow"
-                            >
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: 20, height: 20 }}>
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
-                                </svg>
-                            </span>
-                        </div>
-                        <div style={{ fontSize: 12, opacity: 0.9 }}>
-                            {hasValidWindDirection ? `${parsedDebugWindDirection}deg` : "N/A"}
-                        </div>
-                    </div>
-                </div>
-            ) : null}
-
             <MapContainer style={{ height: "100vh", width: "100%" }} center={[56.0, 11.0]} zoom={8}>
                 <TileLayer url={mapLayerUrl} attributionControl={false} maxZoom={maxZoom} minZoom={minZoom} />
                 <MovingMarker
@@ -263,7 +297,8 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                     setClickedPosition={(latlng) => {
                         setClickedPosition(latlng)
                         const closestMetStation = findNearestMetStation(latlng, stations)
-                        const closestTideStation = findNearestTideStation(latlng, stations)         
+                        const closestTideStation = findNearestTideStation(latlng, stations)
+                        fetchNearestStationObservations(closestMetStation, closestTideStation)
                         setNearestMetStation(closestMetStation)
                         setNearestTideStation(closestTideStation)
                     }}
@@ -273,107 +308,69 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                     setSplitLine={setSplitLine}
                     setSplitLine2={setSplitLine2}
                 />
-                {debug ?
-                    <>
-                        <HeatLayer minZoom={minZoom} maxZoom={maxZoom} />
-                        <Marker opacity={.5} position={nearestPoint} />
-                        <Marker opacity={1} position={nearestNextPoint} />
-                        <GeoJSON data={dk} style={{ color: 'black' }} />
-                        <GeoJSON data={municipalities} />
-                        <GeoJSON data={splitLine} style={{ color: 'red' }} />
-                        <GeoJSON data={splitLine2} style={{ color: 'green' }} />
-                        {/* <GeoJSON data={pointsAlongGeoJson(dk, .4)} style={{ color: 'blue' }} /> */}
-                        <GeoJSON
-                            key={`debug-points-${debugWindDirection}`}
-                            data={{
-                                type: "FeatureCollection",
-                                features: points.map(point => ({
-                                    type: "Feature",
-                                    properties: {
-                                        id: point.id,
-                                        latitude: point.latitude,
-                                        longitude: point.longitude,
-                                        azimuth: point.azimuth,
-                                        municipality: point.municipalityId?.Name,
-                                    },
-                                    geometry: {
-                                        type: "Point",
-                                        coordinates: [point.longitude, point.latitude]
-                                    }
-                                }))
-                            }}
-                            pointToLayer={(_, latlng) => L.circleMarker(latlng, {
-                                radius: 4,
-                                color: "#ff5500",
-                                weight: 1,
-                                fillOpacity: 0.9,
-                                interactive: true,
-                                pane: "markerPane",
-                            })}
-                            onEachFeature={(feature, layer) => {
-                                const props = feature?.properties || {};
-                                const windStatus = hasValidWindDirection
-                                    ? (calculateIsOnshore(Number(props.azimuth), parsedDebugWindDirection) ? "Onshore" : "Offshore")
-                                    : "N/A";
-                                const tooltip = [
-                                    `ID: ${props.id ?? "N/A"}`,
-                                    `Lat: ${Number(props.latitude).toFixed(5)}`,
-                                    `Lng: ${Number(props.longitude).toFixed(5)}`,
-                                    `Azimuth: ${Number(props.azimuth).toFixed(2)}`,
-                                    `Azimuth dir: <span style="display:inline-block;transform:rotate(${Number(props.azimuth).toFixed(2)}deg);transform-origin:center;">&#8593;</span>`,
-                                    `Municipality: ${props.municipality ?? "N/A"}`,
-                                    `Wind direction: ${hasValidWindDirection ? parsedDebugWindDirection : "N/A"}`,
-                                    `Wind relation: ${windStatus}`,
-                                ].join("<br />");
-                                layer.bindTooltip(tooltip, {
-                                    sticky: true,
-                                    direction: "top",
-                                    opacity: 0.95,
-                                });
-                                layer.on({
-                                    mouseover: () => layer.openTooltip(),
-                                    mouseout: () => layer.closeTooltip(),
-                                });
-                            }}
-                        />
+                <HeatLayer minZoom={minZoom} maxZoom={maxZoom} points={points} />
+                {
+                    debug ?
+                        <>
+                            <Marker opacity={.5} position={nearestPoint} >
+                                <Popup>
+                                    <div style={{ minWidth: 160 }}>
+                                        <div style={{ fontWeight: 700, marginBottom: 4 }}>Nearest coastline point</div>
+                                        <div style={{ fontSize: 12, opacity: 0.8 }}>Lat: {nearestPoint.lat}</div>
+                                        <div style={{ fontSize: 12, opacity: 0.8 }}>Lng: {nearestPoint.lng}</div>
+                                    </div>
+                                </Popup>
+                            </Marker>
+                            <Marker opacity={.5} position={nearestNextPoint} >
+                                <Popup>
+                                    <div style={{ minWidth: 160 }}>
+                                        <div style={{ fontWeight: 700, marginBottom: 4 }}>Nearest next coastline point</div>
+                                        <div style={{ fontSize: 12, opacity: 0.8 }}>Lat: {nearestNextPoint.lat}</div>
+                                        <div style={{ fontSize: 12, opacity: 0.8 }}>Lng: {nearestNextPoint.lng}</div>
+                                    </div>
+                                </Popup>
+                            </Marker>
 
-                        <Rectangle bounds={[[bbox[1], bbox[0]], [bbox[3], bbox[2]]]} pathOptions={{ color: 'white' }} />
-                        {stations
-                            .filter((station) => Number.isFinite(Number(station?.latitude)) && Number.isFinite(Number(station?.longitude)))
-                            .map((station) => {
-                                const isNearestMet = nearestMetStation?.stationName === station.stationName
-                                const isNearestTide = nearestTideStation?.stationName === station.stationName
+                            <Marker opacity={1} position={nearestNextPoint} style={{ color: 'white' }} />
+                            <GeoJSON data={dk} style={{ color: 'white' }} />
+                            <GeoJSON data={splitLine} style={{ color: 'red' }} />
+                            <GeoJSON data={splitLine2} style={{ color: 'green' }} />
+                            {/* <GeoJSON data={pointsAlongGeoJson(dk, .25)} style={{ color: 'blue' }} /> */}
+                            {stations
+                                .filter((station) => Number.isFinite(Number(station?.latitude)) && Number.isFinite(Number(station?.longitude)))
+                                .map((station) => {
+                                    const isNearestMet = nearestMetStation?.stationName === station.stationName
+                                    const isNearestTide = nearestTideStation?.stationName === station.stationName
 
-                                return (
-                                    <Marker
-                                        key={station.pk}
-                                        position={[Number(station.latitude), Number(station.longitude)]}
-                                        icon={isNearestMet || isNearestTide ? selectedStationIcon : getStationIcon(station.source)}
-                                    >
-                                        <Popup>
-                                            <div style={{ minWidth: 160 }}>
-                                                <div style={{ fontWeight: 700, marginBottom: 4 }}>{station.stationName}</div>
-                                                <div style={{ fontSize: 12, opacity: 0.8 }}>{station.source} station</div>
-                                                <div style={{ fontSize: 12, marginTop: 4 }}>ID: {station.stationId}</div>
-                                                {isNearestMet ? (
-                                                    <div style={{ fontSize: 12, marginTop: 4 }}>
-                                                        Nearest met: {nearestMetStation.distanceKm.toFixed(2)} km
-                                                    </div>
-                                                ) : null}
-                                                {isNearestTide ? (
-                                                    <div style={{ fontSize: 12, marginTop: 4 }}>
-                                                        Nearest tidewater: {nearestTideStation.distanceKm.toFixed(2)} km
-                                                    </div>
-                                                ) : null}
-                                            </div>
-                                        </Popup>
-                                    </Marker>
-                                )
-                            })}
-                    </>
-                    : null}
-
+                                    return (
+                                        <Marker
+                                            key={station.pk}
+                                            position={[Number(station.latitude), Number(station.longitude)]}
+                                            icon={isNearestMet || isNearestTide ? selectedStationIcon : getStationIcon(station.source)}
+                                        >
+                                            <Popup>
+                                                <div style={{ minWidth: 160 }}>
+                                                    <div style={{ fontWeight: 700, marginBottom: 4 }}>{station.stationName}</div>
+                                                    <div style={{ fontSize: 12, opacity: 0.8 }}>{station.source} station</div>
+                                                    <div style={{ fontSize: 12, marginTop: 4 }}>ID: {station.stationId}</div>
+                                                    {isNearestMet ? (
+                                                        <div style={{ fontSize: 12, marginTop: 4 }}>
+                                                            Nearest met: {nearestMetStation.distanceKm.toFixed(2)} km
+                                                        </div>
+                                                    ) : null}
+                                                    {isNearestTide ? (
+                                                        <div style={{ fontSize: 12, marginTop: 4 }}>
+                                                            Nearest tidewater: {nearestTideStation.distanceKm.toFixed(2)} km
+                                                        </div>
+                                                    ) : null}
+                                                </div>
+                                            </Popup>
+                                        </Marker>
+                                    )
+                                })
+                            }
+                        </> : null}
             </MapContainer>
-        </div>
+        </div >
     )
 }
