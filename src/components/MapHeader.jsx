@@ -29,7 +29,7 @@ const MapHeader = () => {
 
             <header className="map-header-container">
                 <div
-                    className="box p-2 px-4"
+                    className="box"
                     style={{
                         backgroundColor: 'rgba(17, 24, 39, 0.75)',
                         backdropFilter: 'blur(8px)',
@@ -37,16 +37,27 @@ const MapHeader = () => {
                         border: '1px solid rgba(255, 255, 255, 0.12)',
                         boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)',
                         borderRadius: '10px',
+                        padding: '0.45rem 0.7rem 0.45rem 0.55rem',
                     }}
                 >
-                    <div className="is-flex is-align-items-center" style={{ gap: '0.5rem' }}>
+                    <div className="is-flex is-align-items-center" style={{ gap: '0.35rem' }}>
                         {/* Ikon */}
-                        <div className="is-flex is-align-items-center is-justify-content-center">
+                        <div
+                            className="is-flex is-align-items-center is-justify-content-center"
+                            style={{
+                                width: 'clamp(32px, 8vw, 44px)',
+                                height: 'clamp(32px, 8vw, 44px)',
+                                overflow: 'hidden',
+                                flexShrink: 0,
+                            }}
+                        >
                             <img src={AmberIcon} alt="Amber Icon"
                                 style={{
-                                    width: 'clamp(42px, 9vw, 55px)',
-                                    height: 'clamp(42px, 9vw, 55px)',
-                                    objectFit: 'contain',
+                                    width: '100%',
+                                    height: '100%',
+                                    objectFit: 'cover',
+                                    objectPosition: 'center 45%',
+                                    transform: 'scale(1.04)',
                                     filter: 'drop-shadow(0px 4px 6px rgba(0, 0, 0, 0.4))',
                                 }}
                             />
