@@ -1,7 +1,15 @@
 import React, { useEffect, useState } from "react";
 
+const MAP_GUIDE_SEEN_STORAGE_KEY = "amberFinder.mapGuideSeen"
+
 export default function MapGuideControl() {
-    const [isGuideOpen, setIsGuideOpen] = useState(false)
+    const [isGuideOpen, setIsGuideOpen] = useState(() => {
+        if (typeof window === "undefined") {
+            return false
+        }
+
+        return window.localStorage.getItem(MAP_GUIDE_SEEN_STORAGE_KEY) !== "true"
+    })
     const [isNarrowViewport, setIsNarrowViewport] = useState(false)
 
     useEffect(() => {
@@ -19,6 +27,12 @@ export default function MapGuideControl() {
         }
     }, [])
 
+    useEffect(() => {
+        if (isGuideOpen) {
+            window.localStorage.setItem(MAP_GUIDE_SEEN_STORAGE_KEY, "true")
+        }
+    }, [isGuideOpen])
+
     const controlButtonStyle = {
         border: "1px solid rgba(255,255,255,0.35)",
         background: "rgba(0, 0, 0, 0.7)",
@@ -30,7 +44,6 @@ export default function MapGuideControl() {
         fontWeight: 600,
         backdropFilter: "blur(10px)",
         boxShadow: "0 10px 24px rgba(0,0,0,0.22)",
-        width: 124,
     }
 
     return (
@@ -52,7 +65,7 @@ export default function MapGuideControl() {
             <div
                 style={{
                     position: "absolute",
-                    top: 56,
+                    top: 12,
                     right: 12,
                     zIndex: 1000,
                     display: "flex",
@@ -76,8 +89,8 @@ export default function MapGuideControl() {
                     }}
                     title="Sådan bruger du kortet"
                 >
-                    <span>{isGuideOpen ? "Luk guide" : "Guide"}</span>
-                    <span
+                    <span>{isGuideOpen ? "❌" : "❔"}</span>
+                    {/* <span
                         aria-hidden="true"
                         style={{
                             display: "inline-block",
@@ -86,7 +99,7 @@ export default function MapGuideControl() {
                         }}
                     >
                         ▾
-                    </span>
+                    </span> */}
                 </button>
                 <div
                     id="map-guide-card"
@@ -122,7 +135,7 @@ export default function MapGuideControl() {
                             Heatmap-overlayet markerer områder, hvor forholdene kan være gode til at finde rav.
                         </div>
                         <div style={{ marginTop: 12, fontSize: 12, opacity: 0.72 }}>
-                            Tip: skift mellem standardkort og satellitvisning for at sammenligne kystlinje og hotspots.
+                            Tip: skift mellem standardkort og satellitvisning for at sammenligne kystlinje og hotspots 🗺️.
                         </div>
                     </div>
                 </div>

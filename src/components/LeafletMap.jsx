@@ -10,6 +10,7 @@ import dk from "../resources/geojson/test1.json"
 import logo from "../resources/images/marker.svg"
 const minZoom = 1, maxZoom = 14;
 const OBSERVATIONS_BASE_URL = "https://dswx6vubccbkr.cloudfront.net/raw";
+const MAP_LAYER_STORAGE_KEY = "amberFinder.mapLayer"
 
 
 const tidewaterStationIcon = L.divIcon({
@@ -139,9 +140,25 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
     const [splitLine2, setSplitLine2] = useState(undefined)
     const [nearestMetStation, setNearestMetStation] = useState(undefined)
     const [nearestTideStation, setNearestTideStation] = useState(undefined)
-    const [isSatellite, setIsSatellite] = useState(true)
+    const [isSatellite, setIsSatellite] = useState(() => {
+        if (typeof window === "undefined") {
+            return true
+        }
+
+        const storedMapLayer = window.localStorage.getItem(MAP_LAYER_STORAGE_KEY)
+
+        if (storedMapLayer === "standard") {
+            return false
+        }
+
+        return true
+    })
     const observationRequestIdRef = useRef(0)
     const [points, setPoints] = useState([]);
+
+    useEffect(() => {
+        window.localStorage.setItem(MAP_LAYER_STORAGE_KEY, isSatellite ? "satellite" : "standard")
+    }, [isSatellite])
 
     useEffect(() => {
         const fetchPoints = async () => {
@@ -282,7 +299,7 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                 onClick={() => setIsSatellite((prev) => !prev)}
                 style={{
                     position: "absolute",
-                    top: 12,
+                    bottom: 12,
                     right: 12,
                     zIndex: 1000,
                     border: "1px solid rgba(255,255,255,0.35)",
@@ -295,15 +312,15 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                     fontWeight: 600,
                     backdropFilter: "blur(10px)",
                     boxShadow: "0 10px 24px rgba(0,0,0,0.22)",
-                    width: 124,
+
                 }}
                 title="Skift kortlag"
             >
-                {isSatellite ? "Standard 🗺️" : "Satellit 🛰️"}
+                {isSatellite ? "🗺️" : "🛰️"}
             </button>
             <MapGuideControl />
-            <MapContainer style={{ height: "100vh", width: "100%" }} center={[56.0, 11.0]} zoom={8}>
-                <TileLayer url={mapLayerUrl} attributionControl={false} maxZoom={maxZoom} minZoom={minZoom} />
+            <MapContainer attributionControl={false} style={{ height: "100vh", width: "100%" }} center={[56.0, 11.0]} zoom={8} >
+                <TileLayer url={mapLayerUrl} maxZoom={maxZoom} minZoom={minZoom} />
                 <MovingMarker
                     clickedPosition={clickedPosition}
                     setClickedPosition={(latlng) => {
