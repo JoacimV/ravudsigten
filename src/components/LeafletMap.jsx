@@ -8,6 +8,7 @@ import HeatLayer from "./HeatLayer";
 import MapGuideControl from "./MapGuideControl";
 import dk from "../resources/geojson/test1.json"
 import logo from "../resources/images/marker.svg"
+import MapHeader from "./MapHeader"
 const minZoom = 1, maxZoom = 14;
 const OBSERVATIONS_BASE_URL = "https://dswx6vubccbkr.cloudfront.net/raw";
 const MAP_LAYER_STORAGE_KEY = "amberFinder.mapLayer"
@@ -294,6 +295,7 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
 
     return (
         <div style={{ position: "relative" }}>
+            <MapHeader />
             <button
                 type="button"
                 onClick={() => setIsSatellite((prev) => !prev)}
