@@ -301,9 +301,9 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                 onClick={() => setIsSatellite((prev) => !prev)}
                 style={{
                     position: "absolute",
-                    bottom: 12,
-                    right: 12,
-                    zIndex: 1000,
+                    top: 12,
+                    right: 64,
+                    zIndex: 1001,
                     border: "1px solid rgba(255,255,255,0.35)",
                     background: "rgba(0, 0, 0, 0.7)",
                     color: "#fff",
