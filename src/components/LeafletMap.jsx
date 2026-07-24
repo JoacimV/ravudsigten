@@ -144,16 +144,22 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
 
     useEffect(() => {
         const fetchPoints = async () => {
-            const response = await fetch("https://dswx6vubccbkr.cloudfront.net/enriched/coast-points.json");
+
+            const response = await fetch("https://dswx6vubccbkr.cloudfront.net/enriched/coast-points-simple.json");
             const data = await response.json();
-            const points = data.map(point => ({
-                lat: point.latitude,
-                lng: point.longitude,
-                intensity: point.score * 100,
-                stationId: point.metStation,
-                azimuth: point.azimuth,
-                id: point.id,
-            }));
+            const points = [];
+
+            for (const point of data) {
+                const intensity = point[0] * 100; // Assuming the first element is the intensity
+                if (intensity > 60) {
+                    points.push({
+                        intensity: intensity,
+                        stationId: point[1],
+                        lat: point[3],
+                        lng: point[2],
+                    })
+                }
+            }
             setPoints(points);
         }
         fetchPoints();

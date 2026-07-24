@@ -11,9 +11,7 @@ export default function HeatLayer({ minZoom, maxZoom, points }) {
 
 
     useEffect(() => {
-        //Remove points with intensity lower than 60
-        const filteredPoints = points.filter(point => point.intensity >= 60);
-        const layer = L.heatLayer(filteredPoints.map(point => [point.lat, point.lng, point.intensity]), {
+        const layer = L.heatLayer(points.map(point => [point.lat, point.lng, point.intensity]), {
             radius: 12,
             blur: 15,
             minZoom,
