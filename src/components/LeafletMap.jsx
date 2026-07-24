@@ -5,6 +5,7 @@ import { Icon } from 'leaflet'
 import L from "leaflet";
 import "leaflet.heat";
 import HeatLayer from "./HeatLayer";
+import MapGuideControl from "./MapGuideControl";
 import dk from "../resources/geojson/test1.json"
 import logo from "../resources/images/marker.svg"
 const minZoom = 1, maxZoom = 14;
@@ -164,6 +165,7 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
         }
         fetchPoints();
     }, []);
+
     const mapMetObservation = (feature) => {
         const props = feature?.properties ?? {}
         const value = Number(props.value)
@@ -291,11 +293,15 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                     cursor: "pointer",
                     fontSize: 12,
                     fontWeight: 600,
+                    backdropFilter: "blur(10px)",
+                    boxShadow: "0 10px 24px rgba(0,0,0,0.22)",
+                    width: 124,
                 }}
                 title="Skift kortlag"
             >
                 {isSatellite ? "Standard 🗺️" : "Satellit 🛰️"}
             </button>
+            <MapGuideControl />
             <MapContainer style={{ height: "100vh", width: "100%" }} center={[56.0, 11.0]} zoom={8}>
                 <TileLayer url={mapLayerUrl} attributionControl={false} maxZoom={maxZoom} minZoom={minZoom} />
                 <MovingMarker
