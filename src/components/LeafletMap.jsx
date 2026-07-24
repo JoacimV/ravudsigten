@@ -321,7 +321,7 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                 {isSatellite ? "🗺️" : "🛰️"}
             </button>
             <MapGuideControl />
-            <MapContainer attributionControl={false} style={{ height: "100vh", width: "100%" }} center={[56.0, 11.0]} zoom={8} >
+            <MapContainer attributionControl={false} style={{ height: "100vh", width: "100%" }} center={[56.0, 11.0]} zoom={7} >
                 <TileLayer url={mapLayerUrl} maxZoom={maxZoom} minZoom={minZoom} />
                 <MovingMarker
                     clickedPosition={clickedPosition}
