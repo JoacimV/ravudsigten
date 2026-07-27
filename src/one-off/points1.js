@@ -1,8 +1,8 @@
-import coastLines from "./test1.json" with { type: "json" };
+import coastLines from "../resources/geojson/test1.json" with { type: "json" };
 import landGeoJSON from "./land.json" with { type: "json" };
 import Flatbush from 'flatbush';
 import * as turf from '@turf/turf';
-import points from "./coast_points.json" with { type: "json" };
+import points from "./coast_locations.json" with { type: "json" };
 import fs from "fs";
 import stations from "./stations.json" with { type: "json" };
 
@@ -102,17 +102,19 @@ function isPointInLand(point, landGeoJSON) {
 // 3. SKUDSIKKER BEREGNING AF KYSTAZIMUTH OG OCEAN NORMAL
 // ==========================================
 export function getCoastlineData(targetPoint, coastlinesGeoJSON, coastlineIndex, landGeoJSON) {
-    const [lon, lat] = targetPoint.geometry.coordinates;
-
+    // console.log(targetPoint)
+    const { lng, lat } = targetPoint;
+    // console.log(`Beregner kystdata for punkt: ${lng}, ${lat}`);
+    const p = turf.point([lng, lat]);
     // A. Find de 5 nærmeste bounding boxes via Flatbush
-    const candidateIndices = coastlineIndex.neighbors(lon, lat, 5);
+    const candidateIndices = coastlineIndex.neighbors(lng, lat, 5);
 
     let minDistance = Infinity;
     let nearestFeature = null;
 
     for (const idx of candidateIndices) {
         const feature = coastlinesGeoJSON.features[idx];
-        const dist = turf.pointToLineDistance(targetPoint, feature, { units: 'kilometers' });
+        const dist = turf.pointToLineDistance(p, feature, { units: 'kilometers' });
         if (dist < minDistance) {
             minDistance = dist;
             nearestFeature = feature;
@@ -122,7 +124,7 @@ export function getCoastlineData(targetPoint, coastlinesGeoJSON, coastlineIndex,
     if (!nearestFeature) return null;
 
     // B. Snap punktet til kystlinjen
-    const snappedPoint = turf.nearestPointOnLine(nearestFeature, targetPoint);
+    const snappedPoint = turf.nearestPointOnLine(nearestFeature, p);
     const coords = nearestFeature.geometry.coordinates;
     let segmentIndex = snappedPoint.properties.index;
 
@@ -186,7 +188,11 @@ for (const point of points) {
             longitude: coastData.snappedCoordinates[0],
             latitude: coastData.snappedCoordinates[1],
             azimuth: coastData.oceanNormal,
-            metStation: findNearestStation({ lat: coastData.snappedCoordinates[1], lng: coastData.snappedCoordinates[0] }, stations.met, "met").stationId
+            metStation: findNearestStation({ lat: coastData.snappedCoordinates[1], lng: coastData.snappedCoordinates[0] }, stations.met, "met").stationId,
+            strand: point.strand,
+            strandDistance: point.strandDistance,
+            by: point.by,
+            byDistance: point.byDistance
         });
     } else {
         console.log(`Ingen kystdata fundet for punkt: ${point.geometry.coordinates}`);
