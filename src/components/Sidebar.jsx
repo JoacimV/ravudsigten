@@ -3,8 +3,10 @@ import { DateTime } from 'luxon';
 
 export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestStationObservations, onOutsideClose }) {
     const sidebarRef = useRef(null);
+    const sidebarAnimationRef = useRef(null);
     const pointerDownRef = useRef(null);
     const draggedSincePointerDownRef = useRef(false);
+    const [isRendered, setIsRendered] = useState(sidebarOpen);
     const [matches, setMatches] = useState(
         window.matchMedia("(min-width: 768px)").matches
     );
@@ -113,33 +115,55 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
     }, []);
 
     useEffect(() => {
-        if (!sidebarOpen || !sidebarRef.current) {
+        if (sidebarOpen && !isRendered) {
+            setIsRendered(true);
+            return;
+        }
+
+        if (!isRendered || !sidebarRef.current) {
             return;
         }
 
         const prefersReducedMotion = typeof window !== 'undefined'
             && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+        sidebarAnimationRef.current?.cancel();
+
         if (prefersReducedMotion || typeof sidebarRef.current.animate !== 'function') {
+            if (!sidebarOpen) {
+                setIsRendered(false);
+            }
             return;
         }
 
-        const animation = sidebarRef.current.animate(
-            [
-                { opacity: 0, transform: 'translateY(12px) scale(0.98)' },
-                { opacity: 1, transform: 'translateY(0) scale(1)' }
-            ],
-            {
-                duration: 700,
-                easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-                fill: 'both'
-            }
-        );
+        const keyframes = sidebarOpen
+            ? [
+                { opacity: 0, transform: 'translateY(16px)' },
+                { opacity: 1, transform: 'translateY(0)' }
+            ]
+            : [
+                { opacity: 1, transform: 'translateY(0)' },
+                { opacity: 0, transform: 'translateY(16px)' }
+            ];
+
+        const animation = sidebarRef.current.animate(keyframes, {
+            duration: sidebarOpen ? 800 : 700,
+            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+            fill: 'both'
+        });
+
+        sidebarAnimationRef.current = animation;
+
+        if (!sidebarOpen) {
+            animation.onfinish = () => {
+                setIsRendered(false);
+            };
+        }
 
         return () => {
             animation.cancel();
         };
-    }, [sidebarOpen]);
+    }, [sidebarOpen, isRendered]);
 
     useEffect(() => {
         if (!sidebarOpen) {
@@ -195,7 +219,7 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
         };
     }, [sidebarOpen, setSidebarOpen, onOutsideClose]);
 
-    if (!sidebarOpen) {
+    if (!isRendered) {
         return null;
     }
 
@@ -205,10 +229,10 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
             style={{
                 position: 'absolute',
                 zIndex: 401,
-                left: 15,
-                bottom: 15,
-                width: matches ? '360px' : 'calc(100vw - 30px)',
-                maxHeight: matches ? 'calc(100vh - 30%)' : 'calc(100vh - 30%)',
+                // left: 15,
+                bottom: -10,
+                width: matches ? '360px' : 'calc(100vw)',
+                maxHeight: matches ? 'calc(100vh - 30%)' : 'calc(100vh - 60%)',
                 display: 'flex',
                 flexDirection: 'column',
                 overflow: 'hidden'
