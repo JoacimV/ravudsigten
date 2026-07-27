@@ -77,6 +77,7 @@ const getStationIcon = (source) => {
 function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, setNearestNextPoint, setSplitLine, setSplitLine2, suppressNextClickToken }) {
     let clickTimeout = null;  // Declare a variable to hold the timeout
     const shouldIgnoreNextClickRef = useRef(false)
+    const markerRef = useRef(null)
 
     useEffect(() => {
         if (suppressNextClickToken > 0) {
@@ -118,16 +119,55 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
         }
     })
 
+    useEffect(() => {
+        if (!clickedPosition) {
+            return
+        }
+
+        const prefersReducedMotion = typeof window !== 'undefined'
+            && window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+        if (prefersReducedMotion) {
+            return
+        }
+
+        const frameId = window.requestAnimationFrame(() => {
+            const markerElement = markerRef.current?.getElement?.()
+            const markerGraphic = markerElement?.querySelector?.('img, svg') || markerElement
+
+            if (!markerGraphic || typeof markerGraphic.animate !== 'function') {
+                return
+            }
+
+            markerGraphic.animate(
+                [
+                    { opacity: 0.25, translate: '0 -8px', offset: 0 },
+                    { opacity: 1, translate: '0 2px', offset: 0.62 },
+                    { opacity: 1, translate: '0 -1px', offset: 0.82 },
+                    { opacity: 1, translate: '0 0', offset: 1 }
+                ],
+                {
+                    duration: 500,
+                    easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                    fill: 'none'
+                }
+            )
+        })
+
+        return () => {
+            window.cancelAnimationFrame(frameId)
+        }
+    }, [clickedPosition])
+
     if (!clickedPosition) {
         return null
     }
 
     return (
-        <Marker position={clickedPosition} icon={new Icon({
+        <Marker ref={markerRef} position={clickedPosition} icon={new Icon({
             iconUrl: logo,
-            iconSize: [64 * 1.5, 64 * 1.5], // size of the icon
-            iconAnchor: [32, 64], // point of the icon which will correspond to marker's location
-            popupAnchor: [0, -64] // point from which the popup should open relative to the iconAnchor
+            iconSize: [32 * 1.5, 32 * 1.5], // size of the icon
+            iconAnchor: [16 * 1.5, 36 * 1.5], // point of the icon which will correspond to marker's location
         })} />
     )
 }
