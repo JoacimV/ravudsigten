@@ -1,40 +1,89 @@
 import { along } from "@turf/along";
 import { multiPolygon, point, lineString } from "@turf/helpers";
 import { featureCollection } from "@turf/helpers";
-import { lineSplit } from "@turf/line-split";
-import { booleanPointOnLine } from "@turf/boolean-point-on-line";
 import { nearestPointOnLine } from "@turf/nearest-point-on-line";
 import { length } from "@turf/length";
 import dk from "./resources/geojson/denmark-coastal-line.json" with { type: "json" };
 
 export const findNearestCoastline = (position) => {
     const p = point([position.lng, position.lat]);
-    // Load the coastline GeoJSON data
+
+    // Antager dk.features[0] er en MultiPolygon
     const coastline = multiPolygon(dk.features[0].geometry.coordinates);
-    // Find the nearest point on the coastline
-    const lineStrings = [];
-    for (const feater of coastline.geometry.coordinates) {
-        lineStrings.push(lineString(feater[0]));
-    }
 
-    const nps = [];
+    // Opret LineStrings for alle outer rings
+    const lineStrings = coastline.geometry.coordinates.map((poly) => lineString(poly[0]));
+
+    // Find det absolut nærmeste punkt på tværs af alle kystlinje-segmenter
+    let nearest = null;
+    let minDistance = Infinity;
+
     for (const line of lineStrings) {
-        nps.push({ np: nearestPointOnLine(line, p), line });
+        const np = nearestPointOnLine(line, p);
+        if (np.properties.dist < minDistance) {
+            minDistance = np.properties.dist;
+            nearest = { np, line };
+        }
     }
 
-    // Find the point with the shortest distance to the position, look at np.properties.dist for the distance
-    const np = nps.reduce((nearest, point) => {
-        if (!nearest || point.np.properties.dist < nearest.np.properties.dist) {
-            return point;
-        }
-        return nearest;
-    }, undefined);
+    if (!nearest) return null;
 
-    const split = lineSplit(np.line, np.np);
-    const l = booleanPointOnLine(np.np, split.features[0], { ignoreEndVertices: true }) ? split.features[0] : split.features[1];
-    const np2 = along(l, 1, { units: 'meters' });
-    return { split, nearestPoint: { lat: np.np.geometry.coordinates[1], lng: np.np.geometry.coordinates[0] }, nearestNextPoint: { lat: np2.geometry.coordinates[1], lng: np2.geometry.coordinates[0] } }
-}
+    const { np, line } = nearest;
+
+    // --- SIKKER MÅDE AT FINDE "NÆSTE PUNKT" PÅ ---
+    // np.properties.location angiver afstanden fra starten af linjen i miles/km
+    const lineLen = length(line, { units: 'meters' });
+    const currentDistOnLine = np.properties.location * 1000; // konverter til meter hvis location er i km
+
+    // Bevæg dig 1 meter frem ad linjen (eller 1 meter tilbage, hvis vi er ved vejs ende)
+    const targetDist = (currentDistOnLine + 1 <= lineLen)
+        ? currentDistOnLine + 1
+        : Math.max(0, currentDistOnLine - 1);
+
+    const np2 = along(line, targetDist, { units: 'meters' });
+
+    return {
+        nearestPoint: {
+            lat: np.geometry.coordinates[1],
+            lng: np.geometry.coordinates[0]
+        },
+        nearestNextPoint: {
+            lat: np2.geometry.coordinates[1],
+            lng: np2.geometry.coordinates[0]
+        }
+    };
+};
+// export const findNearestCoastline = (position) => {
+//     console.log(position)
+//     const p = point([position.lng, position.lat]);
+//     // Load the coastline GeoJSON data
+//     const coastline = multiPolygon(dk.features[0].geometry.coordinates);
+//     // Find the nearest point on the coastline
+//     const lineStrings = [];
+//     for (const feater of coastline.geometry.coordinates) {
+//         lineStrings.push(lineString(feater[0]));
+//     }
+
+//     const nps = [];
+//     for (const line of lineStrings) {
+//         nps.push({ np: nearestPointOnLine(line, p), line });
+//     }
+
+//     // Find the point with the shortest distance to the position, look at np.properties.dist for the distance
+//     const np = nps.reduce((nearest, point) => {
+//         if (!nearest || point.np.properties.dist < nearest.np.properties.dist) {
+//             return point;
+//         }
+//         return nearest;
+//     }, undefined);
+
+//     const split = lineSplit(np.line, np.np);
+//     console.log(split);
+//     const l = booleanPointOnLine(np.np, split.features[0], { ignoreEndVertices: true }) ? split.features[0] : split.features[1];
+//     console.log(l);
+//     const np2 = along(l, 1, { units: 'meters' });
+//     return { split, nearestPoint: { lat: np.np.geometry.coordinates[1], lng: np.np.geometry.coordinates[0] }, nearestNextPoint: { lat: np2.geometry.coordinates[1], lng: np2.geometry.coordinates[0] } }
+// }
 
 const addStepPointsForCoordinates = (coordinates, points, distanceKm) => {
     if (!Array.isArray(coordinates) || coordinates.length < 2) {

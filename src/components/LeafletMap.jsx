@@ -60,21 +60,24 @@ const metStationIcon = L.divIcon({
     popupAnchor: [0, -14],
 });
 
-const getStationIcon = (source) => {
-    if (source === 'tidewater') {
-        return tidewaterStationIcon;
+const getStationIcon = (source, selected) => {
+    const icon = source === 'tidewater' ? tidewaterStationIcon : metStationIcon;
+    if (selected) {
+        // Make a copy of the source icon and modify its properties for the selected state
+        const selectedIcon = L.divIcon({
+            className: icon.options.className + ' station-marker-icon--selected',
+            html: icon.options.html.replace(/background: linear-gradient\([^)]+\)/, 'background: linear-gradient(180deg, rgba(250,204,21,0.98), rgba(217,119,6,0.98))'),
+            iconSize: [64, 64],
+            iconAnchor: icon.options.iconAnchor,
+            popupAnchor: icon.options.popupAnchor,
+        });
+        return selectedIcon;
+    } else {
+        return icon;
     }
+}
 
-    if (source === 'met') {
-        return metStationIcon;
-    }
-
-    return null;
-};
-
-
-
-function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, setNearestNextPoint, setSplitLine, setSplitLine2, suppressNextClickToken }) {
+function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, setNearestNextPoint, suppressNextClickToken }) {
     let clickTimeout = null;  // Declare a variable to hold the timeout
     const shouldIgnoreNextClickRef = useRef(false)
     const markerRef = useRef(null)
@@ -95,12 +98,12 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
             clearTimeout(clickTimeout);  // If it's a double-click, clear the timeout
         }
         clickTimeout = setTimeout(() => {
-            const { nearestPoint, nearestNextPoint, split } = findNearestCoastline(e.latlng);
+            const { nearestPoint, nearestNextPoint } = findNearestCoastline(e.latlng);
             setClickedPosition(e.latlng);
             setNearestPoint(nearestPoint);
             setNearestNextPoint(nearestNextPoint);
-            setSplitLine(split.features[0]);
-            setSplitLine2(split.features[1]);
+            // setSplitLine(split.features[0]);
+            // setSplitLine2(split.features[1]);
             // map.setView({ lat: nearestPoint.lat, lng: nearestPoint.lng }, 10, { animate: true, duration: 1 })
         }, 300);
     })
@@ -172,34 +175,8 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
     )
 }
 
-const selectedStationIcon = L.divIcon({
-    className: 'station-marker-icon station-marker-icon--selected',
-    html: `
-        <div style="
-            width: 36px;
-            height: 36px;
-            border-radius: 999px;
-            background: linear-gradient(180deg, rgba(250,204,21,0.98), rgba(217,119,6,0.98));
-            border: 2px solid rgba(255,255,255,0.98);
-            box-shadow: 0 8px 18px rgba(0,0,0,0.4);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 14px;
-            line-height: 1;
-            font-weight: 700;
-        ">★</div>
-    `,
-    iconSize: [36, 36],
-    iconAnchor: [18, 18],
-    popupAnchor: [0, -18],
-});
-
 export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestPoint, setNearestNextPoint, debug, stations = [], onNearestStationObservationsChange, sidebarResetToken = 0, sidebarSuppressNextMapClickToken = 0 }) {
     const [clickedPosition, setClickedPosition] = useState(undefined)
-    const [splitLine, setSplitLine] = useState(undefined)
-    const [splitLine2, setSplitLine2] = useState(undefined)
     const [nearestMetStation, setNearestMetStation] = useState(undefined)
     const [nearestTideStation, setNearestTideStation] = useState(undefined)
     const [isSatellite, setIsSatellite] = useState(() => {
@@ -229,8 +206,6 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
         }
 
         setClickedPosition(undefined)
-        setSplitLine(undefined)
-        setSplitLine2(undefined)
         setNearestPoint(undefined)
         setNearestNextPoint(undefined)
         setNearestMetStation(undefined)
@@ -418,13 +393,11 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                     nearestPoint={nearestPoint}
                     setNearestPoint={setNearestPoint}
                     setNearestNextPoint={setNearestNextPoint}
-                    setSplitLine={setSplitLine}
-                    setSplitLine2={setSplitLine2}
                     suppressNextClickToken={sidebarSuppressNextMapClickToken}
                 />
                 <HeatLayer minZoom={minZoom} maxZoom={maxZoom} points={points} />
                 {
-                    debug ?
+                    debug && nearestPoint ?
                         <>
                             <Marker opacity={.5} position={nearestPoint} >
                                 <Popup>
@@ -447,8 +420,6 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
 
                             <Marker opacity={1} position={nearestNextPoint} style={{ color: 'white' }} />
                             <GeoJSON data={dk} style={{ color: 'white' }} />
-                            <GeoJSON data={splitLine} style={{ color: 'red' }} />
-                            <GeoJSON data={splitLine2} style={{ color: 'green' }} />
                             {/* <GeoJSON data={pointsAlongGeoJson(dk, .25)} style={{ color: 'blue' }} /> */}
                             {stations
                                 .filter((station) => Number.isFinite(Number(station?.latitude)) && Number.isFinite(Number(station?.longitude)))
@@ -460,7 +431,7 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                                         <Marker
                                             key={station.pk}
                                             position={[Number(station.latitude), Number(station.longitude)]}
-                                            icon={isNearestMet || isNearestTide ? selectedStationIcon : getStationIcon(station.source)}
+                                            icon={isNearestMet || isNearestTide ? getStationIcon(station.source, true) : getStationIcon(station.source, false)}
                                         >
                                             <Popup>
                                                 <div style={{ minWidth: 160 }}>
