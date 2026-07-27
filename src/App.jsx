@@ -17,6 +17,8 @@ function App() {
 
   const [debug, setDebug] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarResetToken, setSidebarResetToken] = useState(0)
+  const [sidebarSuppressNextMapClickToken, setSidebarSuppressNextMapClickToken] = useState(0)
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -68,6 +70,12 @@ function App() {
         sidebarOpen={sidebarOpen}
         setSidebarOpen={setSidebarOpen}
         nearestStationObservations={nearestStationObservations}
+        onOutsideClose={(source) => {
+          setSidebarResetToken((current) => current + 1)
+          if (source === 'outside') {
+            setSidebarSuppressNextMapClickToken((current) => current + 1)
+          }
+        }}
       />
       <LeafletMap
         debug={debug}
@@ -78,6 +86,8 @@ function App() {
         stations={stations}
         stationsLoading={stationsLoading}
         onNearestStationObservationsChange={setNearestStationObservations}
+        sidebarResetToken={sidebarResetToken}
+        sidebarSuppressNextMapClickToken={sidebarSuppressNextMapClickToken}
       />
     </React.Fragment>
   );

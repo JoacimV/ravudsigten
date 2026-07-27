@@ -74,10 +74,22 @@ const getStationIcon = (source) => {
 
 
 
-function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, setNearestNextPoint, setSplitLine, setSplitLine2 }) {
+function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, setNearestNextPoint, setSplitLine, setSplitLine2, suppressNextClickToken }) {
     let clickTimeout = null;  // Declare a variable to hold the timeout
+    const shouldIgnoreNextClickRef = useRef(false)
+
+    useEffect(() => {
+        if (suppressNextClickToken > 0) {
+            shouldIgnoreNextClickRef.current = true
+        }
+    }, [suppressNextClickToken])
 
     useMapEvent('click', (e) => {
+        if (shouldIgnoreNextClickRef.current) {
+            shouldIgnoreNextClickRef.current = false
+            return
+        }
+
         if (clickTimeout) {
             clearTimeout(clickTimeout);  // If it's a double-click, clear the timeout
         }
@@ -97,6 +109,15 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
             clearTimeout(clickTimeout);  // Cancel the pending click event if it's a double-click
         }
     });
+
+    // If the user pans/zooms before a click occurs, don't keep suppressing a future click.
+    useMapEvent('movestart', () => {
+        shouldIgnoreNextClickRef.current = false
+        if (clickTimeout) {
+            clearTimeout(clickTimeout)
+        }
+    })
+
     if (!clickedPosition) {
         return null
     }
@@ -135,7 +156,7 @@ const selectedStationIcon = L.divIcon({
     popupAnchor: [0, -18],
 });
 
-export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestPoint, setNearestNextPoint, debug, stations = [], onNearestStationObservationsChange }) {
+export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestPoint, setNearestNextPoint, debug, stations = [], onNearestStationObservationsChange, sidebarResetToken = 0, sidebarSuppressNextMapClickToken = 0 }) {
     const [clickedPosition, setClickedPosition] = useState(undefined)
     const [splitLine, setSplitLine] = useState(undefined)
     const [splitLine2, setSplitLine2] = useState(undefined)
@@ -158,8 +179,29 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
     const [points, setPoints] = useState([]);
 
     useEffect(() => {
+        // console.log(pointsAlongGeoJson(dk, .25));
         window.localStorage.setItem(MAP_LAYER_STORAGE_KEY, isSatellite ? "satellite" : "standard")
     }, [isSatellite])
+
+    useEffect(() => {
+        if (sidebarResetToken <= 0) {
+            return
+        }
+
+        setClickedPosition(undefined)
+        setSplitLine(undefined)
+        setSplitLine2(undefined)
+        setNearestPoint(undefined)
+        setNearestNextPoint(undefined)
+        setNearestMetStation(undefined)
+        setNearestTideStation(undefined)
+        onNearestStationObservationsChange?.({
+            met: undefined,
+            tidewater: undefined,
+            metStation: undefined,
+            tidewaterStation: undefined,
+        })
+    }, [sidebarResetToken, setNearestPoint, setNearestNextPoint, onNearestStationObservationsChange])
 
     useEffect(() => {
         const fetchPoints = async () => {
@@ -338,6 +380,7 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                     setNearestNextPoint={setNearestNextPoint}
                     setSplitLine={setSplitLine}
                     setSplitLine2={setSplitLine2}
+                    suppressNextClickToken={sidebarSuppressNextMapClickToken}
                 />
                 <HeatLayer minZoom={minZoom} maxZoom={maxZoom} points={points} />
                 {

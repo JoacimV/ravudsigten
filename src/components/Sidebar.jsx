@@ -1,7 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { DateTime } from 'luxon';
 
-export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestStationObservations }) {
+export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestStationObservations, onOutsideClose }) {
+    const sidebarRef = useRef(null);
+    const pointerDownRef = useRef(null);
+    const draggedSincePointerDownRef = useRef(false);
     const [matches, setMatches] = useState(
         window.matchMedia("(min-width: 768px)").matches
     );
@@ -109,12 +112,96 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
         return () => mediaQuery.removeEventListener('change', handler);
     }, []);
 
+    useEffect(() => {
+        if (!sidebarOpen || !sidebarRef.current) {
+            return;
+        }
+
+        const prefersReducedMotion = typeof window !== 'undefined'
+            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        if (prefersReducedMotion || typeof sidebarRef.current.animate !== 'function') {
+            return;
+        }
+
+        const animation = sidebarRef.current.animate(
+            [
+                { opacity: 0, transform: 'translateY(12px) scale(0.98)' },
+                { opacity: 1, transform: 'translateY(0) scale(1)' }
+            ],
+            {
+                duration: 700,
+                easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
+                fill: 'both'
+            }
+        );
+
+        return () => {
+            animation.cancel();
+        };
+    }, [sidebarOpen]);
+
+    useEffect(() => {
+        if (!sidebarOpen) {
+            return;
+        }
+
+        const dragThresholdPx = 6;
+
+        const handlePointerDown = (event) => {
+            pointerDownRef.current = { x: event.clientX, y: event.clientY };
+            draggedSincePointerDownRef.current = false;
+        };
+
+        const handlePointerMove = (event) => {
+            if (!pointerDownRef.current || draggedSincePointerDownRef.current) {
+                return;
+            }
+
+            const distanceX = Math.abs(event.clientX - pointerDownRef.current.x);
+            const distanceY = Math.abs(event.clientY - pointerDownRef.current.y);
+
+            if (distanceX > dragThresholdPx || distanceY > dragThresholdPx) {
+                draggedSincePointerDownRef.current = true;
+            }
+        };
+
+        const handlePointerUp = () => {
+            pointerDownRef.current = null;
+        };
+
+        const handleOutsideClick = (event) => {
+            if (draggedSincePointerDownRef.current) {
+                draggedSincePointerDownRef.current = false;
+                return;
+            }
+
+            if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+                setSidebarOpen(false);
+                onOutsideClose?.('outside');
+            }
+        };
+
+        document.addEventListener('pointerdown', handlePointerDown, true);
+        document.addEventListener('pointermove', handlePointerMove, true);
+        document.addEventListener('pointerup', handlePointerUp, true);
+        document.addEventListener('click', handleOutsideClick, true);
+
+        return () => {
+            document.removeEventListener('pointerdown', handlePointerDown, true);
+            document.removeEventListener('pointermove', handlePointerMove, true);
+            document.removeEventListener('pointerup', handlePointerUp, true);
+            document.removeEventListener('click', handleOutsideClick, true);
+        };
+    }, [sidebarOpen, setSidebarOpen, onOutsideClose]);
+
     if (!sidebarOpen) {
         return null;
     }
 
     return (
         <div
+            ref={sidebarRef}
             style={{
                 position: 'absolute',
                 zIndex: 401,
@@ -152,7 +239,22 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
                     {/* Top Header */}
                     <div className="is-flex is-justify-content-space-between is-align-items-flex-start mb-4">
                         <p className="heading has-text-grey-light mb-2">Nærmeste station</p>
-                        <button className="delete" aria-label="close" onClick={() => setSidebarOpen(false)}></button>
+                        <button
+                            type="button"
+                            className="delete"
+                            aria-label="close"
+                            onClick={() => {
+                                setSidebarOpen(false)
+                                onOutsideClose?.('button')
+                            }}
+                            style={{
+                                width: '36px',
+                                height: '36px',
+                                minWidth: '36px',
+                                minHeight: '36px',
+                                marginTop: '-6px'
+                            }}
+                        ></button>
                     </div>
                     {
                         nearestStationObservations && nearestStationObservations?.met?.windDir?.length > 0 && nearestStationObservations?.met?.windSpeed?.length > 0 ? (
