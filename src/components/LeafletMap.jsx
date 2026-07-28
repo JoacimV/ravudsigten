@@ -9,6 +9,7 @@ import MapGuideControl from "./MapGuideControl";
 import dk from "../resources/geojson/test1.json"
 import logo from "../resources/images/marker.svg"
 import MapHeader from "./MapHeader"
+import Slider from "./Slider";
 const minZoom = 1, maxZoom = 14;
 const OBSERVATIONS_BASE_URL = "https://dswx6vubccbkr.cloudfront.net/raw";
 const ENRICHED_BASE_URL = "https://dswx6vubccbkr.cloudfront.net/enriched";
@@ -47,32 +48,6 @@ const POINT_WINDOWS = [
         fileCandidates: ['coast-points-simple-day-after-tomorrow.json'],
     },
 ]
-
-const WINDOW_TEXT_LABELS = {
-    now: 'Nu',
-    'now-plus-12': 'Senere i dag',
-    tomorrow: 'I morgen',
-    'tomorrow-plus-12': 'I morgen senere',
-    'day-after-tomorrow': 'I overmorgen',
-}
-
-const formatDisplayDate = (date) => new Intl.DateTimeFormat('da-DK', {
-    day: '2-digit',
-    month: '2-digit',
-}).format(date)
-
-const formatDisplayTime = (date) => new Intl.DateTimeFormat('da-DK', {
-    hour: '2-digit',
-    minute: '2-digit',
-}).format(date)
-
-const calculateWindowEdgeDate = (endOffsetHours) => {
-    const referenceDate = new Date()
-    referenceDate.setMinutes(0, 0, 0)
-    referenceDate.setHours(referenceDate.getHours() + endOffsetHours)
-    return referenceDate
-}
-
 
 const tidewaterStationIcon = L.divIcon({
     className: 'station-marker-icon station-marker-icon--tidewater',
@@ -256,8 +231,6 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
     const [points, setPoints] = useState([]);
     const [pointsByWindow, setPointsByWindow] = useState({})
     const [activeWindowIndex, setActiveWindowIndex] = useState(0)
-    const [pointsLoading, setPointsLoading] = useState(false)
-    const [pointsLoadError, setPointsLoadError] = useState(undefined)
 
     useEffect(() => {
         // console.log(pointsAlongGeoJson(dk, .25));
@@ -324,8 +297,6 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
         }
 
         const fetchAllPoints = async () => {
-            setPointsLoading(true)
-            setPointsLoadError(undefined)
 
             try {
                 const allWindowPoints = await Promise.all(
@@ -338,10 +309,7 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                 setPointsByWindow(Object.fromEntries(allWindowPoints))
             } catch (error) {
                 console.log('Failed to fetch enriched points', error)
-                setPointsLoadError('Kunne ikke hente prognosepunkter')
                 setPointsByWindow({})
-            } finally {
-                setPointsLoading(false)
             }
         }
 
@@ -468,81 +436,17 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
     const mapLayerUrl = isSatellite
         ? "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
         : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-    const pointsStatusText = pointsLoadError ? 'Fejl i data' : pointsLoading ? 'Henter...' : ''
-    const activeWindow = POINT_WINDOWS[activeWindowIndex]
-    const activeWindowEdgeDate = activeWindow
-        ? calculateWindowEdgeDate(activeWindow.endOffsetHours)
-        : undefined
-    const activeWindowTextLabel = WINDOW_TEXT_LABELS[activeWindow?.id] || 'Vindue'
-    const activeWindowDateText = activeWindowEdgeDate ? formatDisplayDate(activeWindowEdgeDate) : ''
-    const activeWindowTimeText = activeWindowEdgeDate ? formatDisplayTime(activeWindowEdgeDate) : ''
-    const activeWindowTopLabel = activeWindowDateText
-        ? `${activeWindowTextLabel} · ${activeWindowDateText}`
-        : activeWindowTextLabel
-    const activeWindowTitleText = `${activeWindowTextLabel} ${activeWindowDateText} ${activeWindowTimeText}`.trim()
+
 
     return (
-        <div style={{ position: "relative" }}>
-            <style>{`
-                .time-window-slider {
-                    -webkit-appearance: none;
-                    appearance: none;
-                    background: transparent;
-                    cursor: pointer;
-                    accent-color: transparent;
-                    -webkit-tap-highlight-color: transparent;
-                }
-
-                .time-window-slider:focus {
-                    outline: none;
-                }
-
-                .time-window-slider::-webkit-slider-runnable-track {
-                    height: 4px;
-                    border-radius: 999px;
-                    background: rgba(255, 255, 255, 0.28);
-                    border: 1px solid rgba(255, 255, 255, 0.22);
-                }
-
-                .time-window-slider::-webkit-slider-thumb {
-                    -webkit-appearance: none;
-                    appearance: none;
-                    width: 12px;
-                    height: 12px;
-                    border-radius: 999px;
-                    margin-top: -5px;
-                    background: #fbbf24;
-                    border: 1px solid rgba(255, 255, 255, 0.65);
-                    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.36);
-                }
-
-                .time-window-slider:focus-visible::-webkit-slider-thumb {
-                    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.36), 0 0 0 4px rgba(251, 191, 36, 0.35);
-                }
-
-                .time-window-slider::-moz-range-track {
-                    height: 4px;
-                    border-radius: 999px;
-                    background: rgba(255, 255, 255, 0.28);
-                    border: 1px solid rgba(255, 255, 255, 0.22);
-                }
-
-                .time-window-slider::-moz-range-thumb {
-                    width: 12px;
-                    height: 12px;
-                    border-radius: 999px;
-                    background: #fbbf24;
-                    border: 1px solid rgba(255, 255, 255, 0.65);
-                    box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.36);
-                }
-            `}</style>
+        <div style={{ position: "relative", height: "calc(100dvh + 200px )", top: -100, bottom: -100, width: "100vw" }}>
             <MapHeader />
             <button
                 type="button"
                 onClick={() => setIsSatellite((prev) => !prev)}
                 style={{
                     position: "absolute",
-                    top: 12,
+                    top: 112,
                     right: 64,
                     zIndex: 1001,
                     border: "1px solid rgba(255,255,255,0.35)",
@@ -561,92 +465,14 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
             >
                 {isSatellite ? "🗺️" : "🛰️"}
             </button>
-            <div
-                style={{
-                    position: 'absolute',
-                    bottom: 16,
-                    right: 16,
-                    zIndex: 401,
-                    width: 176,
-                    height: 72,
-                    border: '1px solid rgba(255,255,255,0.25)',
-                    borderRadius: 10,
-                    background: 'rgba(0, 0, 0, 0.7)',
-                    color: '#fff',
-                    padding: 6,
-                    boxShadow: '0 10px 24px rgba(0,0,0,0.22)',
-                    backdropFilter: 'blur(10px)',
-                }}
-            >
-                <div
-                    style={{
-                        position: 'absolute',
-                        top: 6,
-                        left: 6,
-                        right: 6,
-                        height: 14,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                    }}
-                    title={activeWindowTitleText}
-                >
-                    <div
-                        style={{
-                            fontSize: 9,
-                            opacity: 0.9,
-                            lineHeight: 1,
-                            textAlign: 'left',
-                            whiteSpace: 'nowrap',
-                            overflow: 'hidden',
-                            textOverflow: 'ellipsis',
-                            maxWidth: '70%',
-                        }}
-                    >
-                        {activeWindowTopLabel}
-                    </div>
-                    <div style={{ fontSize: 8, opacity: 0.78, lineHeight: 1 }}>
-                        {activeWindowTimeText}
-                    </div>
-                </div>
-                <input
-                    className="time-window-slider"
-                    type="range"
-                    min={0}
-                    max={POINT_WINDOWS.length - 1}
-                    step={1}
-                    value={activeWindowIndex}
-                    onChange={(event) => setActiveWindowIndex(Number(event.target.value))}
-                    style={{
-                        position: 'absolute',
-                        left: 8,
-                        right: 8,
-                        top: 30,
-                        width: 'calc(100% - 16px)',
-                        height: 14,
-                        margin: 0,
-                    }}
-                    aria-label="Vælg prognosevindue"
-                />
-                <div
-                    style={{
-                        position: 'absolute',
-                        bottom: 6,
-                        left: 6,
-                        right: 6,
-                        minHeight: 8,
-                        fontSize: 8,
-                        lineHeight: 1,
-                        textAlign: 'right',
-                        opacity: pointsLoadError ? 1 : 0.85,
-                        color: pointsLoadError ? '#fca5a5' : '#fff',
-                    }}
-                >
-                    {pointsStatusText}
-                </div>
-            </div>
+            <Slider
+                min={0}
+                max={POINT_WINDOWS.length - 1}
+                value={activeWindowIndex}
+                onChange={(value) => setActiveWindowIndex(value)}
+            />
             <MapGuideControl />
-            <MapContainer attributionControl={false} style={{ height: "100vh", width: "100%" }} center={[56.0, 11.0]} zoom={7} >
+            <MapContainer attributionControl={false} style={{ height: "100%", width: "100%" }} center={[56.0, 11.0]} zoom={7} >
                 <TileLayer url={mapLayerUrl} maxZoom={maxZoom} minZoom={minZoom} />
                 <MovingMarker
                     clickedPosition={clickedPosition}

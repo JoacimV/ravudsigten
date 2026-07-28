@@ -8,7 +8,7 @@ const MapHeader = () => {
             <style>{`
         .map-header-container {
           position: absolute;
-          top: 0.75rem;
+          top: 110px;
           left: 50%;
           transform: translateX(-50%);
           z-index: 1000;
