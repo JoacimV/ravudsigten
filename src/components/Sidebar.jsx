@@ -228,7 +228,7 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
             ref={sidebarRef}
             style={{
                 position: 'absolute',
-                zIndex: 401,
+                zIndex: 402,
                 // left: 15,
                 bottom: -10,
                 width: matches ? '360px' : 'calc(100vw)',
