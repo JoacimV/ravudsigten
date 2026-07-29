@@ -7,7 +7,7 @@ export default function Slider({ min, max, value, onChange }) {
         onChange(newValue);
     };
     return (
-        <div className="columns is-mobile" style={{ position: 'absolute', zIndex: 401, bottom: "8%" }}>
+        <div className="columns is-mobile" style={{ position: 'absolute', zIndex: 401, bottom: 0 - 100 }}>
             <div className="column is-full-mobile" >
                 <div className="box m-5 p-4"
                     style={{

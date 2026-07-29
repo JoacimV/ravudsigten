@@ -315,6 +315,10 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
 
         fetchAllPoints()
     }, []);
+    // Hack to scroll down a bit on mobile devices, so that the map is a bit hidden behind the header.
+    useEffect(() => {
+        window.scrollTo(0, 110);
+    }, []);
 
     useEffect(() => {
         const activeWindow = POINT_WINDOWS[activeWindowIndex]
@@ -439,15 +443,23 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
 
 
     return (
-        <div style={{ position: "relative", height: "calc(100dvh + 200px )", top: -100, bottom: -100, width: "100vw" }}>
+        <div
+            style={{
+                position: "relative",
+                top: 0,
+                left: 0,
+                width: "100vw",
+                height: "100dvh",
+            }}
+        >
             <MapHeader />
             <button
                 type="button"
                 onClick={() => setIsSatellite((prev) => !prev)}
                 style={{
                     position: "absolute",
-                    top: 112,
-                    right: 64,
+                    top: 122,
+                    right: 56,
                     zIndex: 1001,
                     border: "1px solid rgba(255,255,255,0.35)",
                     background: "rgba(0, 0, 0, 0.7)",
@@ -472,7 +484,7 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                 onChange={(value) => setActiveWindowIndex(value)}
             />
             <MapGuideControl />
-            <MapContainer attributionControl={false} style={{ height: "100%", width: "100%" }} center={[56.0, 11.0]} zoom={7} >
+            <MapContainer attributionControl={false} style={{ height: "130dvh", width: "100%" }} center={[56.0, 11.0]} zoom={7}>
                 <TileLayer url={mapLayerUrl} maxZoom={maxZoom} minZoom={minZoom} />
                 <MovingMarker
                     clickedPosition={clickedPosition}

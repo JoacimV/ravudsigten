@@ -230,7 +230,7 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
                 position: 'absolute',
                 zIndex: 402,
                 // left: 15,
-                bottom: -10,
+                bottom: -110,
                 width: matches ? '360px' : 'calc(100vw)',
                 maxHeight: matches ? 'calc(100vh - 30%)' : 'calc(100vh - 60%)',
                 display: 'flex',
