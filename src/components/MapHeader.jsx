@@ -28,8 +28,8 @@ const MapHeader = () => {
       `}</style>
 
             <header className="map-header-container">
-                <div className="box glass"         >
-                    <div className="is-flex is-align-items-center" style={{ gap: '0.35rem' }}>
+                <div className="box glass p-3">
+                    <div className="is-flex is-align-items-center" >
                         {/* Ikon */}
                         <div
                             className="is-flex is-align-items-center is-justify-content-center"
