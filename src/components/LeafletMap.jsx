@@ -7,7 +7,7 @@ import "leaflet.heat";
 import HeatLayer from "./HeatLayer";
 import MapGuideControl from "./MapGuideControl";
 import dk from "../resources/geojson/test1.json"
-import logo from "../resources/images/marker.svg"
+import logo from "../resources/images/marker-rav.png"
 import MapHeader from "./MapHeader"
 import Slider from "./Slider";
 const minZoom = 1, maxZoom = 14;
@@ -202,8 +202,8 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
     return (
         <Marker ref={markerRef} position={clickedPosition} icon={new Icon({
             iconUrl: logo,
-            iconSize: [32 * 1.5, 32 * 1.5], // size of the icon
-            iconAnchor: [16 * 1.5, 36 * 1.5], // point of the icon which will correspond to marker's location
+            iconSize: [32 * 2, 40 * 2], // size of the icon
+            iconAnchor: [16 * 2, 36 * 2], // point of the icon which will correspond to marker's location
         })} />
     )
 }
