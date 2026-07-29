@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DateTime } from 'luxon';
 
-export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObservations, onOutsideClose }) {
+export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObservations, onOutsideClose, score }) {
     const sidebarRef = useRef(null);
     const pointerDownRef = useRef(null);
     const draggedSincePointerDownRef = useRef(false);
@@ -167,6 +167,56 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
     }, [sidebarOpen, setSidebarOpen, onOutsideClose]);
 
 
+    const renderScore = () => {
+        if (score === undefined) {
+            return null;
+        }
+        const scoreTexts = [{
+            color: '',
+            title: 'Svage ravforhold',
+            textOne: 'De seneste vejrforhold har ikke været særligt gunstige for ravjagt ved denne kyst. Der har kun været begrænset pålandsvind, og der er derfor mindre sandsynlighed for, at nyt materiale med rav er blevet skyllet op på stranden.',
+            textTwo: 'Det kan stadig være værd at undersøge stranden, især efter lokale ændringer i vind og bølgegang.'
+        },
+        {
+            color: '',
+            title: 'Mindre gode ravforhold',
+            textOne: 'Ravforholdene ved denne kyst er lige nu under middel. Vindforholdene har kun i begrænset omfang hjulpet med at transportere rav og opskyl ind mod kysten.',
+            textTwo: 'Kig efter friske opskylsbælter, tanglinjer og områder med småsten, hvor rav kan samle sig.'
+        },
+        {
+            color: 'is-link',
+            title: 'Moderate ravforhold',
+            textOne: 'Der har været nogen aktivitet ved kysten, men forholdene er ikke optimale for ravjagt. Vinden har delvist været med til at skabe opskyl, men perioden med gunstige forhold har ikke været lang nok til at give de bedste muligheder.',
+            textTwo: 'En tur langs vandkanten kan stadig give fine fund, især hvis du søger grundigt i nyt opskyl.'
+        },
+        {
+            color: 'is-primary',
+            title: 'Gode ravforhold',
+            textOne: 'Forholdene ved denne kyst er gode for ravjagt. Der har været en længere periode med gunstige vindforhold, som kan have hjulpet med at samle rav langs kysten.',
+            textTwo: 'De bedste steder at lede er typisk ved den nyeste opskylsrand, hvor tang, træstykker og andet let materiale samler sig.'
+        },
+        {
+            color: 'is-success',
+            title: 'Meget gode ravforhold',
+            textOne: 'Forholdene ved denne strand er meget gode for ravjagt lige nu. Der har været vedvarende pålandsvind i flere dage, hvilket giver optimale betingelser for at transportere rav ind mod kysten.',
+            textTwo: 'Gå især efter friske opskylsbælter langs stranden. Her kan rav ofte findes sammen med tang, små grene og mørkt strandmateriale.'
+        },
+        ]
+
+        const scoreIndex = Math.min(Math.max(Math.floor(score * scoreTexts.length), 0), scoreTexts.length - 1);
+
+        return (
+            <div className="mb-4 p-3" style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid #363636' }}>
+                <p className="is-size-6 has-text-white mb-2">{scoreTexts[scoreIndex].title}</p>
+                <progress className={`progress ${scoreTexts[scoreIndex].color}`} value={score} max="1">{score}</progress>
+                <p className="is-size-7 has-text-grey-light mb-1">{scoreTexts[scoreIndex].textOne}</p>
+                <br />
+                <p className="is-size-7 has-text-grey-light mb-1">{scoreTexts[scoreIndex].textTwo}</p>
+            </div>
+        );
+    }
+
+
     return (
         <div
             ref={sidebarRef}
@@ -218,6 +268,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
                         }}
                     ></button>
                 </div>
+                {renderScore()}
                 {
                     nearestStationObservations && nearestStationObservations?.met?.windDir?.length > 0 && nearestStationObservations?.met?.windSpeed?.length > 0 ? (
                         <div className="grid p-0 m-1 mb-4 is-gap-4">

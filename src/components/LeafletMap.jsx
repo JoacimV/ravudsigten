@@ -10,6 +10,8 @@ import dk from "../resources/geojson/test1.json"
 import logo from "../resources/images/marker-rav.png"
 import MapHeader from "./MapHeader"
 import Slider from "./Slider";
+import * as turf from "@turf/turf";
+
 const minZoom = 1, maxZoom = 14;
 const OBSERVATIONS_BASE_URL = "https://dswx6vubccbkr.cloudfront.net/raw";
 const MAP_LAYER_STORAGE_KEY = "amberFinder.mapLayer"
@@ -79,7 +81,7 @@ const getStationIcon = (source, selected) => {
     }
 }
 
-function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, setNearestNextPoint, suppressNextClickToken }) {
+function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, setNearestNextPoint, suppressNextClickToken, activeWindowIndex, forecast, setScore }) {
     let clickTimeout = null;  // Declare a variable to hold the timeout
     const shouldIgnoreNextClickRef = useRef(false)
     const markerRef = useRef(null)
@@ -101,6 +103,11 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
         }
         clickTimeout = setTimeout(() => {
             const { nearestPoint, nearestNextPoint } = findNearestCoastline(e.latlng);
+            const forecastCollection = turf.featureCollection(
+                forecast[activeWindowIndex].map((point) => turf.point([point[2], point[3]], { score: point[0] }))
+            );
+            const nearest = turf.nearestPoint(turf.point([nearestPoint.lng, nearestPoint.lat]), forecastCollection);
+            setScore(nearest?.properties?.score ?? 0);
             setClickedPosition(e.latlng);
             setNearestPoint(nearestPoint);
             setNearestNextPoint(nearestNextPoint);
@@ -180,7 +187,8 @@ export default function LeafletMap({
     setNearestPoint, setNearestNextPoint,
     debug, stations = [], onNearestStationObservationsChange, sidebarResetToken = 0,
     sidebarSuppressNextMapClickToken = 0,
-    forecast
+    forecast,
+    setScore
 }) {
     const [clickedPosition, setClickedPosition] = useState(undefined)
     const [nearestMetStation, setNearestMetStation] = useState(undefined)
@@ -423,7 +431,10 @@ export default function LeafletMap({
                     nearestPoint={nearestPoint}
                     setNearestPoint={setNearestPoint}
                     setNearestNextPoint={setNearestNextPoint}
+                    activeWindowIndex={activeWindowIndex}
+                    forecast={forecast}
                     suppressNextClickToken={sidebarSuppressNextMapClickToken}
+                    setScore={setScore}
                 />
                 <HeatLayer minZoom={minZoom} maxZoom={maxZoom} points={points} />
                 {

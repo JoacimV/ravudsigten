@@ -20,7 +20,7 @@ function App() {
   const [sidebarResetToken, setSidebarResetToken] = useState(0)
   const [sidebarSuppressNextMapClickToken, setSidebarSuppressNextMapClickToken] = useState(0)
   const [forecast, setForecast] = useState(undefined)
-
+  const [score, setScore] = useState(0)
   useEffect(() => {
     const fetchData = async () => {
       const res = await fetch('https://dswx6vubccbkr.cloudfront.net/enriched/coast-points-simple-full.json')
@@ -86,6 +86,7 @@ function App() {
             setSidebarSuppressNextMapClickToken((current) => current + 1)
           }
         }}
+        score={score}
       />
       <LeafletMap
         debug={debug}
@@ -99,6 +100,7 @@ function App() {
         sidebarResetToken={sidebarResetToken}
         sidebarSuppressNextMapClickToken={sidebarSuppressNextMapClickToken}
         forecast={forecast}
+        setScore={setScore}
       />
     </React.Fragment>
   );
