@@ -3,7 +3,6 @@ import { findNearestCoastline, findNearestMetStation, findNearestTideStation } f
 import React, { useRef, useState, useEffect } from "react";
 import { Icon } from 'leaflet'
 import L from "leaflet";
-import "leaflet.heat";
 import HeatLayer from "./HeatLayer";
 import MapGuideControl from "./MapGuideControl";
 import dk from "../resources/geojson/test1.json"
@@ -416,7 +415,7 @@ export default function LeafletMap({
                 onChange={(value) => setActiveWindowIndex(value)}
             />
             <MapGuideControl />
-            <MapContainer attributionControl={false} style={{ height: "130dvh", width: "100%" }} center={[56.0, 11.0]} zoom={7}>
+            <MapContainer attributionControl={false} style={{ height: "130dvh", width: "100%" }} center={[56.0, 11.0]} zoom={8}>
                 <TileLayer url={mapLayerUrl} maxZoom={maxZoom} minZoom={minZoom} />
                 <MovingMarker
                     clickedPosition={clickedPosition}
