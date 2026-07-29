@@ -28,18 +28,7 @@ const MapHeader = () => {
       `}</style>
 
             <header className="map-header-container">
-                <div
-                    className="box"
-                    style={{
-                        backgroundColor: 'rgba(17, 24, 39, 0.75)',
-                        backdropFilter: 'blur(8px)',
-                        WebkitBackdropFilter: 'blur(8px)',
-                        border: '1px solid rgba(255, 255, 255, 0.12)',
-                        boxShadow: '0 8px 20px rgba(0, 0, 0, 0.3)',
-                        borderRadius: '10px',
-                        padding: '0.45rem 0.7rem 0.45rem 0.55rem',
-                    }}
-                >
+                <div className="box glass"         >
                     <div className="is-flex is-align-items-center" style={{ gap: '0.35rem' }}>
                         {/* Ikon */}
                         <div

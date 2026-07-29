@@ -455,22 +455,16 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
             <MapHeader />
             <button
                 type="button"
+                className="glass p-2 m-1"
                 onClick={() => setIsSatellite((prev) => !prev)}
                 style={{
                     position: "absolute",
                     top: 122,
                     right: 56,
                     zIndex: 1001,
-                    border: "1px solid rgba(255,255,255,0.35)",
-                    background: "rgba(0, 0, 0, 0.7)",
-                    color: "#fff",
-                    padding: "8px 10px",
-                    borderRadius: 8,
                     cursor: "pointer",
                     fontSize: 12,
                     fontWeight: 600,
-                    backdropFilter: "blur(10px)",
-                    boxShadow: "0 10px 24px rgba(0,0,0,0.22)",
 
                 }}
                 title="Skift kortlag"

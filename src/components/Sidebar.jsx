@@ -147,7 +147,7 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
             ];
 
         const animation = sidebarRef.current.animate(keyframes, {
-            duration: sidebarOpen ? 800 : 700,
+            duration: sidebarOpen ? 200 : 200,
             easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
             fill: 'both'
         });
@@ -249,10 +249,8 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
                 </div>
             ) : (
                 <div
-                    className="box has-background-dark has-text-light p-5"
+                    className="box has-text-light p-5 glass"
                     style={{
-                        border: '1px solid #30363d',
-                        borderRadius: '16px',
                         display: 'flex',
                         flexDirection: 'column',
                         overflowY: 'auto',
@@ -262,7 +260,7 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
                 >
                     {/* Top Header */}
                     <div className="is-flex is-justify-content-space-between is-align-items-flex-start mb-4">
-                        <p className="heading has-text-grey-light mb-2">Nærmeste station</p>
+                        <p className="heading has-text-white mb-2">Nærmeste station</p>
                         <button
                             type="button"
                             className="delete"
@@ -282,27 +280,32 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
                     </div>
                     {
                         nearestStationObservations && nearestStationObservations?.met?.windDir?.length > 0 && nearestStationObservations?.met?.windSpeed?.length > 0 ? (
-                            <div className="mb-4 p-3" style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid #363636' }}>
-                                <p className="is-size-7 has-text-grey-light mb-1">Nærmeste vejrstation</p>
-                                <p className="is-size-6 has-text-white mb-2">{nearestStationObservations?.metStation?.stationName}</p>
-                                <p className="is-size-7 has-text-grey-light mb-1">Seneste observation</p>
-                                <p className="is-size-6 has-text-white mb-2">{DateTime.fromISO(nearestStationObservations?.met?.windDir[0]?.observed).toLocaleString(DateTime.DATETIME_MED)}</p>
-                                <p className="is-size-7 has-text-grey-light mb-1">Vindretning</p>
-                                <p className="is-size-6 has-text-white">{nearestStationObservations?.met?.windDir[0]?.windDirection}° <span
-                                    className="icon is-medium has-text-info mr-3"
-                                    style={{
-                                        display: 'inline-block',
-                                        transform: `rotate(${nearestStationObservations?.met?.windDir[0]?.windDirection}deg)`,
-                                        transformOrigin: 'center center',
-                                        transition: 'transform 0.5s ease'
-                                    }}
-                                >
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: '20px', height: '20px' }}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
-                                    </svg>
-                                </span></p>
-                                <p className="is-size-7 has-text-grey-light mb-1">Vindhastighed</p>
-                                <p className="is-size-6 has-text-white">{nearestStationObservations?.met?.windSpeed[0]?.windSpeed} m/s</p>
+                            <div className="grid p-0 m-1 mb-4 is-gap-4">
+                                <div className="cell">
+                                    <p className="is-size-7 has-text-grey-light mb-1">Nærmeste vejrstation</p>
+                                    <p className="is-size-6 has-text-white mb-2">{nearestStationObservations?.metStation?.stationName}</p>
+                                    <p className="is-size-7 has-text-grey-light mb-1">Seneste observation</p>
+                                    <p className="is-size-6 has-text-white mb-2">{DateTime.fromISO(nearestStationObservations?.met?.windDir[0]?.observed).toLocaleString(DateTime.DATETIME_MED)}</p>
+
+                                </div>
+                                <div className="cell">
+                                    <p className="is-size-7 has-text-grey-light mb-1">Vindretning</p>
+                                    <p className="is-size-6 has-text-white">{nearestStationObservations?.met?.windDir[0]?.windDirection}° <span
+                                        className="icon is-medium has-text-info mr-3"
+                                        style={{
+                                            display: 'inline-block',
+                                            transform: `rotate(${nearestStationObservations?.met?.windDir[0]?.windDirection}deg)`,
+                                            transformOrigin: 'center center',
+                                            transition: 'transform 0.5s ease'
+                                        }}
+                                    >
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: '20px', height: '20px' }}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                                        </svg>
+                                    </span></p>
+                                    <p className="is-size-7 has-text-grey-light mb-1">Vindhastighed</p>
+                                    <p className="is-size-6 has-text-white">{nearestStationObservations?.met?.windSpeed[0]?.windSpeed} m/s</p>
+                                </div>
                             </div>
                         ) : (
                             <div className="mb-4 p-3" style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid #363636' }}>

@@ -33,34 +33,12 @@ export default function MapGuideControl() {
         }
     }, [isGuideOpen])
 
-    const controlButtonStyle = {
-        border: "1px solid rgba(255,255,255,0.35)",
-        background: "rgba(0, 0, 0, 0.7)",
-        color: "#fff",
-        padding: "8px 10px",
-        borderRadius: 8,
-        cursor: "pointer",
-        fontSize: 12,
-        fontWeight: 600,
-        backdropFilter: "blur(10px)",
-        boxShadow: "0 10px 24px rgba(0,0,0,0.22)",
-    }
 
     return (
         <>
             <div
                 onClick={() => setIsGuideOpen(false)}
                 aria-hidden={!isGuideOpen || !isNarrowViewport}
-                style={{
-                    position: "absolute",
-                    inset: 0,
-                    zIndex: 998,
-                    background: "rgba(3, 7, 18, 0.36)",
-                    backdropFilter: isGuideOpen && isNarrowViewport ? "blur(4px)" : "blur(0px)",
-                    opacity: isGuideOpen && isNarrowViewport ? 1 : 0,
-                    pointerEvents: isGuideOpen && isNarrowViewport ? "auto" : "none",
-                    transition: "opacity 220ms ease, backdrop-filter 220ms ease",
-                }}
             />
             <div
                 style={{
@@ -77,11 +55,14 @@ export default function MapGuideControl() {
             >
                 <button
                     type="button"
+                    className="glass p-2 m-1"
                     onClick={() => setIsGuideOpen((prev) => !prev)}
                     aria-expanded={isGuideOpen}
                     aria-controls="map-guide-card"
                     style={{
-                        ...controlButtonStyle,
+                        cursor: "pointer",
+                        fontSize: 12,
+                        fontWeight: 600,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "space-between",
@@ -90,16 +71,6 @@ export default function MapGuideControl() {
                     title="Sådan bruger du kortet"
                 >
                     <span>{isGuideOpen ? "❌" : "❔"}</span>
-                    {/* <span
-                        aria-hidden="true"
-                        style={{
-                            display: "inline-block",
-                            transform: isGuideOpen ? "rotate(180deg)" : "rotate(0deg)",
-                            transition: "transform 220ms ease",
-                        }}
-                    >
-                        ▾
-                    </span> */}
                 </button>
                 <div
                     id="map-guide-card"
@@ -110,23 +81,11 @@ export default function MapGuideControl() {
                         maxHeight: isGuideOpen ? "min(70vh, 520px)" : 0,
                         opacity: isGuideOpen ? 1 : 0,
                         transform: isGuideOpen ? "scale(1) translateY(0)" : "scale(0.88) translateY(-12px)",
-                        transition: "max-height 280ms cubic-bezier(0.22, 1, 0.36, 1), opacity 220ms ease, transform 280ms cubic-bezier(0.22, 1, 0.36, 1)",
+                        transition: "opacity .2s ease, transform .2s ease, max-height .2s ease",
                         pointerEvents: isGuideOpen ? "auto" : "none",
                     }}
                 >
-                    <div
-                        style={{
-                            borderRadius: 16,
-                            padding: "14px 16px 16px",
-                            background: "linear-gradient(180deg, rgba(11,18,32,0.94), rgba(18,34,58,0.92))",
-                            color: "#f8fafc",
-                            border: "1px solid rgba(255,255,255,0.16)",
-                            boxShadow: "0 18px 42px rgba(0,0,0,0.28)",
-                            backdropFilter: "blur(16px)",
-                            maxHeight: "min(70vh, 520px)",
-                            overflowY: "auto",
-                        }}
-                    >
+                    <div className="box glass"      >
                         <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 8 }}>
                             Sådan virker kortet
                         </div>

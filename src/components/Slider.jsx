@@ -7,17 +7,10 @@ export default function Slider({ min, max, value, onChange }) {
         onChange(newValue);
     };
     return (
-        <div className="columns is-mobile" style={{ position: 'absolute', zIndex: 401, bottom: 0 - 100 }}>
+        <div className="columns is-mobile" style={{ position: 'fixed', zIndex: 401, bottom: 0 }}>
             <div className="column is-full-mobile" >
-                <div className="box m-5 p-4"
-                    style={{
-                        background: 'rgba(255,255,255,0.15)',
-                        backdropFilter: 'blur(10px)',
-                        WebkitBackdropFilter: 'blur(10px)',
-                        border: '1px solid rgba(255,255,255,0.25)',
-                        boxShadow: '0 8px 32px 0 rgba(0,0,0,0.2)'
-                    }}>
-                    <p style={{ color: 'white', fontSize: 12, marginBottom: 4 }}>Vælg prognosevindue</p>
+                <div className="box m-5 p-4 glass" >
+                    <p className="mb-2" style={{ color: '#fffaba', fontSize: 12 }}>Vælg prognosevindue</p>
                     <p>
                         <strong style={{ color: 'white' }}>{values[value]}</strong>
                     </p>
@@ -30,7 +23,7 @@ export default function Slider({ min, max, value, onChange }) {
                     />
                 </div >
             </div>
-        </div>
+        </div >
     );
 }
 // const pointsStatusText = pointsLoadError ? 'Fejl i data' : pointsLoading ? 'Henter...' : ''
