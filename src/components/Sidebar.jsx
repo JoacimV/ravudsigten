@@ -1,12 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DateTime } from 'luxon';
 
-export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestStationObservations, onOutsideClose }) {
+export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObservations, onOutsideClose }) {
     const sidebarRef = useRef(null);
-    const sidebarAnimationRef = useRef(null);
     const pointerDownRef = useRef(null);
     const draggedSincePointerDownRef = useRef(false);
-    const [isRendered, setIsRendered] = useState(sidebarOpen);
     const [matches, setMatches] = useState(
         window.matchMedia("(min-width: 768px)").matches
     );
@@ -115,57 +113,6 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
     }, []);
 
     useEffect(() => {
-        if (sidebarOpen && !isRendered) {
-            setIsRendered(true);
-            return;
-        }
-
-        if (!isRendered || !sidebarRef.current) {
-            return;
-        }
-
-        const prefersReducedMotion = typeof window !== 'undefined'
-            && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-        sidebarAnimationRef.current?.cancel();
-
-        if (prefersReducedMotion || typeof sidebarRef.current.animate !== 'function') {
-            if (!sidebarOpen) {
-                setIsRendered(false);
-            }
-            return;
-        }
-
-        const keyframes = sidebarOpen
-            ? [
-                { opacity: 0, transform: 'translateY(16px)' },
-                { opacity: 1, transform: 'translateY(0)' }
-            ]
-            : [
-                { opacity: 1, transform: 'translateY(0)' },
-                { opacity: 0, transform: 'translateY(16px)' }
-            ];
-
-        const animation = sidebarRef.current.animate(keyframes, {
-            duration: sidebarOpen ? 200 : 200,
-            easing: 'cubic-bezier(0.22, 1, 0.36, 1)',
-            fill: 'both'
-        });
-
-        sidebarAnimationRef.current = animation;
-
-        if (!sidebarOpen) {
-            animation.onfinish = () => {
-                setIsRendered(false);
-            };
-        }
-
-        return () => {
-            animation.cancel();
-        };
-    }, [sidebarOpen, isRendered]);
-
-    useEffect(() => {
         if (!sidebarOpen) {
             return;
         }
@@ -219,9 +166,6 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
         };
     }, [sidebarOpen, setSidebarOpen, onOutsideClose]);
 
-    if (!isRendered) {
-        return null;
-    }
 
     return (
         <div
@@ -230,172 +174,168 @@ export default function Sidebar({ loading, sidebarOpen, setSidebarOpen, nearestS
                 position: 'absolute',
                 zIndex: 402,
                 // left: 15,
+                opacity: sidebarOpen ? 1 : 0,
+                pointerEvents: sidebarOpen ? "auto" : "none",
+                transform: sidebarOpen ? "scale(1) translateY(0)" : "scale(0.88) translateY(-12px)",
+                transition: "max-height 680ms cubic-bezier(0.22, 1, 0.36, 1), transform 680ms cubic-bezier(0.22, 1, 0.36, 1)",
                 bottom: -110,
                 width: matches ? '360px' : 'calc(100vw)',
-                maxHeight: matches ? 'calc(100vh - 30%)' : 'calc(100vh - 60%)',
+                maxHeight: sidebarOpen ? matches ? 'calc(100vh - 30%)' : 'calc(100vh - 60%)' : 0,
                 display: 'flex',
                 flexDirection: 'column',
                 overflow: 'hidden'
             }}
         >
-            {loading ? (
-                <div className="box has-background-dark has-text-light p-5" style={{ border: '1px solid #30363d', borderRadius: '16px' }}>
-                    <div className="mb-4">
-                        <p className="heading has-text-grey-light mb-1">Ravprognose</p>
-                        <p className="title is-5 has-text-grey-lighter">Henter data...</p>
-                    </div>
-                    <progress className="progress is-small is-warning" max="100">15%</progress>
-                    <p className="has-text-centered has-text-grey is-size-7">Forbinder til vejr udbyder...</p>
+            <div
+                className="box has-text-light p-5 glass"
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    overflowY: 'auto',
+                    maxHeight: '100%',
+                    minHeight: 0,
+                    transition: "max-height 180ms cubic-bezier(0.22, 1, 0.36, 1), transform 280ms cubic-bezier(0.22, 1, 0.36, 1)",
+
+                }}
+            >
+                {/* Top Header */}
+                <div className="is-flex is-justify-content-space-between is-align-items-flex-start mb-4">
+                    <p className="heading has-text-white mb-2">Nærmeste station</p>
+                    <button
+                        type="button"
+                        className="delete"
+                        aria-label="close"
+                        onClick={() => {
+                            setSidebarOpen(false)
+                            onOutsideClose?.('button')
+                        }}
+                        style={{
+                            width: '36px',
+                            height: '36px',
+                            minWidth: '36px',
+                            minHeight: '36px',
+                            marginTop: '-6px'
+                        }}
+                    ></button>
                 </div>
-            ) : (
-                <div
-                    className="box has-text-light p-5 glass"
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        overflowY: 'auto',
-                        maxHeight: '100%',
-                        minHeight: 0
-                    }}
-                >
-                    {/* Top Header */}
-                    <div className="is-flex is-justify-content-space-between is-align-items-flex-start mb-4">
-                        <p className="heading has-text-white mb-2">Nærmeste station</p>
-                        <button
-                            type="button"
-                            className="delete"
-                            aria-label="close"
-                            onClick={() => {
-                                setSidebarOpen(false)
-                                onOutsideClose?.('button')
-                            }}
-                            style={{
-                                width: '36px',
-                                height: '36px',
-                                minWidth: '36px',
-                                minHeight: '36px',
-                                marginTop: '-6px'
-                            }}
-                        ></button>
-                    </div>
-                    {
-                        nearestStationObservations && nearestStationObservations?.met?.windDir?.length > 0 && nearestStationObservations?.met?.windSpeed?.length > 0 ? (
-                            <div className="grid p-0 m-1 mb-4 is-gap-4">
-                                <div className="cell">
-                                    <p className="is-size-7 has-text-grey-light mb-1">Nærmeste vejrstation</p>
-                                    <p className="is-size-6 has-text-white mb-2">{nearestStationObservations?.metStation?.stationName}</p>
-                                    <p className="is-size-7 has-text-grey-light mb-1">Seneste observation</p>
-                                    <p className="is-size-6 has-text-white mb-2">{DateTime.fromISO(nearestStationObservations?.met?.windDir[0]?.observed).toLocaleString(DateTime.DATETIME_MED)}</p>
+                {
+                    nearestStationObservations && nearestStationObservations?.met?.windDir?.length > 0 && nearestStationObservations?.met?.windSpeed?.length > 0 ? (
+                        <div className="grid p-0 m-1 mb-4 is-gap-4">
+                            <div className="cell">
+                                <p className="is-size-7 has-text-grey-light mb-1">Nærmeste vejrstation</p>
+                                <p className="is-size-6 has-text-white mb-2">{nearestStationObservations?.metStation?.stationName}</p>
+                                <p className="is-size-7 has-text-grey-light mb-1">Seneste observation</p>
+                                <p className="is-size-6 has-text-white mb-2">{DateTime.fromISO(nearestStationObservations?.met?.windDir[0]?.observed).toLocaleString(DateTime.DATETIME_MED)}</p>
 
-                                </div>
-                                <div className="cell">
-                                    <p className="is-size-7 has-text-grey-light mb-1">Vindretning</p>
-                                    <p className="is-size-6 has-text-white">{nearestStationObservations?.met?.windDir[0]?.windDirection}° <span
-                                        className="icon is-medium has-text-info mr-3"
-                                        style={{
-                                            display: 'inline-block',
-                                            transform: `rotate(${nearestStationObservations?.met?.windDir[0]?.windDirection}deg)`,
-                                            transformOrigin: 'center center',
-                                            transition: 'transform 0.5s ease'
-                                        }}
-                                    >
-                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: '20px', height: '20px' }}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
-                                        </svg>
-                                    </span></p>
-                                    <p className="is-size-7 has-text-grey-light mb-1">Vindhastighed</p>
-                                    <p className="is-size-6 has-text-white">{nearestStationObservations?.met?.windSpeed[0]?.windSpeed} m/s</p>
-                                </div>
                             </div>
-                        ) : (
-                            <div className="mb-4 p-3" style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid #363636' }}>
-                                <p className="is-size-7 has-text-grey-light mb-1">Ingen observationer tilgængelige</p>
-                            </div>
-                        )}
-
-                    {nearestStationObservations?.tidewater ? (
-                        <div className="mb-1 p-3" style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid #363636' }}>
-                            <p className="is-size-7 has-text-grey-light mb-1">Nærmeste tidevandsstation</p>
-                            <p className="is-size-6 has-text-white mb-2">{nearestStationObservations?.tidewaterStation?.stationName || 'Ukendt station'}</p>
-
-                            {hasTidewaterChartData ? (
-                                <>
-                                    <p className="is-size-7 has-text-grey-light mb-2">
-                                        Seneste {tideWaterSeries.length} målinger ({DateTime.fromISO(tideWaterSeries[0].timestamp).toLocaleString(DateTime.DATETIME_SHORT)} - {DateTime.fromISO(tideLatest.timestamp).toLocaleString(DateTime.DATETIME_SHORT)})
-                                    </p>
-                                    <svg
-                                        viewBox={`0 0 ${tideChartWidth} ${tideChartHeight}`}
-                                        style={{ width: '100%', height: '150px', display: 'block' }}
-                                        role="img"
-                                        aria-label="Tidevand udvikling over tid"
-                                    >
-                                        <defs>
-                                            <linearGradient id="tideLineGradient" x1="0" y1="0" x2="1" y2="0">
-                                                <stop offset="0%" stopColor="#60a5fa" />
-                                                <stop offset="100%" stopColor="#22d3ee" />
-                                            </linearGradient>
-                                        </defs>
-
-                                        <line x1={tideChartPadding.left} y1={tideChartPadding.top} x2={tideChartPadding.left} y2={tideChartHeight - tideChartPadding.bottom} stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
-                                        <line x1={tideChartPadding.left} y1={tideChartHeight - tideChartPadding.bottom} x2={tideChartWidth - tideChartPadding.right} y2={tideChartHeight - tideChartPadding.bottom} stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
-
-                                        {tideYTicks.map((tick, index) => (
-                                            <g key={`y-${index}`}>
-                                                <line
-                                                    x1={tideChartPadding.left}
-                                                    y1={tick.y}
-                                                    x2={tideChartWidth - tideChartPadding.right}
-                                                    y2={tick.y}
-                                                    stroke="rgba(255,255,255,0.12)"
-                                                    strokeWidth="1"
-                                                />
-                                                <text
-                                                    x={6}
-                                                    y={tick.y + 3}
-                                                    fontSize="9"
-                                                    fill="rgba(255,255,255,0.8)"
-                                                >
-                                                    {tick.value.toFixed(2)}cm
-                                                </text>
-                                            </g>
-                                        ))}
-
-                                        <path d={tideChartPath} fill="none" stroke="url(#tideLineGradient)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-
-                                        {tideXTicks.map((tick) => (
-                                            <g key={`x-${tick.key}`}>
-                                                <line
-                                                    x1={tick.x}
-                                                    y1={tideChartHeight - tideChartPadding.bottom}
-                                                    x2={tick.x}
-                                                    y2={tideChartHeight - tideChartPadding.bottom + 4}
-                                                    stroke="rgba(255,255,255,0.5)"
-                                                    strokeWidth="1"
-                                                />
-                                                <text
-                                                    x={tick.x}
-                                                    y={tideChartHeight - 8}
-                                                    textAnchor="middle"
-                                                    fontSize="9"
-                                                    fill="rgba(255,255,255,0.7)"
-                                                >
-                                                    {tick.label}
-                                                </text>
-                                            </g>
-                                        ))}
+                            <div className="cell">
+                                <p className="is-size-7 has-text-grey-light mb-1">Vindretning</p>
+                                <p className="is-size-6 has-text-white">{nearestStationObservations?.met?.windDir[0]?.windDirection}° <span
+                                    className="icon is-medium has-text-info mr-3"
+                                    style={{
+                                        display: 'inline-block',
+                                        transform: `rotate(${nearestStationObservations?.met?.windDir[0]?.windDirection}deg)`,
+                                        transformOrigin: 'center center',
+                                        transition: 'transform 0.5s ease'
+                                    }}
+                                >
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: '20px', height: '20px' }}>
+                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
                                     </svg>
-
-                                    <div className="is-size-7 has-text-grey-light" style={{ marginTop: '4px' }}>
-                                        Seneste niveau: <span className="has-text-white">{tideLatest.tideHeight.toFixed(2)} cm</span>
-                                    </div>
-                                </>
-                            ) : (
-                                <p className="is-size-7 has-text-grey-light">Ikke nok tidevandsdata til at vise kurven endnu.</p>
-                            )}
+                                </span></p>
+                                <p className="is-size-7 has-text-grey-light mb-1">Vindhastighed</p>
+                                <p className="is-size-6 has-text-white">{nearestStationObservations?.met?.windSpeed[0]?.windSpeed} m/s</p>
+                            </div>
                         </div>
-                    ) : null}
-                </div>
-            )}
+                    ) : (
+                        <div className="mb-4 p-3" style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid #363636' }}>
+                            <p className="is-size-7 has-text-grey-light mb-1">Ingen observationer tilgængelige</p>
+                        </div>
+                    )}
+
+                {nearestStationObservations?.tidewater ? (
+                    <div className="mb-1 p-3" style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid #363636' }}>
+                        <p className="is-size-7 has-text-grey-light mb-1">Nærmeste tidevandsstation</p>
+                        <p className="is-size-6 has-text-white mb-2">{nearestStationObservations?.tidewaterStation?.stationName || 'Ukendt station'}</p>
+
+                        {hasTidewaterChartData ? (
+                            <>
+                                <p className="is-size-7 has-text-grey-light mb-2">
+                                    Seneste {tideWaterSeries.length} målinger ({DateTime.fromISO(tideWaterSeries[0].timestamp).toLocaleString(DateTime.DATETIME_SHORT)} - {DateTime.fromISO(tideLatest.timestamp).toLocaleString(DateTime.DATETIME_SHORT)})
+                                </p>
+                                <svg
+                                    viewBox={`0 0 ${tideChartWidth} ${tideChartHeight}`}
+                                    style={{ width: '100%', height: '150px', display: 'block' }}
+                                    role="img"
+                                    aria-label="Tidevand udvikling over tid"
+                                >
+                                    <defs>
+                                        <linearGradient id="tideLineGradient" x1="0" y1="0" x2="1" y2="0">
+                                            <stop offset="0%" stopColor="#60a5fa" />
+                                            <stop offset="100%" stopColor="#22d3ee" />
+                                        </linearGradient>
+                                    </defs>
+
+                                    <line x1={tideChartPadding.left} y1={tideChartPadding.top} x2={tideChartPadding.left} y2={tideChartHeight - tideChartPadding.bottom} stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
+                                    <line x1={tideChartPadding.left} y1={tideChartHeight - tideChartPadding.bottom} x2={tideChartWidth - tideChartPadding.right} y2={tideChartHeight - tideChartPadding.bottom} stroke="rgba(255,255,255,0.25)" strokeWidth="1" />
+
+                                    {tideYTicks.map((tick, index) => (
+                                        <g key={`y-${index}`}>
+                                            <line
+                                                x1={tideChartPadding.left}
+                                                y1={tick.y}
+                                                x2={tideChartWidth - tideChartPadding.right}
+                                                y2={tick.y}
+                                                stroke="rgba(255,255,255,0.12)"
+                                                strokeWidth="1"
+                                            />
+                                            <text
+                                                x={6}
+                                                y={tick.y + 3}
+                                                fontSize="9"
+                                                fill="rgba(255,255,255,0.8)"
+                                            >
+                                                {tick.value.toFixed(2)}cm
+                                            </text>
+                                        </g>
+                                    ))}
+
+                                    <path d={tideChartPath} fill="none" stroke="url(#tideLineGradient)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+
+                                    {tideXTicks.map((tick) => (
+                                        <g key={`x-${tick.key}`}>
+                                            <line
+                                                x1={tick.x}
+                                                y1={tideChartHeight - tideChartPadding.bottom}
+                                                x2={tick.x}
+                                                y2={tideChartHeight - tideChartPadding.bottom + 4}
+                                                stroke="rgba(255,255,255,0.5)"
+                                                strokeWidth="1"
+                                            />
+                                            <text
+                                                x={tick.x}
+                                                y={tideChartHeight - 8}
+                                                textAnchor="middle"
+                                                fontSize="9"
+                                                fill="rgba(255,255,255,0.7)"
+                                            >
+                                                {tick.label}
+                                            </text>
+                                        </g>
+                                    ))}
+                                </svg>
+
+                                <div className="is-size-7 has-text-grey-light" style={{ marginTop: '4px' }}>
+                                    Seneste niveau: <span className="has-text-white">{tideLatest.tideHeight.toFixed(2)} cm</span>
+                                </div>
+                            </>
+                        ) : (
+                            <p className="is-size-7 has-text-grey-light">Ikke nok tidevandsdata til at vise kurven endnu.</p>
+                        )}
+                    </div>
+                ) : null}
+            </div>
+
         </div>
     );
 }

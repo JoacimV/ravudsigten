@@ -81,11 +81,11 @@ export default function MapGuideControl() {
                         maxHeight: isGuideOpen ? "min(70vh, 520px)" : 0,
                         opacity: isGuideOpen ? 1 : 0,
                         transform: isGuideOpen ? "scale(1) translateY(0)" : "scale(0.88) translateY(-12px)",
-                        transition: "opacity .2s ease, transform .2s ease, max-height .2s ease",
+                        transition: "max-height 180ms cubic-bezier(0.22, 1, 0.36, 1), transform 280ms cubic-bezier(0.22, 1, 0.36, 1)",
                         pointerEvents: isGuideOpen ? "auto" : "none",
                     }}
                 >
-                    <div className="box glass"      >
+                    <div className="box glass">
                         <div style={{ fontSize: 14, fontWeight: 700, marginBottom: 8 }}>
                             Sådan virker kortet
                         </div>
