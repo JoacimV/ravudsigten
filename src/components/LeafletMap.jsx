@@ -14,7 +14,7 @@ const minZoom = 1, maxZoom = 14;
 const OBSERVATIONS_BASE_URL = "https://dswx6vubccbkr.cloudfront.net/raw";
 const ENRICHED_BASE_URL = "https://dswx6vubccbkr.cloudfront.net/enriched";
 const MAP_LAYER_STORAGE_KEY = "amberFinder.mapLayer"
-const WIND_INTENSITY_THRESHOLD = 60
+const WIND_INTENSITY_THRESHOLD = 55
 
 const POINT_WINDOWS = [
     {
@@ -137,9 +137,6 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
             setClickedPosition(e.latlng);
             setNearestPoint(nearestPoint);
             setNearestNextPoint(nearestNextPoint);
-            // setSplitLine(split.features[0]);
-            // setSplitLine2(split.features[1]);
-            // map.setView({ lat: nearestPoint.lat, lng: nearestPoint.lng }, 10, { animate: true, duration: 1 })
         }, 300);
     })
     // This function prevents setting position, when double clicking
@@ -157,6 +154,7 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
         }
     })
 
+    // Animation for the marker when it is placed on the map. This is a subtle bounce effect to draw attention to the new marker.
     useEffect(() => {
         if (!clickedPosition) {
             return
