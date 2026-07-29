@@ -12,42 +12,9 @@ import MapHeader from "./MapHeader"
 import Slider from "./Slider";
 const minZoom = 1, maxZoom = 14;
 const OBSERVATIONS_BASE_URL = "https://dswx6vubccbkr.cloudfront.net/raw";
-const ENRICHED_BASE_URL = "https://dswx6vubccbkr.cloudfront.net/enriched";
 const MAP_LAYER_STORAGE_KEY = "amberFinder.mapLayer"
 const WIND_INTENSITY_THRESHOLD = 55
 
-const POINT_WINDOWS = [
-    {
-        id: 'now',
-        startOffsetHours: -72,
-        endOffsetHours: 0,
-        fileCandidates: ['coast-points-simple-now.json'],
-    },
-    {
-        id: 'now-plus-12',
-        startOffsetHours: -60,
-        endOffsetHours: 12,
-        fileCandidates: ['coast-points-simple-now-plus-12.json'],
-    },
-    {
-        id: 'tomorrow',
-        startOffsetHours: -48,
-        endOffsetHours: 24,
-        fileCandidates: ['coast-points-simple-tomorrow.json'],
-    },
-    {
-        id: 'tomorrow-plus-12',
-        startOffsetHours: -36,
-        endOffsetHours: 36,
-        fileCandidates: ['coast-points-simple-tomorrow-plus-12.json'],
-    },
-    {
-        id: 'day-after-tomorrow',
-        startOffsetHours: -24,
-        endOffsetHours: 48,
-        fileCandidates: ['coast-points-simple-day-after-tomorrow.json'],
-    },
-]
 
 const tidewaterStationIcon = L.divIcon({
     className: 'station-marker-icon station-marker-icon--tidewater',
@@ -208,7 +175,13 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
     )
 }
 
-export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestPoint, setNearestNextPoint, debug, stations = [], onNearestStationObservationsChange, sidebarResetToken = 0, sidebarSuppressNextMapClickToken = 0 }) {
+export default function LeafletMap({
+    nearestPoint, nearestNextPoint,
+    setNearestPoint, setNearestNextPoint,
+    debug, stations = [], onNearestStationObservationsChange, sidebarResetToken = 0,
+    sidebarSuppressNextMapClickToken = 0,
+    forecast
+}) {
     const [clickedPosition, setClickedPosition] = useState(undefined)
     const [nearestMetStation, setNearestMetStation] = useState(undefined)
     const [nearestTideStation, setNearestTideStation] = useState(undefined)
@@ -256,10 +229,8 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
     useEffect(() => {
         const mapRawPointsToHeatPoints = (data = []) => {
             const mappedPoints = []
-
             for (const point of data) {
                 const intensity = Number(point?.[0]) * 100
-
                 if (Number.isFinite(intensity) && intensity > WIND_INTENSITY_THRESHOLD) {
                     mappedPoints.push({
                         intensity,
@@ -269,65 +240,26 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
                     })
                 }
             }
-
             return mappedPoints
         }
-
-        const fetchWindowPoints = async (windowDefinition) => {
-            let lastError
-
-            for (const fileName of windowDefinition.fileCandidates) {
-                try {
-                    const response = await fetch(`${ENRICHED_BASE_URL}/${fileName}`)
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP ${response.status}`)
-                    }
-
-                    const data = await response.json()
-                    return mapRawPointsToHeatPoints(data)
-                } catch (error) {
-                    lastError = error
-                }
+        if (forecast) {
+            const windowPoints = {};
+            for (let i = 0; i < forecast.length; i++) {
+                const mappedPoints = mapRawPointsToHeatPoints(forecast[i]);
+                windowPoints[i] = mappedPoints;
             }
-
-            throw lastError || new Error(`Ingen datafil fundet for ${windowDefinition.id}`)
+            setPointsByWindow(windowPoints);
         }
 
-        const fetchAllPoints = async () => {
+    }, [forecast]);
 
-            try {
-                const allWindowPoints = await Promise.all(
-                    POINT_WINDOWS.map(async (windowDefinition) => {
-                        const windowPoints = await fetchWindowPoints(windowDefinition)
-                        return [windowDefinition.id, windowPoints]
-                    })
-                )
-
-                setPointsByWindow(Object.fromEntries(allWindowPoints))
-            } catch (error) {
-                console.log('Failed to fetch enriched points', error)
-                setPointsByWindow({})
-            }
-        }
-
-        fetchAllPoints()
-    }, []);
     // Hack to scroll down a bit on mobile devices, so that the map is a bit hidden behind the header.
     useEffect(() => {
         window.scrollTo(0, 110);
     }, []);
 
     useEffect(() => {
-        const activeWindow = POINT_WINDOWS[activeWindowIndex]
-        const windowPoints = pointsByWindow[activeWindow?.id]
-
-        if (!activeWindow || !Array.isArray(windowPoints)) {
-            setPoints([])
-            return
-        }
-
-        setPoints(windowPoints)
+        setPoints(pointsByWindow[activeWindowIndex] || []);
     }, [activeWindowIndex, pointsByWindow])
 
     const mapMetObservation = (feature) => {
@@ -471,7 +403,7 @@ export default function LeafletMap({ nearestPoint, nearestNextPoint, setNearestP
             </button>
             <Slider
                 min={0}
-                max={POINT_WINDOWS.length - 1}
+                max={forecast ? forecast.length - 1 : 0}
                 value={activeWindowIndex}
                 onChange={(value) => setActiveWindowIndex(value)}
             />

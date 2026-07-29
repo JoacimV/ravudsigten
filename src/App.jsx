@@ -19,6 +19,16 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarResetToken, setSidebarResetToken] = useState(0)
   const [sidebarSuppressNextMapClickToken, setSidebarSuppressNextMapClickToken] = useState(0)
+  const [forecast, setForecast] = useState(undefined)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const res = await fetch('https://dswx6vubccbkr.cloudfront.net/enriched/coast-points-simple-full.json')
+      const json = await res.json()
+      setForecast(json);
+    }
+    fetchData()
+  }, [])
 
   useEffect(() => {
     const fetchStations = async () => {
@@ -88,6 +98,7 @@ function App() {
         onNearestStationObservationsChange={setNearestStationObservations}
         sidebarResetToken={sidebarResetToken}
         sidebarSuppressNextMapClickToken={sidebarSuppressNextMapClickToken}
+        forecast={forecast}
       />
     </React.Fragment>
   );
