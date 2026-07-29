@@ -206,7 +206,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
         const scoreIndex = Math.min(Math.max(Math.floor(score * scoreTexts.length), 0), scoreTexts.length - 1);
 
         return (
-            <div className="mb-4 p-3" style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid #363636' }}>
+            <div className="glass mb-4 p-3" style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid #363636' }}>
                 <p className="is-size-6 has-text-white mb-2">{scoreTexts[scoreIndex].title}</p>
                 <progress className={`progress ${scoreTexts[scoreIndex].color}`} value={score} max="1">{score}</progress>
                 <p className="is-size-7 has-text-grey-light mb-1">{scoreTexts[scoreIndex].textOne}</p>
@@ -271,7 +271,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
                 {renderScore()}
                 {
                     nearestStationObservations && nearestStationObservations?.met?.windDir?.length > 0 && nearestStationObservations?.met?.windSpeed?.length > 0 ? (
-                        <div className="grid p-0 m-1 mb-4 is-gap-4">
+                        <div className="grid p-3 mb-4 glass">
                             <div className="cell">
                                 <p className="is-size-7 has-text-grey-light mb-1">Nærmeste vejrstation</p>
                                 <p className="is-size-6 has-text-white mb-2">{nearestStationObservations?.metStation?.stationName}</p>
@@ -305,7 +305,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
                     )}
 
                 {nearestStationObservations?.tidewater ? (
-                    <div className="mb-1 p-3" style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid #363636' }}>
+                    <div className="glass mb-1 p-3" style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid #363636' }}>
                         <p className="is-size-7 has-text-grey-light mb-1">Nærmeste tidevandsstation</p>
                         <p className="is-size-6 has-text-white mb-2">{nearestStationObservations?.tidewaterStation?.stationName || 'Ukendt station'}</p>
 
