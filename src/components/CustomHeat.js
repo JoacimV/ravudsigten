@@ -53,7 +53,7 @@ L.HeatLayer = (L.Layer ? L.Layer : L.Class).extend({
 
         if (isTouchDevice) {
             // MOBIL-LOGIK: Throttled live-opdatering under touch-move
-            this._throttledReset = L.Util.throttle(this._reset, 100, this);
+            this._throttledReset = L.Util.throttle(this._reset, 20, this);
             map.on('move', this._throttledReset, this);
             map.on('moveend', this._reset, this);
         } else {
