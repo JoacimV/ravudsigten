@@ -11,11 +11,13 @@
     "flatbush": "^4.6.2",
     "heatmap.js": "^2.0.5",
     "leaflet": "1.9.4",
-    "simpleheat": "0.4.0",
     "luxon": "3.7.2",
+    "recharts": "3.10.1",
     "react": "19.2.7",
     "react-dom": "19.2.7",
+    "react-is": "^19.2.8",
     "react-leaflet": "5.0.0",
+    "simpleheat": "0.4.0",
     "web-vitals": "5.3.0"
   },
   "scripts": {

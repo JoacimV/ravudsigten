@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DateTime } from 'luxon';
+import { RechartLinearChart } from './RechartLinearChart';
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObservations, onOutsideClose, score }) {
     const sidebarRef = useRef(null);
@@ -13,8 +14,6 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
         const observedDate = new Date(item.timestamp);
         return observedDate.getMinutes() === 0 || observedDate.getMinutes() === 30; // Keep only observations at the top of the hour or half past the hour
     });
-    console.log(tideWaterFiltered)
-
 
     // Set up a media query listener to update the matches state when the viewport width changes
     useEffect(() => {
@@ -216,8 +215,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
                             <p className="is-size-7 has-text-grey-light mb-1">Ingen observationer tilgængelige</p>
                         </div>
                     )}
-                {/* <LinearChart data={tideWaterFiltered} station={nearestStationObservations?.tidewaterStation} /> */}
-
+                <RechartLinearChart data={tideWaterFiltered} />
             </div>
 
         </div>
