@@ -162,7 +162,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
             >
                 {/* Top Header */}
                 <div className="is-flex is-justify-content-space-between is-align-items-flex-start mb-4">
-                    <p className="mb-2 glass p-3 subtitle is-size-6 ">Nærmeste station</p>
+                    <p className="mb-2 glass p-3 title is-size-6 ">Nærmeste station</p>
                     <button
                         type="button"
                         className="delete p-3 m-2"
@@ -185,19 +185,19 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
                     nearestStationObservations && nearestStationObservations?.met?.windDir?.length > 0 && nearestStationObservations?.met?.windSpeed?.length > 0 ? (
                         <div className="grid p-4 mb-4 glass">
                             <div className="cell">
-                                <p className="is-size-7 subtitle mb-1">Nærmeste vejrstation</p>
+                                <p className="is-size-7 title mb-1">Nærmeste vejrstation</p>
                                 <p className="is-size-6 subtitle mb-2">{nearestStationObservations?.metStation?.stationName}</p>
-                                <p className="is-size-7 subtitle mb-1">Seneste observation</p>
+                                <p className="is-size-7 title mb-1">Seneste observation</p>
                                 <p className="is-size-6 subtitle mb-2">{DateTime.fromISO(nearestStationObservations?.met?.windDir[0]?.observed).toLocaleString(DateTime.DATETIME_MED)}</p>
 
                             </div>
                             <div className="cell">
-                                <p className="is-size-7 subtitle mb-1">Vindhastighed</p>
+                                <p className="is-size-7 title mb-1">Vindhastighed</p>
                                 <p className="is-size-6 subtitle mb-2">{nearestStationObservations?.met?.windSpeed[0]?.windSpeed} m/s</p>
-                                <p className="is-size-7 subtitle mb-1">Vindretning</p>
-                                <p className="is-size-6 subtitle">{nearestStationObservations?.met?.windDir[0]?.windDirection}°
+                                <p className="is-size-7 title mb-1">Vindretning</p>
+                                <p className="is-size-6 subtitle mb-2">{nearestStationObservations?.met?.windDir[0]?.windDirection}°
                                     <span
-                                        className="icon is-medium has-text-info  p-0 ml-0 pb-1"
+                                        className="icon is-medium has-text-info  p-0 ml-0 pb-1 m-0"
                                         style={{
                                             transform: `rotate(${nearestStationObservations?.met?.windDir[0]?.windDirection}deg)`,
                                             transformOrigin: 'center center',

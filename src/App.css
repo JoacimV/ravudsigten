@@ -1,3 +1,5 @@
+@import "bulma/css/bulma.min.css";
+
 html,
 body,
 #root {
@@ -6,6 +8,8 @@ body,
     /* overflow: hidden; */
     touch-action: none;
     scroll-behavior: none;
+    font-family: 'Fira Sans', sans-serif;
+
 }
 
 html {
