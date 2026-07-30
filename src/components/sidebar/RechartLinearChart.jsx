@@ -91,7 +91,7 @@ export const RechartLinearChart = ({ data }) => {
                             <br />
                             <p>Hvornår er det bedst at finde rav?</p>
                             <br />
-                            <p>Søg fra 2 timer efter højvande indtil lavvande. Her falder vandstanden og efterlader ravet i det mørke opskyl på stranden. De bedste chancer for ravsøgning er lige efter storm, når vinden slår om mod land.</p>
+                            <p>Søg fra højvandet topper og hele vejen ned mod lavvande. Det faldende vand efterlader ravet øverst i strandens mørke opskyl. Ravsøgningen er bedst lige efter storm eller blæst, når pålandsvinden skubber materialet ind.</p>
                         </span>
                     )}
                 </span>
