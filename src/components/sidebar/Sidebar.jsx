@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { DateTime } from 'luxon';
-import { LinearChart } from './LinearChart';
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObservations, onOutsideClose, score }) {
     const sidebarRef = useRef(null);
@@ -120,11 +119,11 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
 
         return (
             <div className="glass mb-4 p-4">
-                <p className="is-size-6 has-text-white mb-2">{scoreTexts[scoreIndex].title}</p>
+                <p className="is-size-6 mb-2 title">{scoreTexts[scoreIndex].title}</p>
                 <progress className={`progress ${scoreTexts[scoreIndex].color}`} value={score} max="1">{score}</progress>
-                <p className="is-size-7 has-text-grey-light mb-1">{scoreTexts[scoreIndex].textOne}</p>
+                <p className="is-size-7  mb-1 subtitle">{scoreTexts[scoreIndex].textOne}</p>
                 <br />
-                <p className="is-size-7 has-text-grey-light mb-1">{scoreTexts[scoreIndex].textTwo}</p>
+                <p className="is-size-7 mb-1 subtitle">{scoreTexts[scoreIndex].textTwo}</p>
             </div>
         );
     }
@@ -163,7 +162,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
             >
                 {/* Top Header */}
                 <div className="is-flex is-justify-content-space-between is-align-items-flex-start mb-4">
-                    <p className="heading has-text-white mb-2 glass p-3">Nærmeste station</p>
+                    <p className="mb-2 glass p-3 subtitle is-size-6 ">Nærmeste station</p>
                     <button
                         type="button"
                         className="delete p-3 m-2"
@@ -186,29 +185,30 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
                     nearestStationObservations && nearestStationObservations?.met?.windDir?.length > 0 && nearestStationObservations?.met?.windSpeed?.length > 0 ? (
                         <div className="grid p-4 mb-4 glass">
                             <div className="cell">
-                                <p className="is-size-7 has-text-grey-light mb-1">Nærmeste vejrstation</p>
-                                <p className="is-size-6 has-text-white mb-2">{nearestStationObservations?.metStation?.stationName}</p>
-                                <p className="is-size-7 has-text-grey-light mb-1">Seneste observation</p>
-                                <p className="is-size-6 has-text-white mb-2">{DateTime.fromISO(nearestStationObservations?.met?.windDir[0]?.observed).toLocaleString(DateTime.DATETIME_MED)}</p>
+                                <p className="is-size-7 subtitle mb-1">Nærmeste vejrstation</p>
+                                <p className="is-size-6 subtitle mb-2">{nearestStationObservations?.metStation?.stationName}</p>
+                                <p className="is-size-7 subtitle mb-1">Seneste observation</p>
+                                <p className="is-size-6 subtitle mb-2">{DateTime.fromISO(nearestStationObservations?.met?.windDir[0]?.observed).toLocaleString(DateTime.DATETIME_MED)}</p>
 
                             </div>
                             <div className="cell">
-                                <p className="is-size-7 has-text-grey-light mb-1">Vindretning</p>
-                                <p className="is-size-6 has-text-white">{nearestStationObservations?.met?.windDir[0]?.windDirection}° <span
-                                    className="icon is-medium has-text-info mr-3"
-                                    style={{
-                                        display: 'inline-block',
-                                        transform: `rotate(${nearestStationObservations?.met?.windDir[0]?.windDirection}deg)`,
-                                        transformOrigin: 'center center',
-                                        transition: 'transform 0.5s ease'
-                                    }}
-                                >
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: '20px', height: '20px' }}>
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
-                                    </svg>
-                                </span></p>
-                                <p className="is-size-7 has-text-grey-light mb-1">Vindhastighed</p>
-                                <p className="is-size-6 has-text-white">{nearestStationObservations?.met?.windSpeed[0]?.windSpeed} m/s</p>
+                                <p className="is-size-7 subtitle mb-1">Vindhastighed</p>
+                                <p className="is-size-6 subtitle mb-2">{nearestStationObservations?.met?.windSpeed[0]?.windSpeed} m/s</p>
+                                <p className="is-size-7 subtitle mb-1">Vindretning</p>
+                                <p className="is-size-6 subtitle">{nearestStationObservations?.met?.windDir[0]?.windDirection}°
+                                    <span
+                                        className="icon is-medium has-text-info  p-0 ml-0 pb-1"
+                                        style={{
+                                            transform: `rotate(${nearestStationObservations?.met?.windDir[0]?.windDirection}deg)`,
+                                            transformOrigin: 'center center',
+                                            transition: 'transform 0.5s ease'
+                                        }}
+                                    >
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" style={{ width: '20px', height: '20px' }}>
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3" />
+                                        </svg>
+                                    </span>
+                                </p>
                             </div>
                         </div>
                     ) : (
@@ -216,7 +216,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
                             <p className="is-size-7 has-text-grey-light mb-1">Ingen observationer tilgængelige</p>
                         </div>
                     )}
-                <LinearChart data={tideWaterFiltered} station={nearestStationObservations?.tidewaterStation} />
+                {/* <LinearChart data={tideWaterFiltered} station={nearestStationObservations?.tidewaterStation} /> */}
 
             </div>
 

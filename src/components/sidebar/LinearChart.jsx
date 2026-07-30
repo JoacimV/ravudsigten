@@ -98,8 +98,8 @@ export function LinearChart({ data, station }) {
 
 
             <div className="glass mb-1 p-4">
-                <p className="is-size-7 has-text-grey-light mb-1">Nærmeste tidevandsstation</p>
-                <p className="is-size-6 has-text-white mb-2">{station?.stationName || 'Ukendt station'}</p>
+                <p className="is-size-7 subtitle mb-1">Nærmeste tidevandsstation</p>
+                <p className="is-size-6 subtitle mb-2">{station?.stationName || 'Ukendt station'}</p>
 
                 {
                     hasTidewaterChartData ? (
@@ -137,7 +137,8 @@ export function LinearChart({ data, station }) {
                                             x={6}
                                             y={tick.y + 3}
                                             fontSize="9"
-                                            fill="rgba(255,255,255,0.8)"
+                                            className="subtitle is-size-7"
+                                        // fill="rgba(255,255,255,0.8)"
                                         >
                                             {tick.value.toFixed(2)}cm
                                         </text>
@@ -160,8 +161,7 @@ export function LinearChart({ data, station }) {
                                             x={tick.x}
                                             y={tideChartHeight - 8}
                                             textAnchor="middle"
-                                            fontSize="9"
-                                            fill="rgba(255,255,255,0.7)"
+                                            className={"subtitle is-size-7"}
                                         >
                                             {tick.label}
                                         </text>
@@ -169,12 +169,12 @@ export function LinearChart({ data, station }) {
                                 ))}
                             </svg>
 
-                            <div className="is-size-7 has-text-grey-light" style={{ marginTop: '4px' }}>
-                                Seneste niveau: <span className="has-text-white">{tideLatest.tideHeight.toFixed(2)} cm</span>
+                            <div className="is-size-7 subtitle" style={{ marginTop: '4px' }}>
+                                Seneste niveau: <span className="subtitle is-size-7">{tideLatest.tideHeight.toFixed(2)} cm</span>
                             </div>
                         </>
                     ) : (
-                        <p className="is-size-7 has-text-grey-light">Ikke nok tidevandsdata til at vise kurven endnu.</p>
+                        <p className="is-size-7 subtitle">Ikke nok tidevandsdata til at vise kurven endnu.</p>
                     )
                 }
             </div >

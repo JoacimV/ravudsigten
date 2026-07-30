@@ -54,34 +54,8 @@ const MapHeader = () => {
 
                         {/* Tekstsektion */}
                         <div style={{ minWidth: 0, flex: 1 }}>
-                            <h1
-                                className="title mb-0"
-                                style={{
-                                    color: '#FFFFFF',
-                                    fontSize: 'clamp(0.85rem, 3.5vw, 1.1rem)',
-                                    fontWeight: '700',
-                                    letterSpacing: '1px',
-                                    whiteSpace: 'nowrap',
-                                    lineHeight: 1.1,
-                                    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-                                }}
-                            >
-                                RAVUDSIGTEN
-                            </h1>
-                            <p
-                                className="subtitle mb-0 mt-1"
-                                style={{
-                                    color: '#D1D5DB',
-                                    fontSize: 'clamp(0.6rem, 2.2vw, 0.72rem)',
-                                    fontWeight: '400',
-                                    letterSpacing: '0.2px',
-                                    whiteSpace: 'normal',
-                                    lineHeight: 1,
-                                    fontFamily: 'system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif'
-                                }}
-                            >
-                                Din prognose for ravfund
-                            </p>
+                            <h1 className="title mb-0 is-size-7">RAVUDSIGTEN</h1>
+                            <p className="subtitle is-size-7">Din prognose for ravfund</p>
                         </div>
                     </div>
                 </div>

@@ -10,9 +10,9 @@ export default function Slider({ min, max, value, onChange }) {
         <div className="columns is-mobile" style={{ position: 'fixed', zIndex: 401, bottom: 0 }}>
             <div className="column is-full-mobile" >
                 <div className="box m-5 p-4 glass" >
-                    <p className="mb-2" style={{ color: '#fffaba', fontSize: 12 }}>Vælg prognosevindue</p>
+                    <p className="mb-2 subtitle is-size-7">Vælg prognosevindue</p>
                     <p>
-                        <strong style={{ color: 'white' }}>{values[value]}</strong>
+                        <strong className="subtitle is-size-7">{values[value]}</strong>
                     </p>
                     <input
                         type="range"
