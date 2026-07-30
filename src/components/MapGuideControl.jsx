@@ -61,8 +61,8 @@ export default function MapGuideControl() {
             <div
                 ref={guideRef}
                 style={{
-                    position: "absolute",
-                    top: 122,
+                    position: "fixed",
+                    top: 22,
                     right: 12,
                     zIndex: 1000,
                     display: "flex",

@@ -7,8 +7,8 @@ const MapHeader = () => {
             {/* Indlejret CSS til responsiv placering på desktop vs. mobil */}
             <style>{`
         .map-header-container {
-          position: absolute;
-          top: 120px;
+          position: fixed;
+          top: 20px;
           left: 50%;
           transform: translateX(-50%);
           z-index: 1000;

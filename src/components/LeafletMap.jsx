@@ -79,7 +79,6 @@ const getStationIcon = (source, selected) => {
         return icon;
     }
 }
-
 function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, setNearestNextPoint, suppressNextClickToken, activeWindowIndex, forecast, setScore }) {
     let clickTimeout = null;  // Declare a variable to hold the timeout
     const shouldIgnoreNextClickRef = useRef(false)
@@ -395,8 +394,8 @@ export default function LeafletMap({
                 className="glass p-2 m-1"
                 onClick={() => setIsSatellite((prev) => !prev)}
                 style={{
-                    position: "absolute",
-                    top: 122,
+                    position: "fixed",
+                    top: 22,
                     right: 56,
                     zIndex: 1001,
                     cursor: "pointer",

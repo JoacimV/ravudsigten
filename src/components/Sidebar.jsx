@@ -221,19 +221,19 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
         <div
             ref={sidebarRef}
             style={{
-                position: 'absolute',
+                position: 'fixed',
                 zIndex: 402,
                 // left: 15,
                 opacity: sidebarOpen ? 1 : 0,
                 pointerEvents: sidebarOpen ? "auto" : "none",
                 transform: sidebarOpen ? "scale(1) translateY(0)" : "scale(0.88) translateY(-12px)",
                 transition: "max-height 680ms cubic-bezier(0.22, 1, 0.36, 1), transform 680ms cubic-bezier(0.22, 1, 0.36, 1)",
-                bottom: -110,
+                bottom: -10,
                 width: matches ? '360px' : 'calc(100vw)',
                 maxHeight: sidebarOpen ? matches ? 'calc(100vh - 30%)' : 'calc(100vh - 60%)' : 0,
                 display: 'flex',
                 flexDirection: 'column',
-                overflow: 'hidden'
+                overflow: 'auto'
             }}
         >
             <div
