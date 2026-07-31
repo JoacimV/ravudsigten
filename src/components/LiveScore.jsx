@@ -113,7 +113,7 @@ export default function LiveScore({ longitude, latitude, name }) {
                 </div>
             </div>
             <p className="subtitle is-6 mb-3">
-                Vores algoritmeprognose analyserer løbende vindretning, vindstyrke, bølger og strømforhold ved {name} for at give dig det bedste estimat på, hvornår chancerne for at finde rav er størst.
+                Vores algoritmer analyserer løbende vindretning, vindstyrke, bølger og strømforhold ved {name} for at give dig det bedste estimat på, hvornår chancerne for at finde rav er størst.
             </p>
         </div>
     );
