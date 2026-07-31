@@ -47,10 +47,12 @@ const [longitude, latitude] = strandInfo[2];
 
     <main class="section">
         <div class="container">
-            {
-                /* LiveScore indlæser friske data fra CloudFront på klienten hver gang! */
-            }
-            <LiveScore client:load longitude={longitude} latitude={latitude} />
+            <LiveScore
+                client:load
+                longitude={longitude}
+                latitude={latitude}
+                name={strandInfo[0]}
+            />
         </div>
     </main>
 </Layout>
