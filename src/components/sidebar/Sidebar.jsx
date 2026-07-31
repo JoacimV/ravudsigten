@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { DateTime } from 'luxon';
 import { RechartLinearChart } from './RechartLinearChart';
 
-export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObservations, onOutsideClose, score }) {
+export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObservations, onOutsideClose, score, nearestTown }) {
     const sidebarRef = useRef(null);
     const pointerDownRef = useRef(null);
     const draggedSincePointerDownRef = useRef(false);
@@ -128,6 +128,25 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
         );
     }
 
+    /**
+     * Takes nearestTown and creates a link to {apex}/prognoser/[nearestTown]
+     * if there are any bad letters in the name it will be replaced or removed.
+     * @returns {string} link to ravudsigten.dk/prognoser/[nearestTown]
+     */
+    const createLink = () => {
+        if (!nearestTown) {
+            return '';
+        }
+        const slug = nearestTown.toLowerCase()
+            .trim()
+            .replace(/æ/g, "ae")
+            .replace(/ø/g, "oe")
+            .replace(/å/g, "aa")
+            .replace(/[^a-z0-9 -]/g, "")
+            .replace(/\s+/g, "-")
+            .replace(/-+/g, "-");
+        return slug;
+    }
 
     return (
         <div
@@ -162,7 +181,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
             >
                 {/* Top Header */}
                 <div className="is-flex is-justify-content-space-between is-align-items-flex-start mb-4">
-                    <p className="mb-2 glass p-3 title is-size-6 ">Nærmeste station</p>
+                    <p className="mb-2 glass p-3 title is-size-6 ">{nearestTown}</p>
                     <button
                         type="button"
                         className="delete p-3 m-2"
@@ -217,6 +236,10 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
                         </div>
                     )}
                 <RechartLinearChart data={tideWaterFiltered} />
+                <a href={`/prognoser/${createLink()}`}
+                    className="button is-warning is-fullwidth  mb-4 p-2">
+                    Se fuld prognose for {nearestTown} ➔
+                </a>
             </div>
 
         </div>

@@ -14,7 +14,7 @@ function App() {
     metStation: undefined,
     tidewaterStation: undefined,
   })
-
+  const [nearestTown, setNearestTown] = useState(undefined)
   const [debug, setDebug] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [sidebarResetToken, setSidebarResetToken] = useState(0)
@@ -87,6 +87,7 @@ function App() {
           }
         }}
         score={score}
+        nearestTown={nearestTown}
       />
       <LeafletMap
         debug={debug}
@@ -101,6 +102,7 @@ function App() {
         sidebarSuppressNextMapClickToken={sidebarSuppressNextMapClickToken}
         forecast={forecast}
         setScore={setScore}
+        setNearestTown={setNearestTown}
       />
     </React.Fragment>
   );

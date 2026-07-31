@@ -10,6 +10,7 @@ import logo from "../resources/images/marker-rav.png"
 import MapHeader from "./MapHeader"
 import Slider from "./Slider";
 import * as turf from "@turf/turf";
+import towns from "../resources/beaches-and-towns.json" with { type: "json" };
 
 const minZoom = 1, maxZoom = 14;
 const OBSERVATIONS_BASE_URL = "https://dswx6vubccbkr.cloudfront.net/raw";
@@ -79,7 +80,7 @@ const getStationIcon = (source, selected) => {
         return icon;
     }
 }
-function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, setNearestNextPoint, suppressNextClickToken, activeWindowIndex, forecast, setScore }) {
+function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, setNearestNextPoint, suppressNextClickToken, activeWindowIndex, forecast, setScore, geoJSONTowns, setNearestTown }) {
     let clickTimeout = null;  // Declare a variable to hold the timeout
     const shouldIgnoreNextClickRef = useRef(false)
     const markerRef = useRef(null)
@@ -109,6 +110,8 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
             setClickedPosition(e.latlng);
             setNearestPoint(nearestPoint);
             setNearestNextPoint(nearestNextPoint);
+            const nearestTown = turf.nearestPoint(turf.point([e.latlng.lng, e.latlng.lat]), geoJSONTowns);
+            setNearestTown(nearestTown.properties.name);
         }, 300);
     })
     // This function prevents setting position, when double clicking
@@ -186,7 +189,8 @@ export default function LeafletMap({
     debug, stations = [], onNearestStationObservationsChange, sidebarResetToken = 0,
     sidebarSuppressNextMapClickToken = 0,
     forecast,
-    setScore
+    setScore,
+    setNearestTown,
 }) {
     const [clickedPosition, setClickedPosition] = useState(undefined)
     const [nearestMetStation, setNearestMetStation] = useState(undefined)
@@ -208,6 +212,18 @@ export default function LeafletMap({
     const [points, setPoints] = useState([]);
     const [pointsByWindow, setPointsByWindow] = useState({})
     const [activeWindowIndex, setActiveWindowIndex] = useState(0)
+    const [geoJSONTowns, setGeoJSONTowns] = useState()
+
+    useEffect(() => {
+        // Convert towns to geojson features
+        // Format [["Tevandsbugten",[12.35979823,55.97525452],[12.55,55.75]]
+        const townFeatures = towns.map(town => {
+            const [lng, lat] = town[1]
+            return turf.point([lng, lat], { name: town[0] });
+        });
+
+        setGeoJSONTowns(turf.featureCollection(townFeatures));
+    }, [towns])
 
     useEffect(() => {
         // console.log(pointsAlongGeoJson(dk, .25));
@@ -433,6 +449,8 @@ export default function LeafletMap({
                     forecast={forecast}
                     suppressNextClickToken={sidebarSuppressNextMapClickToken}
                     setScore={setScore}
+                    geoJSONTowns={geoJSONTowns}
+                    setNearestTown={setNearestTown}
                 />
                 <HeatLayer minZoom={minZoom} maxZoom={maxZoom} points={points} />
                 {

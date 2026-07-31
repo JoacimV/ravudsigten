@@ -112,6 +112,9 @@ export default function LiveScore({ longitude, latitude, name }) {
                     <p><strong>Tip:</strong> {details.advice}</p>
                 </div>
             </div>
+            <a href={`/`} className="button is-warning is-fullwidth  mb-4 p-2">
+                Tilbage til ravkortet 🗺️
+            </a>
             <p className="subtitle is-6 mb-3">
                 Vores algoritmer analyserer løbende vindretning, vindstyrke, bølger og strømforhold ved {name} for at give dig det bedste estimat på, hvornår chancerne for at finde rav er størst.
             </p>
