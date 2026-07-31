@@ -7,7 +7,7 @@ export const RechartLinearChart = ({ data }) => {
         // Sort tidewater by timestamp
         tideWater.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
         // If timestamp is older than 6 hours discard the item
-        const twelveHoursAgo = new Date( Date.now() - 6 * 60 * 60 * 1000);
+        const twelveHoursAgo = new Date(Date.now() - 6 * 60 * 60 * 1000);
         tideWater = tideWater.filter(item => new Date(item.timestamp) >= twelveHoursAgo);
         // Or older than 12 hours
         const twelveHoursFromNow = new Date(Date.now() + 12 * 60 * 60 * 1000);
@@ -40,7 +40,7 @@ export const RechartLinearChart = ({ data }) => {
         return <p className="is-size-7 has-text-grey-light mb-1">Ingen observationer tilgængelige</p>;
     }
     return (
-        <div className="box glass mb-2" >
+        <div className="box glass mb-4" >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem' }}>
                 <p className='title is-size-6 mb-0'>Tidevand</p>
                 <span
