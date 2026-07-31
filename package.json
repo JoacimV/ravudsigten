@@ -13,19 +13,20 @@
   },
   "dependencies": {
     "@astrojs/react": "^6.0.2",
+    "@astrojs/sitemap": "^3.7.3",
+    "@turf/turf": "7.3.5",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
     "astro": "^7.1.6",
-    "react": "^19.2.8",
-    "react-dom": "^19.2.8",
-    "@turf/turf": "7.3.5",
     "bulma": "1.0.4",
     "flatbush": "^4.6.2",
     "heatmap.js": "^2.0.5",
     "leaflet": "1.9.4",
-    "react-leaflet": "5.0.0",
     "luxon": "3.7.2",
-    "simpleheat": "0.4.0",
-    "recharts": "3.10.1"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-leaflet": "5.0.0",
+    "recharts": "3.10.1",
+    "simpleheat": "0.4.0"
   }
 }
