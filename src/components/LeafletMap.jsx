@@ -173,7 +173,7 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
 
     return (
         <Marker ref={markerRef} position={clickedPosition} icon={new Icon({
-            iconUrl: logo,
+            iconUrl: logo.src,
             iconSize: [32 * 2, 40 * 2], // size of the icon
             iconAnchor: [16 * 2, 36 * 2], // point of the icon which will correspond to marker's location
         })} />

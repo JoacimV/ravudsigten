@@ -1,5 +1,5 @@
 import React from 'react';
-import AmberIcon from "../resources/images/rav.png"
+import AmberIcon from "../resources/images/rav.png";
 
 const MapHeader = () => {
     return (
@@ -40,7 +40,7 @@ const MapHeader = () => {
                                 flexShrink: 0,
                             }}
                         >
-                            <img src={AmberIcon} alt="Amber Icon"
+                            <img src={AmberIcon.src} alt="Amber Icon"
                                 style={{
                                     width: '100%',
                                     height: '100%',

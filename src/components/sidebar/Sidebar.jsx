@@ -15,6 +15,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
         return observedDate.getMinutes() === 0 || observedDate.getMinutes() === 30; // Keep only observations at the top of the hour or half past the hour
     });
 
+
     // Set up a media query listener to update the matches state when the viewport width changes
     useEffect(() => {
         const mediaQuery = window.matchMedia("(min-width: 768px)");

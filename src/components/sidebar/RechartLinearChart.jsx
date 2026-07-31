@@ -7,7 +7,7 @@ export const RechartLinearChart = ({ data }) => {
         // Sort tidewater by timestamp
         tideWater.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
         // If timestamp is older than 6 hours discard the item
-        const twelveHoursAgo = new Date(Date.now() - 6 * 60 * 60 * 1000);
+        const twelveHoursAgo = new Date( Date.now() - 6 * 60 * 60 * 1000);
         tideWater = tideWater.filter(item => new Date(item.timestamp) >= twelveHoursAgo);
         // Or older than 12 hours
         const twelveHoursFromNow = new Date(Date.now() + 12 * 60 * 60 * 1000);

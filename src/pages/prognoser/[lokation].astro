@@ -1,0 +1,56 @@
+---
+// src/pages/prognoser/[lokation].astro
+import Layout from "../../layouts/Layout.astro";
+import strande from "./beaches-and-towns.json";
+import LiveScore from "../../components/LiveScore.jsx"; // <--- Importer komponenten
+
+export async function getStaticPaths() {
+    return strande.map((strand) => {
+        const strandName: string = strand[0] as string;
+        const slug = strandName
+            .toLowerCase()
+            .trim()
+            .replace(/æ/g, "ae")
+            .replace(/ø/g, "oe")
+            .replace(/å/g, "aa")
+            .replace(/[^a-z0-9 -]/g, "")
+            .replace(/\s+/g, "-")
+            .replace(/-+/g, "-");
+
+        return {
+            params: { lokation: slug },
+            props: { strandInfo: strand },
+        };
+    });
+}
+
+const { strandInfo } = Astro.props;
+const pageTitle = `Ravprognose for ${strandInfo[0]} – Chancer og kystvejr`;
+const pageDescription = `Se den nyeste ravprognose for ${strandInfo[0]}. Tjek vindretning, strøm, temperatur og opskylsbetingelser i dag.`;
+
+const [longitude, latitude] = strandInfo[2];
+---
+
+<Layout title={pageTitle} description={pageDescription}>
+    <header class="hero is-light">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">Ravprognose for {strandInfo[0]}</h1>
+                <p class="subtitle">
+                    Aktuelle kystforhold og chancer for at finde rav ved {
+                        strandInfo[0]
+                    }.
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <main class="section">
+        <div class="container">
+            {
+                /* LiveScore indlæser friske data fra CloudFront på klienten hver gang! */
+            }
+            <LiveScore client:load longitude={longitude} latitude={latitude} />
+        </div>
+    </main>
+</Layout>

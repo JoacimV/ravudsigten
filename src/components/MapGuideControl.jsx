@@ -122,7 +122,7 @@ export default function MapGuideControl() {
                         <p className="content is-small has-text-weight-medium mb-3">
                             De farvede felter viser de steder, hvor chancen for at finde rav ser bedst ud lige nu.
                             <img
-                                src={heatlayer}
+                                src={heatlayer.src}
                                 alt="Eksempel på heatmap overlay"
                                 style={{
                                     display: "block",
