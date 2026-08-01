@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { DateTime } from "luxon";
+import { ResponsiveContainer, LineChart, XAxis, YAxis, Tooltip, Line } from "recharts";
 
 // Hjælpefunktion til at hente status, farve og råd baseret på score (0 - 1)
 function getScoreDetails(score) {
@@ -47,8 +49,50 @@ function getScoreDetails(score) {
     }
 }
 
+function DirectionTick({ x = 0, y = 0, payload }) {
+    const degrees = Number(payload?.value ?? 0);
+    const normalized = ((degrees % 360) + 360) % 360;
+
+    return (
+        <g transform={`translate(${x}, ${y})`}>
+            <text
+                x={0}
+                y={0}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fill="#4a4a4a"
+                fontSize={14}
+                transform={`rotate(${normalized - 180}, 0, 0)`}
+            >
+                ↑
+            </text>
+        </g>
+    );
+}
+
+function formatForecastTimestamp(value) {
+    const dt = DateTime.fromISO(value, { zone: "Europe/Copenhagen" });
+    return dt.toFormat("cccc");
+}
+
+function ForecastTooltip({ active, payload, label }) {
+    if (!active || !payload?.length) return null;
+
+    const point = payload[0]?.payload;
+    if (!point) return null;
+
+    return (
+        <div className="box p-3" style={{ border: "1px solid #dbdbdb" }}>
+            <p className="has-text-weight-bold mb-2">{formatForecastTimestamp(point.time)}</p>
+            <p>Vindretning: {point.windDirection}°</p>
+            <p>Vindstyrke: {point.windSpeed} m/s</p>
+        </div>
+    );
+}
+
 export default function LiveScore({ longitude, latitude, name }) {
     const [data, setData] = useState(null);
+    const [forecast, setForecast] = useState(null);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -61,7 +105,6 @@ export default function LiveScore({ longitude, latitude, name }) {
                     const { longitude: lon, latitude: lat } = item.gridPoint;
                     return lon === longitude && lat === latitude;
                 });
-
                 setData(match);
             } catch (err) {
                 console.error("Fejl ved hentning af score:", err);
@@ -70,7 +113,21 @@ export default function LiveScore({ longitude, latitude, name }) {
             }
         }
 
+        async function fetchForecast() {
+            try {
+                const res = await fetch("https://dswx6vubccbkr.cloudfront.net/raw/forecast.json");
+                const fullForecast = await res.json();
+                const match = fullForecast[`${longitude},${latitude}`];
+                // Keep first 58 points, as the rest are not hourly
+                setForecast(match.slice(0, 57));
+            } catch (err) {
+                console.error("Fejl ved hentning af forecast:", err);
+            }
+        }
+
         fetchScore();
+        fetchForecast();
+
     }, [longitude, latitude]);
 
     if (loading) return <div className="notification">Henter nyeste ravscore...</div>;
@@ -78,6 +135,17 @@ export default function LiveScore({ longitude, latitude, name }) {
 
     const scorePct = Math.round((data.score || 0) * 100);
     const details = getScoreDetails(data.score);
+
+    const forecastToChartData = (forecast) => {
+        if (!forecast) return [];
+        return forecast.map((item) => ({
+            time: item.time,
+            windDirection: item.windDirection,
+            windSpeed: item.windSpeed,
+        }));
+    }
+
+    const timeLabels = forecastToChartData(forecast).filter((_, index) => index % 24 === 0);
 
     return (
         <div>
@@ -108,8 +176,32 @@ export default function LiveScore({ longitude, latitude, name }) {
 
                 <p className="subtitle is-6 mb-2">{details.description}</p>
 
-                <div className="content is-small has-text-grey mt-3">
+                <div className="content is-small subtitle mt-3">
                     <p><strong>Tip:</strong> {details.advice}</p>
+                </div>
+            </div>
+            <div className="box glass mb-5">
+                <ResponsiveContainer width="100%" height={240}>
+                    <LineChart width={"100%"} height={240} data={forecastToChartData(forecast)}>
+                        <XAxis dataKey="windDirection" tick={<DirectionTick />} tickLine={false} axisLine={false} />
+                        <YAxis dataKey="windSpeed" unit="m/s" />
+                        <Tooltip content={<ForecastTooltip />} />
+                        <Line
+                            type="monotone"
+                            dataKey="windSpeed"
+                            dot={false}
+                        />
+                    </LineChart>
+                </ResponsiveContainer>
+                <div className="ml-6 mr-6" style={{ display: "flex", justifyContent: "space-between", fontSize: "0.75rem", color: "#7a7a7a" }}>
+                    {timeLabels.map((point) => (
+                        <span key={point.time}>
+                            {formatForecastTimestamp(point.time)}
+                        </span>
+                    ))}
+                </div>
+                <div className="content is-small subtitle mt-3">
+                    <p><strong>Tip: </strong>Linjen viser vindhastigheden (m/s) over de næste dage, og pilene i bunden angiver vindretningen. Et hop i vinden kombineret med den rette vindretning er ofte nøglen til gode ravbetingelser.</p>
                 </div>
             </div>
             <a href={`/`} className="button is-warning is-fullwidth  mb-4 p-2">
