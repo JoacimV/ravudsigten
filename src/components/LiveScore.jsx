@@ -81,9 +81,13 @@ function ForecastTooltip({ active, payload, label }) {
     const point = payload[0]?.payload;
     if (!point) return null;
 
+    const dt = DateTime.fromISO(point.time, { zone: "Europe/Copenhagen" });
+
+
     return (
         <div className="box p-3" style={{ border: "1px solid #dbdbdb" }}>
             <p className="has-text-weight-bold mb-2">{formatForecastTimestamp(point.time)}</p>
+            <p>Tid: {dt.toLocaleString(DateTime.TIME_SIMPLE)}</p>
             <p>Vindretning: {point.windDirection}°</p>
             <p>Vindstyrke: {point.windSpeed} m/s</p>
         </div>
