@@ -57,12 +57,23 @@ export default function MapGuideControl() {
             <div
                 onClick={() => setIsGuideOpen(false)}
                 aria-hidden={!isGuideOpen || !isNarrowViewport}
+                style={{
+                    position: "fixed",
+                    inset: 0,
+                    zIndex: 999,
+                    background: isGuideOpen ? "rgba(4, 12, 18, 0.42)" : "transparent",
+                    backdropFilter: isGuideOpen ? "blur(8px) saturate(120%)" : "none",
+                    WebkitBackdropFilter: isGuideOpen ? "blur(8px) saturate(120%)" : "none",
+                    opacity: isGuideOpen ? 1 : 0,
+                    pointerEvents: isGuideOpen ? "auto" : "none",
+                    transition: "opacity 180ms ease, backdrop-filter 180ms ease, background 180ms ease",
+                }}
             />
             <div
                 ref={guideRef}
                 style={{
                     position: "fixed",
-                    top: 22,
+                    top: 64,
                     right: 12,
                     zIndex: 1000,
                     display: "flex",
