@@ -137,7 +137,15 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
         if (!nearestTown) {
             return '';
         }
-        return nearestTown.slug || '';
+        const slug = nearestTown.toLowerCase()
+            .trim()
+            .replace(/æ/g, "ae")
+            .replace(/ø/g, "oe")
+            .replace(/å/g, "aa")
+            .replace(/[^a-z0-9 -]/g, "")
+            .replace(/\s+/g, "-")
+            .replace(/-+/g, "-");
+        return slug;
     }
 
     return (
@@ -173,7 +181,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
             >
                 {/* Top Header */}
                 <div className="is-flex is-justify-content-space-between is-align-items-flex-start mb-4">
-                    <p className="mb-2 glass p-3 title is-size-6 ">{nearestTown?.name ?? nearestTown}</p>
+                    <p className="mb-2 glass p-3 title is-size-6 ">{nearestTown}</p>
                     <button
                         type="button"
                         className="delete p-3 m-2"
@@ -230,7 +238,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
                 <RechartLinearChart data={tideWaterFiltered} />
                 <a href={`/prognoser/${createLink()}`}
                     className="button is-warning is-fullwidth  mb-4 p-2">
-                    Se fuld prognose for {nearestTown?.name ?? nearestTown} ➔
+                    Se fuld prognose for {nearestTown} ➔
                 </a>
             </div>
 
