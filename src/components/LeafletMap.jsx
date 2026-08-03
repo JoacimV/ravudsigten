@@ -11,6 +11,7 @@ import MapHeader from "./MapHeader"
 import Slider from "./Slider";
 import * as turf from "@turf/turf";
 import towns from "../resources/beaches-and-towns.json" with { type: "json" };
+import { LanguagePicker } from "./LanguagePicker";
 
 const minZoom = 1, maxZoom = 14;
 const OBSERVATIONS_BASE_URL = "https://dswx6vubccbkr.cloudfront.net/raw";
@@ -411,8 +412,8 @@ export default function LeafletMap({
                 onClick={() => setIsSatellite((prev) => !prev)}
                 style={{
                     position: "fixed",
-                    top: 22,
-                    right: 56,
+                    bottom: 22,
+                    right: 12,
                     zIndex: 1001,
                     cursor: "pointer",
                     fontSize: 12,
@@ -423,6 +424,7 @@ export default function LeafletMap({
             >
                 {isSatellite ? "🗺️" : "🛰️"}
             </button>
+            <LanguagePicker />
             <Slider
                 min={0}
                 max={forecast ? forecast.length - 1 : 0}

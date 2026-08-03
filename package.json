@@ -7,13 +7,15 @@
   },
   "scripts": {
     "dev": "astro dev --host",
-    "build": "astro build",
+    "build": "paraglide-js compile --project ./project.inlang --outdir ./src\\paraglide && astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "machine-translate": "inlang machine translate --project project.inlang"
   },
   "dependencies": {
     "@astrojs/react": "^6.0.2",
     "@astrojs/sitemap": "^3.7.3",
+    "@astrojs/node": "^11.0.3",
     "@turf/turf": "7.3.5",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
@@ -28,5 +30,10 @@
     "react-leaflet": "5.0.0",
     "recharts": "3.10.1",
     "simpleheat": "0.4.0"
+  },
+  "devDependencies": {
+    "@inlang/cli": "^3.0.0",
+    "@inlang/paraglide-js": "^2.23.1",
+    "@inlang/paraglide-js-adapter-vite": "^1.2.40"
   }
 }
