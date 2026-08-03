@@ -4,19 +4,24 @@ import Layout from "../../layouts/Layout.astro";
 import strande from "../../resources/beaches-and-towns.json";
 import LiveScore from "../../components/LiveScore.jsx";
 import banner from "../../resources/images/banner.png";
+import { createLocationSlug } from "../../utils/locationSlug.js";
 
 export async function getStaticPaths() {
+    const duplicateCounts = new Map<string, number>();
+
+    for (const strand of strande) {
+        const strandName: string = strand[0] as string;
+        const existingCount = duplicateCounts.get(strandName) ?? 0;
+        duplicateCounts.set(strandName, existingCount + 1);
+    }
+
+    const seenCounts = new Map<string, number>();
+
     return strande.map((strand) => {
         const strandName: string = strand[0] as string;
-        const slug = strandName
-            .toLowerCase()
-            .trim()
-            .replace(/æ/g, "ae")
-            .replace(/ø/g, "oe")
-            .replace(/å/g, "aa")
-            .replace(/[^a-z0-9 -]/g, "")
-            .replace(/\s+/g, "-")
-            .replace(/-+/g, "-");
+        const seenCount = seenCounts.get(strandName) ?? 0;
+        seenCounts.set(strandName, seenCount + 1);
+        const slug = createLocationSlug(strandName, seenCount, duplicateCounts.get(strandName) ?? 1);
 
         return {
             params: { lokation: slug },

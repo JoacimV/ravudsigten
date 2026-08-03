@@ -12,6 +12,7 @@ import Slider from "./Slider";
 import * as turf from "@turf/turf";
 import towns from "../resources/beaches-and-towns.json" with { type: "json" };
 import { LanguagePicker } from "./LanguagePicker";
+import { createLocationSlug } from "../utils/locationSlug";
 
 const minZoom = 1, maxZoom = 14;
 const OBSERVATIONS_BASE_URL = "https://dswx6vubccbkr.cloudfront.net/raw";
@@ -112,7 +113,7 @@ function MovingMarker({ clickedPosition, setClickedPosition, setNearestPoint, se
             setNearestPoint(nearestPoint);
             setNearestNextPoint(nearestNextPoint);
             const nearestTown = turf.nearestPoint(turf.point([e.latlng.lng, e.latlng.lat]), geoJSONTowns);
-            setNearestTown(nearestTown.properties.name);
+            setNearestTown(nearestTown.properties);
         }, 300);
     })
     // This function prevents setting position, when double clicking
@@ -218,9 +219,25 @@ export default function LeafletMap({
     useEffect(() => {
         // Convert towns to geojson features
         // Format [["Tevandsbugten",[12.35979823,55.97525452],[12.55,55.75]]
-        const townFeatures = towns.map(town => {
+        const duplicateCounts = new Map();
+
+        for (const town of towns) {
+            const townName = town[0];
+            const existingCount = duplicateCounts.get(townName) ?? 0;
+            duplicateCounts.set(townName, existingCount + 1);
+        }
+
+        const seenCounts = new Map();
+
+        const townFeatures = towns.map((town) => {
+            const townName = town[0];
+            const seenCount = seenCounts.get(townName) ?? 0;
+            seenCounts.set(townName, seenCount + 1);
             const [lng, lat] = town[1]
-            return turf.point([lng, lat], { name: town[0] });
+            return turf.point([lng, lat], {
+                name: townName,
+                slug: createLocationSlug(townName, seenCount, duplicateCounts.get(townName) ?? 1),
+            });
         });
 
         setGeoJSONTowns(turf.featureCollection(townFeatures));
