@@ -1,6 +1,5 @@
-import React from 'react';
 import AmberIcon from "../resources/images/rav.png";
-
+import * as m from "../paraglide/messages.js";
 const MapHeader = () => {
     return (
         <>
@@ -54,8 +53,8 @@ const MapHeader = () => {
 
                         {/* Tekstsektion */}
                         <div style={{ minWidth: 0, flex: 1 }}>
-                            <h1 className="title mb-0 is-size-7">RAVUDSIGTEN</h1>
-                            <p className="subtitle is-size-7">Din prognose for ravfund</p>
+                            <h1 className="title mb-0 is-size-7">{m.real_north_mantis_jolt()}</h1>
+                            <p className="subtitle is-size-7">{m.bold_game_haddock_grin()}</p>
                         </div>
                     </div>
                 </div>
