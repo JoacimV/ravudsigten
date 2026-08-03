@@ -1,4 +1,8 @@
 {
     "$schema": "https://inlang.com/schema/inlang-message-format",
-    "choose_forecast_window": "Vælg prognosevindue"
+    "choose_forecast_window": "Vælg prognosevindue",
+    "now": "Nu",
+    "in_x_hours": "Om {x} timer",
+    "tomorrow": "I morgen",
+    "in_2_days": "Om 2 dage"
 }

@@ -1,4 +1,8 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "choose_forecast_window": "Choose forecast window"
+  "choose_forecast_window": "Choose forecast window",
+  "now": "Now",
+  "in_x_hours": "In {x} hours",
+  "tomorrow": "Tomorrow",
+  "in_2_days": "In 2 days"
 }

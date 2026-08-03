@@ -1,5 +1,5 @@
 import * as m from '../paraglide/messages.js';
-const values = ['Nu', 'Om 12 timer', 'I morgen', 'Om 36 timer', 'Om 48 timer'];
+const values = [m.now(), m.in_x_hours({ x: '12' }), m.tomorrow(), m.in_x_hours({ x: '36' }), m.in_2_days()];
 export default function Slider({ min, max, value, onChange }) {
     const handleChange = (event) => {
         const newValue = parseFloat(event.target.value);
