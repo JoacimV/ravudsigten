@@ -1,5 +1,9 @@
 import { paraglideMiddleware } from "./paraglide/server.js";
 
 export const onRequest = (context, next) => {
-    return paraglideMiddleware(context.request, ({ request }) => next(request));
+    if (context.isPrerendered) {
+        return next();
+    }
+
+    return paraglideMiddleware(context.request, () => next());
 };
