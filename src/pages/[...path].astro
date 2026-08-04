@@ -68,8 +68,11 @@ for (const locale of locales) {
 ---
 
 <Layout
-    title={m.dark_noble_spider_pinch({ name: strandInfo[0] })}
-    description={m.glad_game_swallow_sprout({ name: strandInfo[0] })}
+    title={m.dark_noble_spider_pinch({ name: strandInfo[0] }, { locale: lang })}
+    description={m.glad_game_swallow_sprout(
+        { name: strandInfo[0] },
+        { locale: lang },
+    )}
 >
     <Fragment slot="head">
         {
@@ -88,10 +91,20 @@ for (const locale of locales) {
         <div class="hero-body">
             <div class="container">
                 <h1 class="title">
-                    {m.weary_cuddly_cuckoo_endure({ name: strandInfo[0] })}
+                    {
+                        m.weary_cuddly_cuckoo_endure(
+                            { name: strandInfo[0] },
+                            { locale: lang },
+                        )
+                    }
                 </h1>
                 <p class="subtitle">
-                    {m.quaint_swift_hamster_revive({ name: strandInfo[0] })}
+                    {
+                        m.quaint_swift_hamster_revive(
+                            { name: strandInfo[0] },
+                            { locale: lang },
+                        )
+                    }
                 </p>
             </div>
             <div class="is-fullwidth"></div>
