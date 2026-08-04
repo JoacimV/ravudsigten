@@ -1,0 +1,17 @@
+{
+  "$schema": "https://inlang.com/schema/inlang-message-format",
+  "choose_forecast_window": "Välj prognosfönster",
+  "now": "Nu",
+  "in_x_hours": "Om {x} timmar",
+  "tomorrow": "Imorgon",
+  "in_2_days": "Om 2 dagar",
+  "bold_game_haddock_grin": "Din prognos för ravfynd",
+  "real_north_mantis_jolt": "BÄRNSTENSPROGNOSEN",
+  "antsy_away_elephant_amuse": "Så här fungerar kortet",
+  "wacky_brief_penguin_boil": "Tryck på kartan för att välja en plats och se en mer detaljerad prognos från de närmaste mätstationerna.",
+  "long_cozy_tadpole_advise": "De färgade fälten visar de platser där chansen att hitta bärnsten ser bäst ut just nu.",
+  "tangy_neat_ray_reap": "Tips: växla mellan standardkartan och satellitvyn för att jämföra kustlinjen och populära platser 🗺️.",
+  "vexed_patchy_wren_lift": "Exempel på överlagring av värmekarta",
+  "small_clear_moth_hurl": "Stäng guiden",
+  "dirty_formal_bullock_bless": "Så här använder du kortet"
+}

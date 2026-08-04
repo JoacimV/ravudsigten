@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import heatlayer from "../resources/images/heatlayer.png"
+import * as m from "../paraglide/messages"
 const MAP_GUIDE_SEEN_STORAGE_KEY = "amberFinder.mapGuideSeen"
 
 export default function MapGuideControl() {
@@ -98,7 +99,7 @@ export default function MapGuideControl() {
                         justifyContent: "space-between",
                         gap: 8,
                     }}
-                    title="Sådan bruger du kortet"
+                    title={m.dirty_formal_bullock_bless()}
                 >
                     <span>{isGuideOpen ? "❌" : "❔"}</span>
                 </button>
@@ -120,21 +121,21 @@ export default function MapGuideControl() {
                         <button
                             type="button"
                             className="delete is-small m-1"
-                            aria-label="Luk guide"
+                            aria-label={m.small_clear_moth_hurl()}
                             onClick={() => setIsGuideOpen(false)}
                             style={{ position: "absolute", top: 10, right: 10, scale: 1.2 }}
                         />
                         <p className="title is-6 mb-3 pr-5">
-                            Sådan virker kortet
+                            {m.antsy_away_elephant_amuse()}
                         </p>
                         <p className="content is-small has-text-weight-medium mb-3">
-                            Tryk på kortet for at vælge et punkt og se en mere detaljeret prognose fra de nærmeste målestationer.
+                            {m.wacky_brief_penguin_boil()}
                         </p>
                         <p className="content is-small has-text-weight-medium mb-3">
-                            De farvede felter viser de steder, hvor chancen for at finde rav ser bedst ud lige nu.
+                            {m.long_cozy_tadpole_advise()}
                             <img
                                 src={heatlayer.src}
-                                alt="Eksempel på heatmap overlay"
+                                alt={m.vexed_patchy_wren_lift()}
                                 style={{
                                     display: "block",
                                     width: "100%",
@@ -144,7 +145,7 @@ export default function MapGuideControl() {
                             />
                         </p>
                         <p className="content is-small has-text-grey">
-                            Tip: skift mellem standardkort og satellitvisning for at sammenligne kystlinje og hotspots 🗺️.
+                            {m.tangy_neat_ray_reap()}
                         </p>
                     </div>
                 </div>

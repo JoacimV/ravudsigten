@@ -1,9 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/project-settings",
-  "baseLocale": "dk",
+  "baseLocale": "da",
   "locales": [
-    "dk",
-    "se",
+    "da",
+    "sv",
     "en",
     "de"
   ],
