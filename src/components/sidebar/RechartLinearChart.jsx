@@ -1,5 +1,7 @@
 import React from 'react';
 import { LineChart, Line, Tooltip, ResponsiveContainer, YAxis, XAxis } from 'recharts';
+import { getLocale } from '../../paraglide/runtime.js';
+import * as m from '../../paraglide/messages.js';
 export const RechartLinearChart = ({ data }) => {
     const [showHelp, setShowHelp] = React.useState(false);
 
@@ -37,16 +39,16 @@ export const RechartLinearChart = ({ data }) => {
         : -1;
 
     if (!data || data.length === 0) {
-        return <p className="is-size-7 has-text-grey-light mb-1">Ingen observationer tilgængelige</p>;
+        return <p className="is-size-7 has-text-grey-light mb-1">{m.ok_bald_capybara_hike()}</p>;
     }
     return (
         <div className="box glass mb-4" >
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', marginBottom: '0.25rem' }}>
-                <p className='title is-size-6 mb-0'>Tidevand</p>
+                <p className='title is-size-6 mb-0'>{m.lofty_fresh_orangutan_play()}</p>
                 <span
                     role="button"
                     tabIndex={0}
-                    aria-label="Forklaring til tidevandsgrafen"
+                    aria-label={m.novel_sound_chicken_find()}
                     onMouseEnter={() => setShowHelp(true)}
                     onMouseLeave={() => setShowHelp(false)}
                     onFocus={() => setShowHelp(true)}
@@ -87,11 +89,11 @@ export const RechartLinearChart = ({ data }) => {
                                 pointerEvents: 'none'
                             }}
                         >
-                            <p>Den orange prik er lige nu.</p>
+                            <p>{m.fluffy_caring_mammoth_empower()}</p>
                             <br />
-                            <p>Hvornår er det bedst at finde rav?</p>
+                            <p>{m.proof_white_snake_skip()}</p>
                             <br />
-                            <p>Søg fra højvandet topper og hele vejen ned mod lavvande. Det faldende vand efterlader ravet øverst i strandens mørke opskyl. Ravsøgningen er bedst lige efter storm eller blæst, når pålandsvinden skubber materialet ind.</p>
+                            <p>{m.best_grand_jay_explore()}</p>
                         </span>
                     )}
                 </span>
@@ -116,7 +118,15 @@ export const RechartLinearChart = ({ data }) => {
                     />
                 </LineChart>
             </ResponsiveContainer>
-            <p className='subtitle is-size-7'>Seneste observation {chartData[nowMarkerIndex]?.height}cm</p>
+            <p className='subtitle is-size-7'>{m.plane_royal_mayfly_fold({
+                height: new Intl.NumberFormat(getLocale(),
+                    {
+                        style: 'unit',
+                        unit: 'centimeter',
+                        unitDisplay: 'narrow',
+                    })
+                    .format(chartData[nowMarkerIndex]?.height)
+            })}</p>
         </div>
     );
 };
