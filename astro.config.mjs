@@ -12,11 +12,19 @@ export default defineConfig({
   },
   site: 'https://ravudsigten.dk',
   integrations: [react(), sitemap()],
+  i18n: {
+    defaultLocale: 'da',
+    locales: ['da', 'en', 'sv', 'de'],
+    routing: {
+      prefixDefaultLocale: false // 'da' er på /, 'en' er på /en osv.
+    }
+  },
   vite: {
     plugins: [
       paraglideVitePlugin({
         project: './project.inlang',
         outdir: './src/paraglide',
+        strategy: ['url', 'localStorage', 'cookie', 'baseLocale'],
       })
     ],
   }

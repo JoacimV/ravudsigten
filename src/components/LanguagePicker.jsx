@@ -1,11 +1,12 @@
-import React, { useMemo } from "react";
-import { getLocale, setLocale, locales } from "../paraglide/runtime.js";
+import { useMemo } from "react";
+import * as m from "../paraglide/messages.js";
+import { deLocalizeHref, getLocale, localizeHref, locales } from "../paraglide/runtime.js";
 
 const labels = {
-    dk: "🇩🇰",
-    se: "🇸🇪",
-    en: "🇬🇧",
-    de: "🇩🇪",
+    da: { flag: "🇩🇰", code: "DA" },
+    sv: { flag: "🇸🇪", code: "SV" },
+    en: { flag: "🇬🇧", code: "EN" },
+    de: { flag: "🇩🇪", code: "DE" },
 };
 
 export const LanguagePicker = () => {
@@ -15,7 +16,11 @@ export const LanguagePicker = () => {
         const nextLocale = event.target.value;
         if (!locales.includes(nextLocale)) return;
         if (nextLocale === current) return;
-        setLocale(nextLocale);
+
+        const currentPath = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+        const basePath = deLocalizeHref(currentPath);
+        const nextPath = localizeHref(basePath, { locale: nextLocale });
+        window.location.assign(nextPath);
     };
 
     return (
@@ -30,7 +35,7 @@ export const LanguagePicker = () => {
                 fontSize: 12,
                 fontWeight: 600,
             }}
-            title="Skift sprog"
+            title={m.lost_such_lark_devour()}
         >
             <select
                 id="language-picker"
@@ -43,10 +48,12 @@ export const LanguagePicker = () => {
                     fontWeight: 700,
                     outline: "none",
                 }}
-                aria-label="Choose language"
+                aria-label={m.aqua_topical_seal_mend()}
             >
                 {locales.map((locale) => (
-                    <option key={locale} value={locale}>{labels[locale]}</option>
+                    <option key={locale} value={locale}>
+                        {labels[locale]?.flag} {labels[locale]?.code ?? locale.toUpperCase()}
+                    </option>
                 ))}
             </select>
         </div>

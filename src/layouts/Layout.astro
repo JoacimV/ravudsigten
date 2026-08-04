@@ -1,15 +1,30 @@
 ---
-// src/layouts/Layout.astro
-interface Props {
-    title: string;
-    description: string;
+import { locales } from "../paraglide/runtime.js";
+import * as m from "../paraglide/messages.js";
+const siteUrl = "https://ravudsigten.dk";
+let currentLang: "da" | "sv" | "en" | "de" = "da"; // default language
+if (Astro.currentLocale) {
+    currentLang = Astro.currentLocale as "da" | "sv" | "en" | "de";
 }
 
-const { title, description } = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, siteUrl).href;
+const ogLocaleMap: Record<string, string> = {
+    da: "da_DK",
+    en: "en_US",
+    de: "de_DE",
+    sv: "sv_SE",
+};
+
+const currentOgLocale = ogLocaleMap[currentLang];
+const availableLocales = Object.values(locales);
+const title = m.honest_bald_canary_expand(undefined, { locale: currentLang });
+const description = m.dull_tidy_pelican_find(undefined, {
+    locale: currentLang,
+});
 ---
 
 <!--text/html-->
-<html lang="da">
+<html lang={currentLang}>
     <head>
         <meta charset="UTF-8" />
         <meta
@@ -19,18 +34,43 @@ const { title, description } = Astro.props;
         <title>{title}</title>
         <meta name="description" content={description} />
         <meta name="robots" content="index, follow" />
-        <link rel="canonical" href="https://ravudsigten.dk/" />
-
+        <link rel="canonical" href={canonicalURL} />
         <!-- Open Graph -->
         <meta property="og:type" content="website" />
         <meta property="og:title" content={title} />
         <meta property="og:description" content={description} />
-        <meta property="og:url" content="https://ravudsigten.dk/" />
+        <meta property="og:url" content={canonicalURL} />
         <meta
             property="og:image"
             content="https://ravudsigten.dk/og-image.png"
         />
+        <meta property="og:locale" content={currentOgLocale} />
 
+        {
+            availableLocales.map((locale) => {
+                return (
+                    <meta
+                        property="og:locale:alternate"
+                        content={ogLocaleMap[locale]}
+                    />
+                );
+            })
+        }
+        <link rel="alternate" hreflang="da" href={`${siteUrl}/`} />
+        {
+            availableLocales.map((locale) => {
+                if (locale === "da") return null;
+                return (
+                    <link
+                        rel="alternate"
+                        hreflang={locale}
+                        href={`${siteUrl}/${locale}`}
+                    />
+                );
+            })
+        }
+
+        <link rel="alternate" hreflang="x-default" href={`${siteUrl}/en`} />
         <!-- Hvis du bruger Leaflet CSS fra CDN eller lokal fil -->
         <link
             rel="stylesheet"

@@ -1,12 +1,4 @@
 ---
-// src/pages/index.astro
-import Layout from "../layouts/Layout.astro";
-import App from "../components/App.jsx";
+import HomePage from '../components/HomePage.astro';
 ---
-
-<Layout
-	title="Ravudsigten.dk | Se hvornår og hvor du finder rav ved kysten"
-	description="Gør din ravjagt nemmere! Se dagens ravudsigt, vind, strøm og kystforhold, så du ved præcis, hvornår chancerne for at finde rav er størst."
->
-	<App client:only="react" />
-</Layout>
+<HomePage />
