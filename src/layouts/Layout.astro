@@ -17,10 +17,22 @@ const ogLocaleMap: Record<string, string> = {
 
 const currentOgLocale = ogLocaleMap[currentLang];
 const availableLocales = Object.values(locales);
-const title = m.honest_bald_canary_expand(undefined, { locale: currentLang });
-const description = m.dull_tidy_pelican_find(undefined, {
-    locale: currentLang,
-});
+const pathname = Astro.url.pathname;
+const isLocaleLandingPage =
+    pathname === "/" ||
+    availableLocales.some(
+        (locale) => pathname === `/${locale}` || pathname === `/${locale}/`,
+    );
+const propDescription = Astro.props.description;
+const propTitle = Astro.props.title;
+const title =
+    propTitle ??
+    m.honest_bald_canary_expand(undefined, { locale: currentLang });
+const description =
+    propDescription ??
+    m.dull_tidy_pelican_find(undefined, {
+        locale: currentLang,
+    });
 ---
 
 <!--text/html-->
@@ -48,6 +60,7 @@ const description = m.dull_tidy_pelican_find(undefined, {
 
         {
             availableLocales.map((locale) => {
+                if (locale === currentLang) return null;
                 return (
                     <meta
                         property="og:locale:alternate"
@@ -56,21 +69,30 @@ const description = m.dull_tidy_pelican_find(undefined, {
                 );
             })
         }
-        <link rel="alternate" hreflang="da" href={`${siteUrl}/`} />
         {
-            availableLocales.map((locale) => {
-                if (locale === "da") return null;
-                return (
+            isLocaleLandingPage && (
+                <>
+                    <link rel="alternate" hreflang="da" href={`${siteUrl}/`} />
+                    {availableLocales.map((locale) => {
+                        if (locale === "da") return null;
+                        return (
+                            <link
+                                rel="alternate"
+                                hreflang={locale}
+                                href={`${siteUrl}/${locale}`}
+                            />
+                        );
+                    })}
+
                     <link
                         rel="alternate"
-                        hreflang={locale}
-                        href={`${siteUrl}/${locale}`}
+                        hreflang="x-default"
+                        href={`${siteUrl}/en`}
                     />
-                );
-            })
+                </>
+            )
         }
-
-        <link rel="alternate" hreflang="x-default" href={`${siteUrl}/en`} />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <!-- Hvis du bruger Leaflet CSS fra CDN eller lokal fil -->
         <link
             rel="stylesheet"
@@ -89,6 +111,7 @@ const description = m.dull_tidy_pelican_find(undefined, {
         <link rel="stylesheet" href="/bulma.min.css" />
         <link rel="stylesheet" href="/App.css" />
         <link rel="sitemap" href="/sitemap-index.xml" />
+        <slot name="head" />
         <!-- Astro generator -->
         <meta name="generator" content={Astro.generator} />
     </head>

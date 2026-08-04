@@ -45,5 +45,8 @@
   "watery_loose_bobcat_blink": "Det har varit en del aktivitet längs kusten, men förhållandena är inte optimala för bärnstensjakt. Vinden har delvis bidragit till att skapa strandfynd, men perioden med gynnsamma förhållanden har inte varit tillräckligt lång för att ge de bästa möjligheterna.",
   "shy_zesty_cougar_soar": "En promenad längs strandkanten kan fortfarande ge fina fynd, särskilt om man letar noggrant bland det som nyligen spolats upp på stranden.",
   "quiet_north_penguin_bloom": "Förhållandena vid denna kust är goda för bärnstensjakt. Det har varit en längre period med gynnsamma vindförhållanden, vilket kan ha bidragit till att bärnsten har samlats längs kusten.",
-  "wacky_vivid_bulldog_dust": "Förhållandena vid den här stranden är just nu mycket gynnsamma för att leta efter bärnsten. Det har blåst en ihållande pålandsvind i flera dagar, vilket skapar optimala förhållanden för att föra bärnsten in mot kusten."
+  "wacky_vivid_bulldog_dust": "Förhållandena vid den här stranden är just nu mycket gynnsamma för att leta efter bärnsten. Det har blåst en ihållande pålandsvind i flera dagar, vilket skapar optimala förhållanden för att föra bärnsten in mot kusten.",
+  "simple_spare_duck_peel": "Följ den direktsända prognosen för: {name}.",
+  "dark_noble_spider_pinch": "Prognos för {name} – Chancer och kustväder",
+  "glad_game_swallow_sprout": "Se den senaste prognosen för {name}. Kolla in vindriktning, strömmar, temperatur och vågförhållanden för idag."
 }

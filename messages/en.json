@@ -45,5 +45,8 @@
   "watery_loose_bobcat_blink": "There has been some activity along the coast, but conditions are not ideal for amber hunting. The wind has contributed to some driftwood being washed ashore, but the period of favorable conditions has not lasted long enough to provide the best opportunities.",
   "shy_zesty_cougar_soar": "A walk along the water's edge can still yield some nice finds, especially if you search thoroughly through the new driftwood.",
   "quiet_north_penguin_bloom": "The conditions along this coast are good for amber hunting. There has been a prolonged period of favorable wind conditions, which may have helped gather amber along the coast.",
-  "wacky_vivid_bulldog_dust": "The conditions at this beach are excellent for amber hunting right now. There have been steady onshore winds for several days, creating optimal conditions for washing amber ashore."
+  "wacky_vivid_bulldog_dust": "The conditions at this beach are excellent for amber hunting right now. There have been steady onshore winds for several days, creating optimal conditions for washing amber ashore.",
+  "simple_spare_duck_peel": "Follow the live amber alert for: {name}.",
+  "dark_noble_spider_pinch": "{name} Amber Alert – Risks and Coastal Weather",
+  "glad_game_swallow_sprout": "View the latest surf forecast for {name}. Check today&#x27;s wind direction, current, temperature, and surf conditions."
 }

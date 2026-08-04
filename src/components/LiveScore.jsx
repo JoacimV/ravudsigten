@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { DateTime } from "luxon";
 import { ResponsiveContainer, LineChart, XAxis, YAxis, Tooltip, Line } from "recharts";
+import * as m from "../paraglide/messages.js";
+import { getLocale } from "../paraglide/runtime.js";
 
 // Hjælpefunktion til at hente status, farve og råd baseret på score (0 - 1)
 function getScoreDetails(score) {
@@ -154,7 +156,7 @@ export default function LiveScore({ longitude, latitude, name }) {
     return (
         <div>
             <p className="subtitle is-6 mb-3">
-                Følg den live ravprognose for kysterne {name}.
+                {m.simple_spare_duck_peel({ name })}
             </p>
             <div className="box amber-score-card glass">
                 <div className="level is-mobile mb-2">
@@ -208,7 +210,7 @@ export default function LiveScore({ longitude, latitude, name }) {
                     <p><strong>Tip: </strong>Linjen viser vindhastigheden (m/s) over de næste dage, og pilene i bunden angiver vindretningen. Et hop i vinden kombineret med den rette vindretning er ofte nøglen til gode ravbetingelser.</p>
                 </div>
             </div>
-            <a href={`/`} className="button is-warning is-fullwidth  mb-4 p-2">
+            <a href={`${getLocale() === 'da' ? '/' : `/${getLocale()}/`}`} className="button is-warning is-fullwidth  mb-4 p-2">
                 Tilbage til ravkortet 🗺️
             </a>
             <p className="subtitle is-6 mb-3">

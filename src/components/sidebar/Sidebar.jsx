@@ -1,7 +1,8 @@
-import  { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { DateTime } from 'luxon';
 import { RechartLinearChart } from './RechartLinearChart';
 import * as m from '../../paraglide/messages.js';
+import { getLocale } from '../../paraglide/runtime.js';
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObservations, onOutsideClose, score, nearestTown }) {
     const sidebarRef = useRef(null);
@@ -229,7 +230,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
                         </div>
                     )}
                 <RechartLinearChart data={tideWaterFiltered} />
-                <a href={`/prognoser/${createLink()}`}
+                <a href={`${getLocale() === 'da' ? `/prognoser/${createLink()}` : `/${getLocale()}/prognoser/${createLink()}`}`}
                     className="button is-warning is-fullwidth  mb-4 p-2">
                     {m.heavy_great_grebe_amaze()} {nearestTown?.name ?? nearestTown} ➔
                 </a>

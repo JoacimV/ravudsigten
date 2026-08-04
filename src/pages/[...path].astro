@@ -1,0 +1,115 @@
+---
+// src/pages/[...path].astro
+import Layout from "../layouts/Layout.astro";
+import strande from "../resources/beaches-and-towns.json";
+import LiveScore from "../components/LiveScore.jsx";
+import banner from "../resources/images/banner.png";
+import { createLocationSlug } from "../utils/locationSlug.js";
+import { locales } from "../paraglide/runtime.js";
+import * as m from "../paraglide/messages.js";
+
+export async function getStaticPaths() {
+    const duplicateCounts = new Map<string, number>();
+
+    for (const strand of strande) {
+        const strandName = strand[0] as string;
+        const existingCount = duplicateCounts.get(strandName) ?? 0;
+        duplicateCounts.set(strandName, existingCount + 1);
+    }
+
+    const paths = [];
+
+    for (const lang of locales) {
+        const seenCounts = new Map<string, number>();
+
+        for (const strand of strande) {
+            const strandName = strand[0] as string;
+            const seenCount = seenCounts.get(strandName) ?? 0;
+            seenCounts.set(strandName, seenCount + 1);
+            const slug = createLocationSlug(
+                strandName,
+                seenCount,
+                duplicateCounts.get(strandName) ?? 1,
+            );
+
+            // da -> /prognoser/hundested
+            // en -> /en/prognoser/hundested
+            // de -> /de/prognoser/hundested
+            // se -> /se/prognoser/hundested
+            const routePath =
+                lang === "da"
+                    ? `prognoser/${slug}`
+                    : `${lang}/prognoser/${slug}`;
+
+            paths.push({
+                params: { path: routePath },
+                props: { strandInfo: strand, lang, slug },
+            });
+        }
+    }
+
+    return paths;
+}
+
+const { strandInfo, lang, slug } = Astro.props;
+
+const [longitude, latitude] = strandInfo[2];
+
+// Canonical URL & Hreflang URLs til SEO
+const urls = [];
+
+for (const locale of locales) {
+    const url =
+        locale === "da"
+            ? `https://ravudsigten.dk/prognoser/${slug}`
+            : `https://ravudsigten.dk/${locale}/prognoser/${slug}`;
+    urls.push({ locale, url });
+}
+---
+
+<Layout
+    title={m.dark_noble_spider_pinch({ name: strandInfo[0] })}
+    description={m.glad_game_swallow_sprout({ name: strandInfo[0] })}
+>
+    <Fragment slot="head">
+        {
+            urls.map(({ locale, url }) => (
+                <link rel="alternate" hreflang={locale} href={url} />
+            ))
+        }
+        <link
+            rel="alternate"
+            hreflang="x-default"
+            href={`https://ravudsigten.dk/en/prognoser/${slug}`}
+        />
+    </Fragment>
+
+    <header class="hero is-link">
+        <div class="hero-body">
+            <div class="container">
+                <h1 class="title">Ravprognose for {strandInfo[0]}</h1>
+                <p class="subtitle">
+                    Aktuelle kystforhold og chancer for at finde rav ved {
+                        strandInfo[0]
+                    }.
+                </p>
+            </div>
+            <div class="is-fullwidth"></div>
+        </div>
+        <img
+            src={banner.src}
+            alt="Banner"
+            style={{ objectFit: "cover", maxHeight: "400px" }}
+        />
+    </header>
+    <main class="section">
+        <div class="container">
+            <LiveScore
+                client:load
+                longitude={longitude}
+                latitude={latitude}
+                name={strandInfo[0]}
+            />
+        </div>
+    </main>
+</Layout>
