@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import  { useState, useEffect, useRef } from 'react';
 import { DateTime } from 'luxon';
 import { RechartLinearChart } from './RechartLinearChart';
+import * as m from '../../paraglide/messages.js';
 
 export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObservations, onOutsideClose, score, nearestTown }) {
     const sidebarRef = useRef(null);
@@ -85,33 +86,33 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
         }
         const scoreTexts = [{
             color: '',
-            title: 'Svage ravforhold',
-            textOne: 'De seneste vejrforhold har ikke været særligt gunstige for ravjagt ved denne kyst. Der har kun været begrænset pålandsvind, og der er derfor mindre sandsynlighed for, at nyt materiale med rav er blevet skyllet op på stranden.',
-            textTwo: 'Det kan stadig være værd at undersøge stranden, især efter lokale ændringer i vind og bølgegang.'
+            title: m.gaudy_inclusive_lamb_splash(),
+            textOne: m.whole_level_albatross_rush(),
+            textTwo: m.giant_arable_angelfish_buy()
         },
         {
             color: '',
-            title: 'Mindre gode ravforhold',
-            textOne: 'Ravforholdene ved denne kyst er lige nu under middel. Vindforholdene har kun i begrænset omfang hjulpet med at transportere rav og opskyl ind mod kysten.',
-            textTwo: 'Kig efter friske opskylsbælter, tanglinjer og områder med småsten, hvor rav kan samle sig.'
+            title: m.active_mean_alligator_peel(),
+            textOne: m.least_mild_florian_engage(),
+            textTwo: m.grand_just_kitten_find()
         },
         {
             color: 'is-link',
-            title: 'Moderate ravforhold',
-            textOne: 'Der har været nogen aktivitet ved kysten, men forholdene er ikke optimale for ravjagt. Vinden har delvist været med til at skabe opskyl, men perioden med gunstige forhold har ikke været lang nok til at give de bedste muligheder.',
-            textTwo: 'En tur langs vandkanten kan stadig give fine fund, især hvis du søger grundigt i nyt opskyl.'
+            title: m.basic_slimy_slug_pride(),
+            textOne: m.watery_loose_bobcat_blink(),
+            textTwo: m.shy_zesty_cougar_soar()
         },
         {
             color: 'is-primary',
-            title: 'Gode ravforhold',
-            textOne: 'Forholdene ved denne kyst er gode for ravjagt. Der har været en længere periode med gunstige vindforhold, som kan have hjulpet med at samle rav langs kysten.',
-            textTwo: 'De bedste steder at lede er typisk ved den nyeste opskylsrand, hvor tang, træstykker og andet let materiale samler sig.'
+            title: m.tangy_dark_cat_fear(),
+            textOne: m.quiet_north_penguin_bloom(),
+            textTwo: m.inner_upper_wolf_feast()
         },
         {
             color: 'is-success',
-            title: 'Meget gode ravforhold',
-            textOne: 'Forholdene ved denne strand er meget gode for ravjagt lige nu. Der har været vedvarende pålandsvind i flere dage, hvilket giver optimale betingelser for at transportere rav ind mod kysten.',
-            textTwo: 'Gå især efter friske opskylsbælter langs stranden. Her kan rav ofte findes sammen med tang, små grene og mørkt strandmateriale.'
+            title: m.knotty_raw_shark_jolt(),
+            textOne: m.wacky_vivid_bulldog_dust(),
+            textTwo: m.formal_full_osprey_fond()
         },
         ]
 
@@ -152,7 +153,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
                 transform: sidebarOpen ? "scale(1) translateY(0)" : "scale(0.88) translateY(-12px)",
                 transition: "max-height 680ms cubic-bezier(0.22, 1, 0.36, 1), transform 680ms cubic-bezier(0.22, 1, 0.36, 1)",
                 bottom: -10,
-                width: matches ? '360px' : 'calc(100vw)',
+                width: matches ? '460px' : 'calc(100vw)',
                 maxHeight: sidebarOpen ? matches ? 'calc(100dvh)' : 'calc(100vh - 50%)' : 0,
                 display: 'flex',
                 flexDirection: 'column',
@@ -160,7 +161,7 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
             }}
         >
             <div
-                className="box has-text-light p-2 glass"
+                className="box has-text-light p-3 glass"
                 style={{
                     display: 'flex',
                     flexDirection: 'column',
@@ -196,16 +197,16 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
                     nearestStationObservations && nearestStationObservations?.met?.windDir?.length > 0 && nearestStationObservations?.met?.windSpeed?.length > 0 ? (
                         <div className="grid p-4 mb-4 glass">
                             <div className="cell">
-                                <p className="is-size-7 title mb-1">Nærmeste vejrstation</p>
+                                <p className="is-size-7 title mb-1">{m.game_caring_skunk_amuse()}</p>
                                 <p className="is-size-6 subtitle mb-2">{nearestStationObservations?.metStation?.stationName}</p>
-                                <p className="is-size-7 title mb-1">Seneste observation</p>
+                                <p className="is-size-7 title mb-1">{m.heroic_teary_gull_sprout()}</p>
                                 <p className="is-size-6 subtitle mb-2">{DateTime.fromISO(nearestStationObservations?.met?.windDir[0]?.observed).toLocaleString(DateTime.DATETIME_MED)}</p>
 
                             </div>
                             <div className="cell">
-                                <p className="is-size-7 title mb-1">Vindhastighed</p>
+                                <p className="is-size-7 title mb-1">{m.proud_mealy_hyena_talk()}</p>
                                 <p className="is-size-6 subtitle mb-2">{nearestStationObservations?.met?.windSpeed[0]?.windSpeed} m/s</p>
-                                <p className="is-size-7 title mb-1">Vindretning</p>
+                                <p className="is-size-7 title mb-1">{m.funny_loose_crossbill_sew()}</p>
                                 <p className="is-size-6 subtitle mb-2">{nearestStationObservations?.met?.windDir[0]?.windDirection}°
                                     <span
                                         className="icon is-medium has-text-info  p-0 ml-0 pb-1 m-0"
@@ -224,13 +225,13 @@ export default function Sidebar({ sidebarOpen, setSidebarOpen, nearestStationObs
                         </div>
                     ) : (
                         <div className="mb-4 p-3" style={{ backgroundColor: 'rgba(255,255,255,0.03)', borderRadius: '10px', border: '1px solid #363636' }}>
-                            <p className="is-size-7 has-text-grey-light mb-1">Ingen observationer tilgængelige</p>
+                            <p className="is-size-7 has-text-grey-light mb-1">{m.orange_muddy_pony_swim()}</p>
                         </div>
                     )}
                 <RechartLinearChart data={tideWaterFiltered} />
                 <a href={`/prognoser/${createLink()}`}
                     className="button is-warning is-fullwidth  mb-4 p-2">
-                    Se fuld prognose for {nearestTown?.name ?? nearestTown} ➔
+                    {m.heavy_great_grebe_amaze()} {nearestTown?.name ?? nearestTown} ➔
                 </a>
             </div>
 
