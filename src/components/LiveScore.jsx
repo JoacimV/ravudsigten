@@ -10,43 +10,43 @@ function getScoreDetails(score) {
 
     if (score >= 0.8) {
         return {
-            label: "Fremragende ravvejr!",
+            label: m.suave_nimble_poodle_sew(),
             badgeClass: "is-success",
             color: "#23d160",
-            description: "Forholdene er ideelle! Vind og strøm har arbejdet sammen om at føre rav ind mod kysten. Kom ud og kig i opskyllet!",
-            advice: "Søg efter 'ravpinde' (små træstykker) og mørkt opskyl langs vandkanten."
+            description: m.flat_formal_crow_inspire(),
+            advice: m.equal_funny_felix_fold()
         };
     } else if (score >= 0.6) {
         return {
-            label: "Gode chancer",
+            label: m.whole_away_falcon_devour(),
             badgeClass: "is-primary",
             color: "#00d1b2",
-            description: "Betingelserne er rigtig fine. Der er god bevægelse i vandet og chance for opskyl af rav.",
-            advice: "Fokuser på strækninger med læ eller hvor tangen samler sig."
+            description: m.least_mild_haddock_build(),
+            advice: m.new_main_worm_stir()
         };
     } else if (score >= 0.4) {
         return {
-            label: "Nogenlunde forhold",
+            label: m.witty_dirty_insect_create(),
             badgeClass: "is-warning",
             color: "#ffe08a",
-            description: "Forholdene er middel. Der kan godt ligge rav, men det kræver et godt øje og lidt tålmodighed.",
-            advice: "Gå en tur langs vandkanten og hold øje med friske opskyllinjer."
+            description: m.mushy_heavy_grebe_delight(),
+            advice: m.broad_alert_ibex_pat()
         };
     } else if (score >= 0.2) {
         return {
-            label: "Lave chancer",
+            label: m.crazy_fun_jellyfish_reside(),
             badgeClass: "is-orange",
             color: "#ffdd57",
-            description: "Svage betingelser. Vandet har enten været for roligt, eller vindretningen er ikke helt gunstig endnu.",
-            advice: "Det er en fin tur ud, men forvent ikke store mængder rav i dag."
+            description: m.shy_raw_wombat_cheer(),
+            advice: m.awful_direct_pig_burn()
         };
     } else {
         return {
-            label: "Dårlige forhold",
+            label: m.mean_honest_skunk_intend(),
             badgeClass: "is-danger",
             color: "#ff3860",
-            description: "Blikstille vand eller forkert vindretning. Ravet ligger sandsynligvis stadig roligt på bunden ude i vandet.",
-            advice: "Vent på at vinden og bølgerne rører op i havbunden."
+            description: m.gray_warm_alpaca_borrow(),
+            advice: m.lost_mellow_emu_accept()
         };
     }
 }
@@ -89,9 +89,9 @@ function ForecastTooltip({ active, payload, label }) {
     return (
         <div className="box p-3" style={{ border: "1px solid #dbdbdb" }}>
             <p className="has-text-weight-bold mb-2">{formatForecastTimestamp(point.time)}</p>
-            <p>Tid: {dt.toLocaleString(DateTime.TIME_SIMPLE)}</p>
-            <p>Vindretning: {point.windDirection}°</p>
-            <p>Vindstyrke: {point.windSpeed} m/s</p>
+            <p>{m.quiet_candid_lark_rush()} {dt.toLocaleString(DateTime.TIME_SIMPLE)}</p>
+            <p>{m.grand_swift_pig_treat()} {point.windDirection}°</p>
+            <p>{m.livid_brief_sloth_care()} {point.windSpeed} m/s</p>
         </div>
     );
 }
@@ -136,8 +136,8 @@ export default function LiveScore({ longitude, latitude, name }) {
 
     }, [longitude, latitude]);
 
-    if (loading) return <div className="notification">Henter nyeste ravscore...</div>;
-    if (!data) return <div className="notification is-light">Score ikke tilgængelig lige nu.</div>;
+    if (loading) return <div className="notification">{m.ok_round_squirrel_dash()}</div>;
+    if (!data) return <div className="notification is-light">{m.north_sour_skunk_pave()}</div>;
 
     const scorePct = Math.round((data.score || 0) * 100);
     const details = getScoreDetails(data.score);
@@ -183,7 +183,7 @@ export default function LiveScore({ longitude, latitude, name }) {
                 <p className="subtitle is-6 mb-2">{details.description}</p>
 
                 <div className="content is-small subtitle mt-3">
-                    <p><strong>Tip:</strong> {details.advice}</p>
+                    <p><strong>{m.caring_north_haddock_express()}</strong> {details.advice}</p>
                 </div>
             </div>
             <div className="box glass mb-5">
@@ -207,14 +207,14 @@ export default function LiveScore({ longitude, latitude, name }) {
                     ))}
                 </div>
                 <div className="content is-small subtitle mt-3">
-                    <p><strong>Tip: </strong>Linjen viser vindhastigheden (m/s) over de næste dage, og pilene i bunden angiver vindretningen. Et hop i vinden kombineret med den rette vindretning er ofte nøglen til gode ravbetingelser.</p>
+                    <p><strong>{m.caring_north_haddock_express()} </strong>{m.jumpy_cute_koala_assure()}</p>
                 </div>
             </div>
             <a href={`${getLocale() === 'da' ? '/' : `/${getLocale()}/`}`} className="button is-warning is-fullwidth  mb-4 p-2">
-                Tilbage til ravkortet 🗺️
+                {m.swift_glad_chipmunk_flow()} 🗺️
             </a>
             <p className="subtitle is-6 mb-3">
-                Vores algoritmer analyserer løbende vindretning, vindstyrke, bølger og strømforhold ved {name} for at give dig det bedste estimat på, hvornår chancerne for at finde rav er størst.
+                {m.full_mad_beaver_pray({ name })}
             </p>
         </div>
     );
