@@ -8,11 +8,9 @@ export default function Slider({ min, max, value, onChange }) {
     return (
         <div className="columns is-mobile" style={{ position: 'fixed', zIndex: 401, bottom: 0 }}>
             <div className="column is-full-mobile" >
-                <div className="box m-5 p-4 glass" >
-                    <p className="mb-2 subtitle is-size-7">{m.choose_forecast_window()}</p>
-                    <p>
-                        <strong className="subtitle is-size-7">{values[value]}</strong>
-                    </p>
+                <div className="box glass p-2 ml-5 m-2" >
+                    {/* <p className="mb-2 subtitle is-size-7">{m.choose_forecast_window()}</p> */}
+                    <p className="title is-size-7 m-0 p-1">                       {values[value]}                    </p>
                     <input
                         type="range"
                         min={min}

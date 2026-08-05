@@ -422,7 +422,7 @@ export default function LeafletMap({
                 height: "100dvh",
             }}
         >
-            <MapHeader />
+            {/* <MapHeader /> */}
             <button
                 type="button"
                 className="glass p-2 m-1"
