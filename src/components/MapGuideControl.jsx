@@ -105,7 +105,7 @@ export default function MapGuideControl() {
                 </button>
                 <div
                     id="map-guide-card"
-                    className="glass px-4 py-3 mt-4"
+                    className="px-4 py-3 mt-4"
                     style={{
                         width: "100%",
                         overflow: "hidden",
