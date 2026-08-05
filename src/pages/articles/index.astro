@@ -1,0 +1,78 @@
+---
+import { getCollection } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../layouts/Header.astro";
+import banner from "../../resources/images/banner.png";
+
+// Hent alle artikler og sorter dem efter dato (nyeste først)
+const alleArtikler = await getCollection("articles");
+alleArtikler.sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+---
+
+<Layout
+    title="Artikler & Guides om Ravjagt - Ravudsigten"
+    description="Læs vores seneste artikler og guides om ravjagt, vindforhold og kystvejr."
+    image={banner}
+>
+<Header
+    title="Artikler & Guides om Ravjagt - Ravudsigten"
+    description="Læs vores seneste artikler og guides om ravjagt, vindforhold og kystvejr."
+    image={banner}
+/>
+    <section class="section">
+        <div class="container">
+            <h1 class="title is-2">Artikler & Guides</h1>
+            <p class="subtitle is-5">
+                Få viden om kystforhold, opskyl og hvordan du øger dine chancer
+                for at finde rav.
+            </p>
+
+            <div class="columns is-multiline mt-4">
+                {
+                    alleArtikler.map((artikel) => (
+                        <div class="column is-12-mobile is-6-tablet is-4-desktop">
+                            <div
+                                class="card glass"
+                                style="height: 100%; display: flex; flex-direction: column;"
+                            >
+                                <div class="card-content" style="flex-grow: 1;">
+                                    <p class="is-size-7 subtitle mb-1">
+                                        {artikel.data.pubDate.toLocaleDateString(
+                                            "da-DK",
+                                            {
+                                                year: "numeric",
+                                                month: "short",
+                                                day: "numeric",
+                                            },
+                                        )}
+                                    </p>
+                                    <h2 class="title is-4 mb-3">
+                                        <a
+                                            href={`/articles/${artikel.id}`}
+                                            class="title"
+                                        >
+                                            {artikel.data.title}
+                                        </a>
+                                    </h2>
+                                    <p class="subtitle">
+                                        {artikel.data.description}
+                                    </p>
+                                </div>
+                                <footer class="card-footer">
+                                    <a
+                                        href={`/articles/${artikel.id}`}
+                                        class="card-footer-item has-text-link"
+                                    >
+                                        Læs artiklen →
+                                    </a>
+                                </footer>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+</Layout>

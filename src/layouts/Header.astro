@@ -1,0 +1,21 @@
+---
+import banner from "../resources/images/banner.png";
+
+const { title, description, image } = Astro.props;
+---
+
+<!--text/html-->
+<header class="hero is-link">
+    <div class="hero-body">
+        <div class="container">
+            <h1 class="title">{title}</h1>
+            <p class="subtitle">{description}</p>
+        </div>
+        <div class="is-fullwidth"></div>
+    </div>
+    <img
+        src={image ? image.src : banner.src}
+        alt="Banner"
+        style={{ objectFit: "cover", maxHeight: "400px" }}
+    />
+</header>

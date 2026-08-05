@@ -1,6 +1,7 @@
 ---
 // src/pages/[...path].astro
 import Layout from "../layouts/Layout.astro";
+import Header from "../layouts/Header.astro";
 import strande from "../resources/beaches-and-towns.json";
 import LiveScore from "../components/LiveScore.jsx";
 import banner from "../resources/images/banner.png";
@@ -73,6 +74,7 @@ for (const locale of locales) {
         { name: strandInfo[0] },
         { locale: lang },
     )}
+    image={banner}
 >
     <Fragment slot="head">
         {
@@ -86,35 +88,17 @@ for (const locale of locales) {
             href={`https://ravudsigten.dk/en/prognoser/${slug}`}
         />
     </Fragment>
-
-    <header class="hero is-link">
-        <div class="hero-body">
-            <div class="container">
-                <h1 class="title">
-                    {
-                        m.weary_cuddly_cuckoo_endure(
-                            { name: strandInfo[0] },
-                            { locale: lang },
-                        )
-                    }
-                </h1>
-                <p class="subtitle">
-                    {
-                        m.quaint_swift_hamster_revive(
-                            { name: strandInfo[0] },
-                            { locale: lang },
-                        )
-                    }
-                </p>
-            </div>
-            <div class="is-fullwidth"></div>
-        </div>
-        <img
-            src={banner.src}
-            alt="Banner"
-            style={{ objectFit: "cover", maxHeight: "400px" }}
-        />
-    </header>
+    <Header
+        title={m.weary_cuddly_cuckoo_endure(
+            { name: strandInfo[0] },
+            { locale: lang },
+        )}
+        description={m.quaint_swift_hamster_revive(
+            { name: strandInfo[0] },
+            { locale: lang },
+        )}
+        image={banner}
+    />
     <main class="section">
         <div class="container">
             <LiveScore

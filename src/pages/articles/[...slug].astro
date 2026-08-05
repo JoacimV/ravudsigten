@@ -1,0 +1,58 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+// Ret stien til dit eget layout, f.eks. BaseLayout eller MainLayout
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../layouts/Header.astro";
+
+// Generer stier for alle artikler i content collection
+export async function getStaticPaths() {
+    const articles = await getCollection("articles");
+    return articles.map((entry) => ({
+        params: { slug: entry.id },
+        props: { entry },
+    }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<Layout title={entry.data.title} description={entry.data.description}>
+    <Header title={entry.data.title} description={entry.data.description} />
+    <section class="section">
+        <div class="container">
+            <div class="columns is-centered">
+                <div class="column is-12">
+                    <nav class="breadcrumb" aria-label="breadcrumbs">
+                        <ul>
+                            <li><a href="/">Forside</a></li>
+                            <li><a href="/articles">Artikler</a></li>
+                            <li class="is-active">
+                                <a href="#" aria-current="page"
+                                    >{entry.data.title}</a
+                                >
+                            </li>
+                        </ul>
+                    </nav>
+
+                    <header class="mb-5">
+                        <h1 class="title is-2">{entry.data.title}</h1>
+                        <p class="subtitle is-6 subtitle">
+                            Publiceret {
+                                entry.data.pubDate.toLocaleDateString("da-DK", {
+                                    year: "numeric",
+                                    month: "long",
+                                    day: "numeric",
+                                })
+                            } • Af {entry.data.author}
+                        </p>
+                    </header>
+                    <hr />
+                    <div class="content">
+                        <Content />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</Layout>
